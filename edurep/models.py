@@ -17,7 +17,7 @@ class EdurepSearch(HttpResource):
         if next_record_element is None:
             return {}
         next_record = int(next_record_element.text)
-        if next_record > 900:
+        if next_record > 901:
             return {}
         return {
             "startRecord": next_record
