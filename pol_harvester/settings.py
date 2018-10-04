@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'pol_harvester',
+    'edurep',
 ]
 
 MIDDLEWARE = [
@@ -118,3 +121,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REQUESTS_PROXIES = None
+REQUESTS_VERIFY = True
+REQUESTS_PROXIES_ENABLED = {
+    "http": "localhost:8888"
+}

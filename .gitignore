@@ -7,3 +7,4 @@ __pycache__
 
 # Data and other too large files
 data/
+*.sqlite3
