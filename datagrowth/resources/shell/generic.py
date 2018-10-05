@@ -38,6 +38,7 @@ class ShellResource(Resource):
         "settings": "--settings="
     }
     DIRECTORY_SETTING = None
+    CONTENT_TYPE = "text/plain"
 
     SCHEMA = {
         "arguments": {},
@@ -95,7 +96,7 @@ class ShellResource(Resource):
 
     @property
     def content(self):
-        return "application/json", self.transform(self.stdout)
+        return self.CONTENT_TYPE, self.transform(self.stdout)
 
     def transform(self, stdout):
         """

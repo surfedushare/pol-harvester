@@ -7,12 +7,6 @@ class KaldiAspireResource(ShellResource):
 
     resource = KaldiAspireResource().run(<file-path>)
     content_type, transcript = resource.content
-
-    Please note that later:
-    resource.save()
-    Or:
-    serialize(resource)
-    Will allow us to transport Kaldi output across wires
     """
 
     CMD_TEMPLATE = [
@@ -32,12 +26,7 @@ class KaldiAspireResource(ShellResource):
     ]
     FLAGS = {}
     CONTENT_TYPE = "text/plain"
-
-    def save(self, *args, **kwargs):
-        raise NotImplementedError(
-            "It's impossible to save the data for this research project. "
-            "Please run this in a Django project to save data."
-        )
+    DIRECTORY_SETTING = "KALDI_BASE_PATH"
 
     def transform(self, stdout):
         # TODO: clear LOG lines and strip "utterance-id1"

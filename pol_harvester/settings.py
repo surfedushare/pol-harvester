@@ -131,3 +131,4 @@ REQUESTS_PROXIES_ENABLED = {
 }
 
 DATAGROWTH_DATETIME_FORMAT = "%Y%m%d%H%M%S%f"
+KALDI_BASE_PATH = '/home/surf/kaldi/egs/aspire/s5/'
