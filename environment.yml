@@ -1,0 +1,20 @@
+name: surf-harvest
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - pip=10.0.1=py36_0
+  - python=3.6.6
+  - uwsgi
+  - libiconv
+  - lxml
+  - beautifulsoup4
+  - pip:
+    - django==1.11
+    - jsonschema==2.6.0
+    - whitenoise==4.0
+    - pytz==2018.5
+    - django-bootstrap4==0.0.7
+    - ipdb==0.11
+    - urlobject==2.4.3
+    - git+https://github.com/fako/django-json-field.git
