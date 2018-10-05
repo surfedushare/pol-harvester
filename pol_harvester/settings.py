@@ -122,8 +122,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_ROOT = BASE_DIR + '/media/'
+
 REQUESTS_PROXIES = None
 REQUESTS_VERIFY = True
 REQUESTS_PROXIES_ENABLED = {
     "http": "localhost:8888"
 }
+
+DATAGROWTH_DATETIME_FORMAT = "%Y%m%d%H%M%S%f"

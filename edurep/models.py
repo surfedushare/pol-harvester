@@ -1,4 +1,4 @@
-from datagrowth.resources import HttpResource
+from datagrowth.resources import HttpResource, HttpFileResource
 
 
 class EdurepSearch(HttpResource):
@@ -25,3 +25,7 @@ class EdurepSearch(HttpResource):
 
     class Meta:
         verbose_name_plural = "Edurep searches"
+
+
+class EdurepFile(HttpFileResource):
+    pass

@@ -17,7 +17,6 @@ def send(config, *args, **kwargs):
     limit = config.continuation_limit or 1
     # Continue as long as there are subsequent requests
     while has_next_request and count < limit:
-        print("Round:", count)
         # Get payload
         link = Resource(config=config.to_dict(protected=True))
         link.request = current_request
