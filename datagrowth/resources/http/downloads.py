@@ -1,17 +1,19 @@
 import os
-from datetime import datetime
-from urlobject import URLObject
 from io import BytesIO
+import hashlib
+from urlobject import URLObject
+from datetime import datetime
 
 from django.conf import settings
-from django.core.files.storage import default_storage
 from django.core.exceptions import ValidationError
+from django.core.files.storage import default_storage
 from django.core.files import File
 
+from datagrowth import settings as datagrowth_settings
 from datagrowth.resources.http.generic import HttpResource
 
 
-class HttpFileResource(HttpResource):
+class HttpFileResource(HttpResource):  # TODO: write tests
 
     GET_SCHEMA = {
         "args": {
@@ -20,9 +22,6 @@ class HttpFileResource(HttpResource):
                 {
                     "type": "string",
                     "pattern": "^http"
-                },
-                {
-                    "type": "string"
                 }
             ],
             "minItems": 1,
@@ -66,26 +65,40 @@ class HttpFileResource(HttpResource):
         return File
 
     def _get_file_info(self, url):
+        # Getting the file name and extension from url
         path = str(URLObject(url).path)
         tail, head = os.path.split(path)
         name, extension = os.path.splitext(head)
         now = datetime.utcnow()
         file_name = "{}.{}".format(
-            now.strftime(settings.DATAGROWTH_DATETIME_FORMAT),
+            now.strftime(datagrowth_settings.DATAGROWTH_DATETIME_FORMAT),
             name
         )
-        return file_name, extension
+        # Hashing the file name
+        hasher = hashlib.md5()
+        hasher.update(file_name.encode('utf-8'))
+        file_hash = hasher.hexdigest()
+        # Constructing file path
+        file_path = os.path.join(
+            settings.MEDIA_ROOT,
+            self._meta.app_label,
+            "downloads",
+            file_hash[0], file_hash[1:3]  # this prevents huge (problematic) directory listings
+        )
+        return file_path, file_name, extension
 
     def _save_file(self, url, content):
-        file_name, extension = self._get_file_info(url)
+        file_path, file_name, extension = self._get_file_info(url)
         if len(file_name) > 150:
             file_name = file_name[:150]
-            file_name += extension
+        file_name += extension
         if len(file_name) > 155:
             file_name = file_name[:155]
         FileClass = self._get_file_class()
         file = FileClass(BytesIO(content))
-        file_name = default_storage.save('downloads/' + file_name, file)
+        if not os.path.exists(file_path):
+            os.makedirs(file_path)
+        file_name = default_storage.save(os.path.join(file_path, file_name), file)
         return file_name
 
     def _update_from_response(self, response):
@@ -94,13 +107,16 @@ class HttpFileResource(HttpResource):
         self.status = response.status_code
         self.body = file_name
 
+    def transform(self, file):
+        return file
+
     @property
     def content(self):
         if self.success:
             content_type = self.head.get("content-type", "unknown/unknown").split(';')[0]
             file = default_storage.open(self.body)
             try:
-                return content_type, file
+                return content_type, self.transform(file)
             except IOError:
                 return None, None
         return None, None
