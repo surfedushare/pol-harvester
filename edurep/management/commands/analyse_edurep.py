@@ -35,3 +35,11 @@ class Command(BaseCommand):
         mime_type_count.plot(kind="barh", x="mime_type", y="counts")
         domain_count.plot(kind="barh", x="domain", y="counts")
         plt.show()
+
+        # Sampling
+        pdf = df[df["mime_type"]=="application/pdf"]
+        wur = pdf[df["domain"]=="edepot.wur.nl"]
+        not_wur = pdf[df["domain"]!="edepot.wur.nl"]
+        with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.max_colwidth', -1):
+            print(not_wur[["source", "title"]].sample(10))
+            print(wur[["source", "title"]].sample(100))
