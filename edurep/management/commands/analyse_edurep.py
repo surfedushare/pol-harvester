@@ -1,6 +1,9 @@
+import os
 import json
 import pandas as pd
 from urlobject import URLObject
+
+import matplotlib.pyplot as plt
 
 from django.core.management.base import BaseCommand
 
@@ -17,10 +20,18 @@ class Command(BaseCommand):
 
         def normalize_source(entry):
             url = URLObject(entry["source"])
-            entry["source"] = url.hostname
+            entry["domain"] = url.hostname
+            entry["path"], file_name = os.path.split(url.path)
             return entry
 
         df = pd.DataFrame([normalize_source(record) for record in records])
-        print(df.groupby("language").size().reset_index(name='counts'))
-        print(df.groupby("mime_type").size().reset_index(name='counts'))
-        print(df.groupby("source").size().reset_index(name='counts'))
+        # df = df[df["domain"]!="edepot.wur.nl"]
+
+        # Plots
+        language_count = df.groupby("language").size().reset_index(name='counts')
+        mime_type_count = df.groupby("mime_type").size().reset_index(name='counts')
+        domain_count = df.groupby("domain").size().reset_index(name='counts')
+        language_count.plot(kind="barh", x="language", y="counts")
+        mime_type_count.plot(kind="barh", x="mime_type", y="counts")
+        domain_count.plot(kind="barh", x="domain", y="counts")
+        plt.show()
