@@ -15,3 +15,7 @@ class DGHttpError50X(DGResourceException):
 
 class DGHttpError40X(DGResourceException):
     pass
+
+
+class DGNoContent(Exception):
+    pass
