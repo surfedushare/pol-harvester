@@ -7,9 +7,12 @@ from datagrowth.resources.http.tasks import send_serie
 
 class Command(BaseCommand):
 
+    def add_arguments(self, parser):
+        parser.add_argument('-i', '--input', type=str, required=True)
+
     def handle(self, *args, **options):
 
-        with open("edurep/data/resources.json", "r") as json_file:
+        with open(options["input"], "r") as json_file:
             records = json.load(json_file)
 
         config = {
