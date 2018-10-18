@@ -4,6 +4,10 @@ from uuid import uuid4
 
 from django.core.management.base import BaseCommand
 
+from datagrowth.exceptions import DGResourceException
+from pol_harvester.models import HttpTikaResource
+from edurep.models import EdurepFile
+
 
 class Command(BaseCommand):
 
@@ -20,8 +24,19 @@ class Command(BaseCommand):
         if not os.path.exists(base_dir):
             os.makedirs(base_dir)
 
+        with_text = []
+
         for record in records:
             identifier = str(uuid4())
+            text = None
+            try:
+                file = EdurepFile().get(record["source"])
+                tika_hash = HttpTikaResource.hash_from_data({"file": file.body})
+                tika_resource = HttpTikaResource.objects.get(data_hash=tika_hash)
+                content_type, content = tika_resource.content
+                text = content.get("text", None)
+            except (DGResourceException, HttpTikaResource.DoesNotExist):
+                pass
             output = {
                 "id": identifier,
                 "url": record["source"],
@@ -30,10 +45,15 @@ class Command(BaseCommand):
                     {
                         "title": record["title"],
                         "url": record["source"],
-                        "text": None,
+                        "text": text,
                         "content-type": record["mime_type"]
                     }
                 ]
             }
             with open(os.path.join(base_dir, identifier + ".json"), "w") as record_file:
                 json.dump(output, record_file)
+            if text:
+                with_text.append(output)
+
+        with open(os.path.join(base_dir, "with_text.json"), "w") as record_file:
+            json.dump(with_text, record_file, indent=4)
