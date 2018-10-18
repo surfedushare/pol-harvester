@@ -122,13 +122,20 @@ class ExtractProcessor(object):
                 result[name] = reach(objective, node)
             yield result
 
+    @staticmethod
+    def _eval_extraction(name, objective, soup, el=None):
+        try:
+            return eval(objective) if objective else None
+        except Exception as exc:
+            raise ValueError("Can't extract '{}'".format(name)) from exc
+
     def text_xml(self, soup):  # soup used in eval!
 
         context = {}
         for name, objective in self._context.items():
-            context[name] = eval(objective) if objective else objective
+            context[name] = self._eval_extraction(name, objective, soup)
 
-        at = elements = eval(self._at) if self._at else None
+        at = elements = self._eval_extraction("@", self._at, soup)
         if not isinstance(at, list):
             elements = [at]
 
@@ -137,5 +144,5 @@ class ExtractProcessor(object):
             for name, objective in self._objective.items():
                 if not objective:
                     continue
-                result[name] = eval(objective) if not callable(objective) else objective(soup, el)
+                result[name] = self._eval_extraction(name, objective, soup, el)
             yield result
