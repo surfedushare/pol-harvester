@@ -8,4 +8,5 @@ __pycache__
 # Data and other too large files
 data/
 media/
+logs/
 *.sqlite3
