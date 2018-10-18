@@ -6,8 +6,6 @@ import matplotlib.pyplot as plt
 from django.core.management.base import BaseCommand
 
 from datagrowth.resources.http.tasks import send_serie
-
-from pol_harvester.models import HttpTikaResource
 from edurep.models import EdurepFile
 
 
