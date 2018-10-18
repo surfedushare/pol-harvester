@@ -46,7 +46,7 @@ class Command(BaseCommand):
                         "title": record["title"],
                         "url": record["source"],
                         "text": text,
-                        "content-type": record["mime_type"]
+                        "mime_type": record["mime_type"]
                     }
                 ]
             }
