@@ -5,6 +5,9 @@ from datagrowth.resources.http.tasks import send
 
 class Command(BaseCommand):
 
+    def add_arguments(self, parser):
+        parser.add_argument('-q', '--query', type=str, required=True)
+
     def handle(self, *args, **options):
         config = {
             "resource": "edurep.EdurepSearch",
@@ -12,4 +15,4 @@ class Command(BaseCommand):
             "_namespace": "http_resource",
             "_private": ["_private", "_namespace", "_defaults"]
         }
-        send("lom.educational.context=HO", config=config, method="get")
+        send(options["query"], config=config, method="get")

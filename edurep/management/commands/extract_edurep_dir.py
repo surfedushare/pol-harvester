@@ -38,8 +38,8 @@ class Command(BaseCommand):
                     soup = BeautifulSoup(content, "lxml")
                     try:
                         rsl += list(prc.extract("text/xml", soup))
-                    except AttributeError:
-                        print("Invalid XML: ", file_path)
+                    except ValueError as exc:
+                        print("Invalid XML:", exc, file_path)
 
         with open(options["output"], "w") as json_file:
             json.dump(rsl, json_file, indent=4)
