@@ -116,6 +116,9 @@ class ShellResource(Resource):
         else:
             return self.VARIABLES
 
+    def debug(self):
+        print(subprocess.list2cmdline(self.command.get("cmd", [])))
+
     #######################################################
     # CREATE COMMAND
     #######################################################
