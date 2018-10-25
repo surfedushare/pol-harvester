@@ -37,6 +37,7 @@ class ShellResource(Resource):
     FLAGS = {
         "settings": "--settings="
     }
+    VARIABLES = {}
     DIRECTORY_SETTING = None
     CONTENT_TYPE = "text/plain"
 
@@ -109,6 +110,12 @@ class ShellResource(Resource):
         """
         return stdout
 
+    def environment(self, *args, **kwargs):
+        if not self.VARIABLES:
+            return None
+        else:
+            return self.VARIABLES
+
     #######################################################
     # CREATE COMMAND
     #######################################################
@@ -116,7 +123,10 @@ class ShellResource(Resource):
     # The values inside are passed to the subprocess library
 
     def variables(self, *args):
-        raise NotImplementedError("Variables are not specified on this resource")
+        args = args or self.command.get("args")
+        return {
+            "input": args
+        }
 
     def _create_command(self, *args, **kwargs):
         self._validate_input(*args, **kwargs)
@@ -202,6 +212,7 @@ class ShellResource(Resource):
     def _run(self):
         cmd = self.command.get("cmd")
         cwd = None
+        env = self.environment(*self.command.get("args"), **self.command.get("kwargs"))
         if self.DIRECTORY_SETTING:
             cwd = getattr(settings, self.DIRECTORY_SETTING)
         results = subprocess.run(
@@ -209,7 +220,8 @@ class ShellResource(Resource):
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            cwd=cwd
+            cwd=cwd,
+            env=env
         )
         self.status = results.returncode
         self.stdout = results.stdout
