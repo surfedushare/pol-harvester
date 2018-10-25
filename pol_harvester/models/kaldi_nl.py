@@ -35,10 +35,11 @@ class KaldiNLResource(ShellResource):
         return env
 
     def clean_stdout(self, stdout):
+        stdout = super().clean_stdout(stdout)
         return "".join((
             output
             for output in stdout.split("\r") if
-            not output.startswith("Rescoring") and
+            not output.startswith("Rescoring..") and
             not output.startswith("[") and
             not output.startswith("NNet3 Decoding")
         ))
