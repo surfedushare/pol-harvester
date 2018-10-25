@@ -30,9 +30,18 @@ class KaldiNLResource(ShellResource):
         env = super().environment()
         hsh = hashlib.sha1()
         vars = self.variables(*args)
-        hsh.update(" ".join(vars["input"]))
+        hsh.update(" ".join(vars["input"]).encode("utf-8"))
         env["OUTPUT_PATH"] = hsh.hexdigest()
         return env
+
+    def clean_stdout(self, stdout):
+        return "".join((
+            output
+            for output in stdout.split("\r") if
+            not output.startswith("Rescoring") and
+            not output.startswith("[") and
+            not output.startswith("NNet3 Decoding")
+        ))
 
     def transform(self, stdout):
         is_transcript = False
