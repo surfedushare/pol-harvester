@@ -9,6 +9,7 @@ dependencies:
   - libiconv
   - lxml
   - beautifulsoup4
+  - urlobject
   - pip:
     - django==1.11
     - jsonschema==2.6.0
