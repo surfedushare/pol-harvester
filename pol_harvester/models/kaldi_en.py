@@ -26,7 +26,7 @@ class KaldiAspireResource(ShellResource):
     ]
     FLAGS = {}
     CONTENT_TYPE = "text/plain"
-    DIRECTORY_SETTING = "KALDI_BASE_PATH"
+    DIRECTORY_SETTING = "KALDI_ASPIRE_BASE_PATH"
 
     def transform(self, stdout):
         # TODO: clear LOG lines and strip "utterance-id1"
