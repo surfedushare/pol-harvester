@@ -33,11 +33,11 @@ class YouTubeDLResource(ShellResource):
         if "output" not in kwargs:
             vars = self.variables(*args)
             file_path, file_name, extension = self._get_file_info(vars["url"])
-            kwargs["output"] = "'{}'".format(os.path.join(file_path, "%(title)s.%(ext)s"))
+            kwargs["output"] = os.path.join(file_path, "%(title)s.%(ext)s")
         return super().run(*args, **kwargs)
 
     def transform(self, stdout):
-        match = re.search("\[ffmpeg\] Destination: '(.+)$", stdout, flags=re.MULTILINE)
+        match = re.search("\[ffmpeg\] Destination: (.+)$", stdout, flags=re.MULTILINE)
         return match.group(1) if match else None
 
     def _get_file_info(self, url):
