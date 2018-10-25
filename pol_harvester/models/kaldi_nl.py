@@ -1,4 +1,5 @@
 import hashlib
+import re
 
 from django.conf import settings
 
@@ -54,4 +55,4 @@ class KaldiNLResource(ShellResource):
                 is_transcript = False
             elif is_transcript:
                 out.append(line)
-        return "\n".join(out)
+        return re.sub(" \(.+\)$", "", "\n".join(out), flags=re.MULTILINE)
