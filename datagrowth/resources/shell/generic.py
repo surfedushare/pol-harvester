@@ -203,6 +203,12 @@ class ShellResource(Resource):
         # All is fine :)
         return command
 
+    def clean_stdout(self, stdout):
+        return stdout.decode("utf-8")
+
+    def clean_stderr(self, stderr):
+        return stderr.decode("utf-8")
+
     #######################################################
     # PROTECTED METHODS
     #######################################################
@@ -223,9 +229,12 @@ class ShellResource(Resource):
             cwd=cwd,
             env=env
         )
+        self._update_from_results(results)
+
+    def _update_from_results(self, results):
         self.status = results.returncode
-        self.stdout = results.stdout
-        self.stderr = results.stderr
+        self.stdout = self.clean_stdout(results.stdout)
+        self.stderr = self.clean_stderr(results.stderr)
 
     def _handle_errors(self):
         if not self.success:
