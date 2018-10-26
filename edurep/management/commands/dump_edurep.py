@@ -39,6 +39,8 @@ class Command(BaseCommand):
             return None
         transcription = KaldiNLResource().run(file_path)
         _, transcript = transcription.content
+        if transcript is None:
+            log.warning("Could not find transcription for: {}".format(record["source"]))
         return transcript
 
     def handle(self, *args, **options):
