@@ -10,6 +10,7 @@ from datagrowth.processors import ExtractProcessor
 class Command(BaseCommand):
 
     def add_arguments(self, parser):
+        parser.add_argument('-i', '--input', type=str, required=True)
         parser.add_argument('-o', '--output', type=str, required=True)
 
     def handle(self, *args, **options):
@@ -28,7 +29,7 @@ class Command(BaseCommand):
         prc = ExtractProcessor(config=config)
 
         rsl = []
-        for root, dirs, files in os.walk("data/ho-collections"):
+        for root, dirs, files in os.walk(options["input"]):
             for file in files:
                 if file.startswith(".") or file.endswith("txt"):
                     continue
