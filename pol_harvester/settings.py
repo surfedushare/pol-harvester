@@ -26,6 +26,7 @@ SECRET_KEY = 'm+2zzqoclh8b6um4%#k&(gw!!(=mmw&$y&u^14jkyt$t==p-$e'
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'localhost',
     '.surfpol.nl'
 ]
 
