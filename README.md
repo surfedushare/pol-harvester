@@ -81,10 +81,11 @@ Notice how all these commands create a similar output file that we'll call the `
 
 #### 3.) Download content
 
-Edurep only harvests meta data. To get the content of the learning materials you can run the following command
+Edurep only harvests meta data. To get the content of the learning materials you can run the following commands
 
 ```bash
 ./manage.py download_edurep --input <data-file>
+./manage.py extract_text_edurep_files --input <data-file> --formats application/msword,application/octet-stream,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,vnd.openxmlformats-officedocument.presentationml.presentation
 ```
 
 This will put the content in files on your harddisk under the ```media``` directory. 
@@ -102,3 +103,16 @@ Some of the Edurep content consists of video. We need to download this content s
 As with step 3 all files will be stored under ```media``` while the paths to these files 
 and possible error messages that occured will reside in the database.
 Note that only .wav files get stored permanently.
+
+#### 5.) Export data and profit!
+
+There is no use in having data if you can't use it somewhere else like in Elastic Search.
+To be able to do that simply run the following command:
+
+```bash
+./manage.py dump_edurep --input <data-file> --output <your-output-directory>
+```
+
+This dump does two things:
+1. It places all objects in files and assigns a unique id to these objects, which is then used as the filename.
+2. It places all objects with texts together in a file called with_text.json.
