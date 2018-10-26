@@ -64,7 +64,7 @@ class ShellResource(Resource):
 
         if not self.command:
             self.command = self._create_command(*args, **kwargs)
-            self.uri = ShellResource.uri_from_cmd(self.command.get("cmd"))
+            self.uri = self.uri_from_cmd(self.command.get("cmd"))
         else:
             self.validate_command(self.command)
 

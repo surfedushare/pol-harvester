@@ -18,7 +18,6 @@ def run(config, *args, **kwargs):
         cmd.save()
         success.append(cmd.id)
     except DGResourceException as exc:
-        print("ERROR")
         cmd = exc.resource
         cmd.clean()
         cmd.save()
@@ -32,9 +31,7 @@ def run(config, *args, **kwargs):
 def run_serie(config, args_list, kwargs_list):
     success = []
     errors = []
-    print(len(args_list), len(kwargs_list))
     for args, kwargs in zip(args_list, kwargs_list):
-        print("STARTING")
         scc, err = run(config=config, *args, **kwargs)
         success += scc
         errors += err
