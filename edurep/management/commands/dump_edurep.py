@@ -62,6 +62,7 @@ class Command(BaseCommand):
                 "id": identifier,
                 "url": record["source"],
                 "keywords": record["keywords"],
+                "language": record["language"],
                 "documents": [
                     {
                         "title": record["title"],
