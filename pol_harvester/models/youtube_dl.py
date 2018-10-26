@@ -33,7 +33,7 @@ class YouTubeDLResource(ShellResource):
         if "output" not in kwargs:
             vars = self.variables(*args)
             file_path, file_name, extension = self._get_file_info(vars["url"])
-            kwargs["output"] = os.path.join(file_path, "%(title)s.%(ext)s")
+            kwargs["output"] = os.path.join(file_path, "%(id)s.%(ext)s")
         return super().run(*args, **kwargs)
 
     def transform(self, stdout):
