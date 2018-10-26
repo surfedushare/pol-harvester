@@ -16,7 +16,7 @@ class YouTubeDLResource(ShellResource):
         "youtube-dl",
         "--extract-audio",
         "--audio-format=wav",
-        "--postprocessor-args=-acodec pcm_s16le -ac 1 -ar 8000",
+        "--postprocessor-args=-ac 1 -ar 8000",
         "CMD_FLAGS",
         "{}"
     ]
@@ -62,3 +62,9 @@ class YouTubeDLResource(ShellResource):
             file_hash[0], file_hash[1:3]  # this prevents huge (problematic) directory listings
         )
         return file_path, file_name, extension
+
+    @staticmethod
+    def uri_from_cmd(cmd):
+        # We filter --output flag, because it's always unique for every invoke
+        cmd = [part for part in cmd if not part.startswith("--output=")]
+        return ShellResource.uri_from_cmd(cmd)

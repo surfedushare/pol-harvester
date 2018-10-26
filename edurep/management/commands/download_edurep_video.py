@@ -1,3 +1,4 @@
+from tqdm import tqdm
 import json
 from urlobject import URLObject
 
@@ -7,8 +8,8 @@ from datagrowth.resources.shell.tasks import run_serie
 
 
 VIDEO_DOMAINS = [
-    "mediasite.hro.nl",
-    "video.saxion.nl",
+    # "mediasite.hro.nl",  # TODO: https://github.com/SURFpol/pol-harvester/issues/2
+    # "video.saxion.nl",  # TODO: https://github.com/SURFpol/pol-harvester/issues/3
     # NB: Ted is the only English one at the moment, we exclude it for now
 ]
 
@@ -30,11 +31,11 @@ class Command(BaseCommand):
         }
 
         run_serie(
-            [
+            tqdm([
                 [record["source"]] for record in records
                 if record["mime_type"].startswith("video") or
                 URLObject(record["source"]).hostname in VIDEO_DOMAINS
-            ],
+            ]),
             [
                 {} for record in records
                 if record["mime_type"].startswith("video") or

@@ -1,22 +1,22 @@
 from django.contrib import admin
 
-from datagrowth.resources import ResourceAdmin
+from datagrowth.admin import ShellResourceAdmin, HttpResourceAdmin
 from pol_harvester.models import KaldiAspireResource, KaldiNLResource, YouTubeDLResource, HttpTikaResource
 
 
-class KaldiAspireResourceAdmin(ResourceAdmin):
+class KaldiAspireResourceAdmin(ShellResourceAdmin):
     pass
 
 
-class KaldiNLResourceAdmin(ResourceAdmin):
+class KaldiNLResourceAdmin(ShellResourceAdmin):
     pass
 
 
-class YouTubeDLResourceAdmin(ResourceAdmin):
+class YouTubeDLResourceAdmin(ShellResourceAdmin):
     pass
 
 
-class HttpTikaResourceAdmin(ResourceAdmin):
+class HttpTikaResourceAdmin(HttpResourceAdmin):
     pass
 
 
