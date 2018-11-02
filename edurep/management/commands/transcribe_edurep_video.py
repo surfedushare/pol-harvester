@@ -6,6 +6,7 @@ from urlobject import URLObject
 from django.core.management.base import BaseCommand
 
 from datagrowth.resources.shell.tasks import run
+from datagrowth.exceptions import DGShellError
 from pol_harvester.models import YouTubeDLResource
 
 
@@ -40,7 +41,10 @@ class Command(BaseCommand):
             URLObject(record["source"]).hostname in VIDEO_DOMAINS
         ]
         for video_record in tqdm(video_records):
-            download = YouTubeDLResource().run(video_record["source"])
+            try:
+                download = YouTubeDLResource().run(video_record["source"])
+            except DGShellError:
+                continue
             _, file_path = download.content
             if file_path is None:
                 log.warning("Could not find download for: {}".format(video_record["source"]))
