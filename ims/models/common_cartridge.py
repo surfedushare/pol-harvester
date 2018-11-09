@@ -4,9 +4,9 @@ from zipfile import ZipFile
 
 from bs4 import BeautifulSoup
 
+from django.conf import settings
 from django.db import models
 from django import forms
-from django.urls import reverse
 from django.core.exceptions import ValidationError
 
 
@@ -23,9 +23,9 @@ class CommonCartridge(models.Model):
                 'type': manifest.find('schema').text,
                 'version': manifest.find('schemaversion').text
             },
-            'title': manifest.find('lomimscc:title').find('lomimscc:string').text,
-            'export_at': manifest.find('lomimscc:contribute').find('lomimscc:date').find('lomimscc:datetime').text,
-            'license': manifest.find('lomimscc:rights').find('lomimscc:description').find('lomimscc:string').text
+            'title': manifest.find('lomcc:title').find('lomcc:string').text,
+            'export_at': manifest.find('lomcc:contribute').find('lomcc:date').find('lomcc:datetime').text,
+            'license': manifest.find('lomcc:rights').find('lomcc:description').find('lomcc:string').text
         }
 
     def get_content_tree(self):
@@ -39,18 +39,33 @@ class CommonCartridge(models.Model):
         for resource in resources:
             results[resource['identifier']] = {
                 'content_type': resource['type'],
-                'main': resource['href'],
+                'main': resource.get('href', None),
                 'files': [file['href'] for file in resource.find_all('file')]
             }
         return results
 
-    def get_absolute_url(self):
-        return reverse('share:common-cartridge-upload-success', kwargs={"pk": self.id})
+    def get_extract_destination(self):
+        tail, head = os.path.split(self.file.name)
+        return os.path.join(settings.MEDIA_ROOT, "tmp", head)
+
+    def extract(self):
+        destination = self.get_extract_destination()
+        if os.path.exists(destination):
+            return
+        cartridge = ZipFile(self.file)
+        cartridge.extractall(destination)
 
     def metadata_tag(self):
         return '<pre>{}</pre>'.format(json.dumps(self.get_metadata(), indent=4))
     metadata_tag.short_description = 'Metadata'
     metadata_tag.allow_tags = True
+
+    def clean(self):
+        cartridge = ZipFile(self.file)
+        try:
+            self.manifest = cartridge.read('imsmanifest.xml')
+        except KeyError:
+            raise ValidationError('The common cartridge should contain a manifest file')
 
     def __str__(self):
         tail, head = os.path.split(self.file.name)
@@ -60,11 +75,7 @@ class CommonCartridge(models.Model):
 class CommonCartridgeForm(forms.ModelForm):
 
     def clean(self):
-        cartridge = ZipFile(self.files['file'])
-        try:
-            self.instance.manifest = cartridge.read('imsmanifest.xml')
-        except KeyError:
-            raise ValidationError('The common cartridge should contain a manifest file')
+        self.instance.clean()  # TODO: is this necessary?
         # TODO: check metadata
         super().clean()
 
