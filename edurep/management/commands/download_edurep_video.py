@@ -33,12 +33,12 @@ class Command(BaseCommand):
         run_serie(
             tqdm([
                 [record["source"]] for record in records
-                if record["mime_type"].startswith("video") or
+                if record["mime_type"].startswith("video") or  # TODO: some videos have text/html mime type
                 URLObject(record["source"]).hostname in VIDEO_DOMAINS
             ]),
             [
                 {} for record in records
-                if record["mime_type"].startswith("video") or
+                if record["mime_type"].startswith("video") or  # TODO: some videos have text/html mime type
                 URLObject(record["source"]).hostname in VIDEO_DOMAINS
             ],
             config=config

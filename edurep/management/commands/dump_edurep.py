@@ -39,7 +39,10 @@ class Command(BaseCommand):
         }]
 
     def get_documents_from_kaldi(self, record):
-        download = YouTubeDLResource().run(record["source"])
+        try:
+            download = YouTubeDLResource().run(record["source"])
+        except DGResourceException:
+            return None
         _, file_path = download.content
         if file_path is None:
             log.warning("Could not find download for: {}".format(record["source"]))
