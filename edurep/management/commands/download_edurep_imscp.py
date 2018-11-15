@@ -30,14 +30,14 @@ class Command(BaseCommand):
         package_records = [record for record in records if record["mime_type"] == "application/x-Wikiwijs-Arrangement"]
 
         successes, errors = send_serie(
-            [[record["source"] + "?p=imscc"] for record in package_records],
+            [[record["source"] + "?p=imscp"] for record in package_records],
             [{} for _ in records],
             config=config,
             method="get"
         )
 
         if len(errors):
-            log.warning("{} errors while downloading IMSCC's".format(len(errors)))
+            log.warning("{} errors while downloading IMSCP's".format(len(errors)))
 
         for success_id in successes:
             edurep_file = EdurepFile.objects.get(id=success_id)

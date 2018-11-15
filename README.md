@@ -79,7 +79,7 @@ Use one of the commands below:
 
 Notice how all these commands create a similar output file that we'll call the ```data file``` from now on.
 
-#### 3.) Download content
+#### 3.A) Download content
 
 Edurep only harvests meta data. To get the content of the learning materials you can run the following commands
 
@@ -91,7 +91,7 @@ Edurep only harvests meta data. To get the content of the learning materials you
 This will put the content in files on your harddisk under the ```media``` directory. 
 You can find all downloaded content with paths as well as metadata from Tika in the database.
 
-#### 4.) Download and transcribe video
+#### 3.B) Download and transcribe video
 
 Some of the Edurep content consists of video. We need to download this content separately using:
 
@@ -100,11 +100,24 @@ Some of the Edurep content consists of video. We need to download this content s
 ./manage.py transcribe_edurep_video --input <data-file>
 ```
 
-As with step 3 all files will be stored under ```media``` while the paths to these files 
+As with step 3.A all files will be stored under ```media``` while the paths to these files 
 and possible error messages that occured will reside in the database.
 Note that only .wav files get stored permanently.
 
-#### 5.) Export data and profit!
+
+#### 3.C) Download and extract IMS Content Packages
+
+Other content consists of content packages as defined by IMS. You can download and extract these with the following commands
+
+```bash
+./manage.py download_edurep_imscp --input <data-file>
+./manage.py extract_text_edurep_imscp --input <data-file>
+```
+
+This places the package download and extracted files under ```media```. It will also process the extracted files with Tika.
+Errors in this process are to be ofund in the database.
+
+#### 4.) Export data and profit!
 
 There is no use in having data if you can't use it somewhere else like in Elastic Search.
 To be able to do that simply run the following command:

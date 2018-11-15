@@ -18,14 +18,15 @@ class CommonCartridge(models.Model):
 
     def get_metadata(self):
         manifest = BeautifulSoup(self.manifest, "lxml")
+        schema = manifest.find('schema').text
+        title = manifest.find('lomcc:title').find('lomcc:string').text if schema == "IMS Common Cartridge" else \
+                manifest.find('imsmd:title').find('imsmd:langstring').text
         return {
             'schema': {
-                'type': manifest.find('schema').text,
+                'type': schema,
                 'version': manifest.find('schemaversion').text
             },
-            'title': manifest.find('lomcc:title').find('lomcc:string').text,
-            'export_at': manifest.find('lomcc:contribute').find('lomcc:date').find('lomcc:datetime').text,
-            'license': manifest.find('lomcc:rights').find('lomcc:description').find('lomcc:string').text
+            'title': title
         }
 
     def get_content_tree(self):

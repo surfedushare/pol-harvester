@@ -27,12 +27,12 @@ class Command(BaseCommand):
 
         df = pd.DataFrame(records)
         df = df.loc[df['mime_type']=="application/x-Wikiwijs-Arrangement"]
-        uris = [EdurepFile.uri_from_url(url + "?p=imscc") for url in list(df["source"])]
+        uris = [EdurepFile.uri_from_url(url + "?p=imscp") for url in list(df["source"])]
         file_resources = list(EdurepFile.objects.filter(uri__in=uris))
         file_paths = [edurep_file.body.replace(default_storage.base_location, "") for edurep_file in file_resources]
         imscc_cartridges = list(CommonCartridge.objects.filter(file__in=file_paths))
 
-        log.info("Extracting IMSCC's")
+        log.info("Extracting IMSCP's")
 
         files = []
         for cartridge in tqdm(imscc_cartridges):
@@ -47,17 +47,15 @@ class Command(BaseCommand):
                     ]
                     files += paths
 
-        print(files[:10])
+        config = {
+            "resource": "pol_harvester.HttpTikaResource",
+            "_namespace": "http_resource",
+            "_private": ["_private", "_namespace", "_defaults"]
+        }
 
-        # config = {
-        #     "resource": "pol_harvester.HttpTikaResource",
-        #     "_namespace": "http_resource",
-        #     "_private": ["_private", "_namespace", "_defaults"]
-        # }
-        #
-        # send_serie(
-        #     [[] for _ in file_resources],
-        #     [{"file": os.path.join() file} for file in files],
-        #     config=config,
-        #     method="post"
-        # )
+        send_serie(
+            [[] for _ in files],
+            [{"file": file} for file in files],
+            config=config,
+            method="post"
+        )
