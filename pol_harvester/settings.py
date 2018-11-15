@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'pol_harvester',
     'edurep',
     'ims',
+    'surfshare',
 ]
 
 MIDDLEWARE = [
