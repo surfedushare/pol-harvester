@@ -42,7 +42,12 @@ class Command(BaseCommand):
         try:
             download = YouTubeDLResource().run(record["source"])
         except DGResourceException:
-            return None
+            return [{
+                "title": record["title"],
+                "url": record["source"],
+                "text": None,
+                "mime_type": record["mime_type"]
+            }]
         _, file_path = download.content
         if file_path is None:
             log.warning("Could not find download for: {}".format(record["source"]))
