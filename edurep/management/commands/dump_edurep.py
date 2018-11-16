@@ -90,8 +90,9 @@ class Command(BaseCommand):
                 content_type, content = tika_resource.content
                 text = content.get("text", None)
                 url = record["source"] + file.replace(os.path.join(default_storage.base_location, destination), "")
+                title = content.get("title", [""])[0]
                 documents.append({
-                    "title": content.get("title", [record["title"]])[0],
+                    "title": title if title else record["title"],
                     "url": url,
                     "text": text if text else None,
                     "mime_type": content.get("mime-type", None)
