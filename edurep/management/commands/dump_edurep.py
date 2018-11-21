@@ -48,8 +48,8 @@ class Command(BaseCommand):
                 "text": None,
                 "mime_type": record["mime_type"]
             }]
-        _, file_path = download.content
-        if file_path is None:
+        _, file_paths = download.content
+        if not len(file_paths):
             log.warning("Could not find download for: {}".format(record["source"]))
             return [{
                 "title": record["title"],
@@ -57,16 +57,19 @@ class Command(BaseCommand):
                 "text": None,
                 "mime_type": record["mime_type"]
             }]
-        transcription = KaldiNLResource().run(file_path)
-        _, transcript = transcription.content
-        if transcript is None:
-            log.warning("Could not find transcription for: {}".format(record["source"]))
-        return [{
-            "title": record["title"],
-            "url": record["source"],
-            "text": transcript,
-            "mime_type": record["mime_type"]
-        }]
+        transcripts = []
+        for file_path in file_paths:
+            resource = KaldiNLResource().run(file_path)
+            _, transcript = resource.content
+            if transcript is None:
+                log.warning("Could not find transcription for: {}".format(file_path))
+            transcripts.append({
+                "title": record["title"],
+                "url": record["source"],
+                "text": transcript,
+                "mime_type": record["mime_type"]
+            })
+        return transcripts
 
     def get_documents_from_imscp(self, record):
         documents = []
