@@ -49,8 +49,9 @@ class Command(BaseCommand):
                 download = YouTubeDLResource().run(video_url)
             except DGShellError:
                 continue
-            _, file_path = download.content
-            if file_path is None:
-                log.warning("Could not find download for: {}".format(video_url))
+            _, file_paths = download.content
+            if not file_paths:
+                log.warning("Could not find download(s) for: {}".format(video_url))
                 continue
-            run(file_path, config=config)
+            for file_path in file_paths:
+                run(file_path, config=config)

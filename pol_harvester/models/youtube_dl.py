@@ -37,8 +37,7 @@ class YouTubeDLResource(ShellResource):
         return super().run(*args, **kwargs)
 
     def transform(self, stdout):
-        match = re.search("\[ffmpeg\] Destination: (.+)$", stdout, flags=re.MULTILINE)
-        return match.group(1) if match else None
+        return re.findall("\[ffmpeg\] Destination: (.+)$", stdout, flags=re.MULTILINE)
 
     def _get_file_info(self, url):
         # Getting the file name and extension from url
