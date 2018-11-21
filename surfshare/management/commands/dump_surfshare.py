@@ -26,20 +26,38 @@ class Command(BaseCommand):
         parser.add_argument('-i', '--input', type=str, required=True)
         parser.add_argument('-o', '--output', type=str, required=True)
 
-    def get_video_text(self, document):
+    def get_documents_from_kaldi(self, document):
         try:
             download = YouTubeDLResource().run(document["url"])
         except DGResourceException:
-            return
-        _, file_path = download.content
-        if file_path is None:
+            return [{
+                "title": document["title"],
+                "url": document["url"],
+                "text": None,
+                "mime_type": document["content-type"]
+            }]
+        _, file_paths = download.content
+        if not len(file_paths):
             log.warning("Could not find download for: {}".format(document["url"]))
-            return
-        transcription = KaldiNLResource().run(file_path)
-        _, transcript = transcription.content
-        if transcript is None:
-            log.warning("Could not find transcription for: {}".format(document["url"]))
-        return transcript
+            return [{
+                "title": document["title"],
+                "url": document["url"],
+                "text": None,
+                "mime_type": document["content-type"]
+            }]
+        transcripts = []
+        for file_path in file_paths:
+            resource = KaldiNLResource().run(file_path)
+            _, transcript = resource.content
+            if transcript is None:
+                log.warning("Could not find transcription for: {}".format(file_path))
+            transcripts.append({
+                "title": document["title"],
+                "url": document["url"],
+                "text": transcript,
+                "mime_type": document["content-type"]
+            })
+        return transcripts
 
     def handle(self, *args, **options):
 
@@ -54,21 +72,18 @@ class Command(BaseCommand):
                 with open(os.path.join(path, file), "r") as json_file:
                     data = json.load(json_file)
                 documents = []
-                has_text = False
                 for document in data.get("documents", []):
                     if URLObject(document["url"]).hostname in VIDEO_DOMAINS:
-                        text = self.get_video_text(document)
-                        document["text"] = text
-                        document["mime_type"] = "video/mp4"  # TODO: detect correct type?
-                        del document["exception"]
+                        documents += self.get_documents_from_kaldi(document)
                     else:
                         document["mime_type"] = document["content-type"]
                         del document["content-type"]
-                    has_text = has_text or document["text"] is not None
-                    documents.append(document)
+                        documents.append(document)
                 data["documents"] = documents
-                if has_text:
+
+                if any((doc for doc in documents if doc["text"] is not None)):
                     with_text.append(data)
+
                 with open(os.path.join(base_dir, file), "w") as json_file:
                     json.dump(data, json_file)
 
