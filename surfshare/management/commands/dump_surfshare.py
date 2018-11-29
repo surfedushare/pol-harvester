@@ -7,17 +7,10 @@ from django.core.management.base import BaseCommand
 
 from datagrowth.exceptions import DGResourceException
 from pol_harvester.models import YouTubeDLResource, KaldiNLResource
+from surfshare.constants import VIDEO_DOMAINS
 
 
 log = logging.getLogger(__name__)
-
-
-VIDEO_DOMAINS = [
-    'www.youtube.com',
-    'lecturenet.uu.nl',
-    'vimeo.com',
-    'player.ou.nl',
-]
 
 
 class Command(BaseCommand):

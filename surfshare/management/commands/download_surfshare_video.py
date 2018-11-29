@@ -6,14 +6,7 @@ from urlobject import URLObject
 from django.core.management.base import BaseCommand
 
 from datagrowth.resources.shell.tasks import run_serie
-
-
-VIDEO_DOMAINS = [
-    'www.youtube.com',
-    'lecturenet.uu.nl',
-    'vimeo.com',
-    'player.ou.nl',
-]
+from surfshare.constants import VIDEO_DOMAINS
 
 
 class Command(BaseCommand):
