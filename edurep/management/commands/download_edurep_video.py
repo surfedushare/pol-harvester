@@ -5,13 +5,7 @@ from urlobject import URLObject
 from django.core.management.base import BaseCommand
 
 from datagrowth.resources.shell.tasks import run_serie
-
-
-VIDEO_DOMAINS = [
-    # "mediasite.hro.nl",  # TODO: https://github.com/SURFpol/pol-harvester/issues/2
-    # "video.saxion.nl",  # TODO: https://github.com/SURFpol/pol-harvester/issues/3
-    # NB: Ted is the only English one at the moment, we exclude it for now
-]
+from edurep.constants import VIDEO_DOMAINS
 
 
 class Command(BaseCommand):
@@ -33,13 +27,11 @@ class Command(BaseCommand):
         run_serie(
             tqdm([
                 [record["source"]] for record in records
-                if record["mime_type"].startswith("video") or  # TODO: some videos have text/html mime type
-                URLObject(record["source"]).hostname in VIDEO_DOMAINS
+                if URLObject(record["source"]).hostname in VIDEO_DOMAINS
             ]),
             [
                 {} for record in records
-                if record["mime_type"].startswith("video") or  # TODO: some videos have text/html mime type
-                URLObject(record["source"]).hostname in VIDEO_DOMAINS
+                if URLObject(record["source"]).hostname in VIDEO_DOMAINS
             ],
             config=config
         )

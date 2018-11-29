@@ -9,16 +9,10 @@ from django.core.management.base import BaseCommand
 from datagrowth.resources.shell.tasks import run
 from datagrowth.exceptions import DGShellError
 from pol_harvester.models import YouTubeDLResource
+from edurep.constants import VIDEO_DOMAINS
 
 
 log = logging.getLogger(__name__)
-
-
-VIDEO_DOMAINS = [
-    # "mediasite.hro.nl",  # TODO: https://github.com/SURFpol/pol-harvester/issues/2
-    # "video.saxion.nl",  # TODO: https://github.com/SURFpol/pol-harvester/issues/3
-    # NB: Ted is the only English one at the moment, we exclude it for now
-]
 
 
 class Command(BaseCommand):
@@ -38,8 +32,7 @@ class Command(BaseCommand):
         }
         video_records = [
             record for record in records
-            if record["mime_type"].startswith("video") or  # for Leraar24 it will need to be "text" see: GH-11
-            URLObject(record["source"]).hostname in VIDEO_DOMAINS
+            if URLObject(record["source"]).hostname in VIDEO_DOMAINS
         ]
         for video_record in tqdm(video_records):
             try:

@@ -3,6 +3,7 @@ import os
 import json
 from uuid import uuid4
 from tqdm import tqdm
+from urlobject import URLObject
 
 from django.core.management.base import BaseCommand
 from django.core.files.storage import default_storage
@@ -13,7 +14,7 @@ from spacy_cld import LanguageDetector
 from datagrowth.exceptions import DGResourceException
 from pol_harvester.models import HttpTikaResource, YouTubeDLResource, KaldiNLResource
 from edurep.models import EdurepFile
-from edurep.constants import TIKA_MIME_TYPES
+from edurep.constants import TIKA_MIME_TYPES, VIDEO_DOMAINS
 from ims.models import CommonCartridge
 
 
@@ -62,6 +63,12 @@ class Command(BaseCommand):
         ]
 
     def get_documents_from_kaldi(self, record):
+        title = record.get("title", None)
+        if not title:
+            return [self._create_document(None, record)]
+        language = self.get_language_from_snippet(title)
+        if not language == "nl":
+            return [self._create_document(None, record)]
         try:
             download = YouTubeDLResource().run(record["source"])
         except DGResourceException:
@@ -130,7 +137,7 @@ class Command(BaseCommand):
 
         for record in tqdm(records):
             identifier = str(uuid4())
-            if record["mime_type"].startswith("video"):
+            if URLObject(record["source"]).hostname in VIDEO_DOMAINS:
                 documents = self.get_documents_from_kaldi(record)
             elif record["mime_type"] == "application/x-Wikiwijs-Arrangement":
                 documents = self.get_documents_from_imscp(record)
