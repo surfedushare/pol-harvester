@@ -1,4 +1,5 @@
 import logging
+import os
 from tqdm import tqdm
 import json
 from urlobject import URLObject
@@ -37,7 +38,7 @@ class Command(BaseCommand):
         }
         video_records = [
             record for record in records
-            if record["mime_type"].startswith("video") or
+            if record["mime_type"].startswith("video") or  # for Leraar24 it will need to be "text" see: GH-11
             URLObject(record["source"]).hostname in VIDEO_DOMAINS
         ]
         for video_record in tqdm(video_records):
@@ -50,4 +51,7 @@ class Command(BaseCommand):
                 log.warning("Could not find download for: {}".format(video_record["source"]))
                 continue
             for file_path in file_paths:
+                file_path = file_path.replace("/home/surf/pol-harvester", "/mnt")  # TODO: migrate absolute to relative
+                if not os.path.exists(file_path):
+                    print("Path does not exist:", file_path)
                 run(file_path, config=config)
