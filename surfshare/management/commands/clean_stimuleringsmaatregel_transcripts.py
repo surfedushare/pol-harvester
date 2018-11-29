@@ -1,13 +1,11 @@
 import os
 import logging
 from tqdm import tqdm
-from datetime import datetime
-from urlobject import URLObject
 
 from django.core.management.base import BaseCommand
 
 from datagrowth.utils import ibatch, batchize
-from pol_harvester.models import YouTubeDLResource, KaldiNLResource
+from pol_harvester.models import KaldiNLResource
 
 
 log = logging.getLogger("datascope")
@@ -25,14 +23,9 @@ class Command(BaseCommand):
             batches, rest = batchize(count, batch_size)
             batch_iterator = tqdm(batch_iterator, total=batches)
 
-        keep = []
-        delete = []
         for instances in batch_iterator:
             for instance in instances:
                 variables = instance.variables()
-                file = variables["input"]
+                file = variables["input"][0]
                 if not os.path.exists(file):
-                    delete.append(instance.id)
-                else:
-                    keep.append(instance.id)
-        print(len(keep), len(delete))
+                    instance.delete()
