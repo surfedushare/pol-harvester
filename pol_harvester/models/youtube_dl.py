@@ -25,6 +25,7 @@ class YouTubeDLResource(ShellResource):
     }
 
     def variables(self, *args):
+        args = args or self.command.get("args")
         return {
             "url": args[0]
         }
