@@ -6,7 +6,7 @@ from tqdm import tqdm
 from django.core.management.base import BaseCommand
 
 from datagrowth.utils import ibatch, batchize
-from pol_harvester.models import KaldiNLResource
+from pol_harvester.models import YouTubeDLResource
 
 
 log = logging.getLogger("datascope")
@@ -17,7 +17,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         batch_size = 500
         columns = ["created_at", "uri"]
-        queryset = KaldiNLResource.objects.values(*columns)
+        queryset = YouTubeDLResource.objects.values(*columns)
         count = queryset.all().count()
         batch_iterator = ibatch(queryset.iterator(), batch_size=batch_size)
         if count >= batch_size * 5:

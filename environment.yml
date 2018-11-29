@@ -19,4 +19,5 @@ dependencies:
     - django-bootstrap4==0.0.7
     - ipdb==0.11
     - urlobject==2.4.3
+    - pandas
     - git+https://github.com/fako/django-json-field.git
