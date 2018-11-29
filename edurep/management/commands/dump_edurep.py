@@ -6,6 +6,9 @@ from uuid import uuid4
 from django.core.management.base import BaseCommand
 from django.core.files.storage import default_storage
 
+import spacy
+from spacy_cld import LanguageDetector
+
 from datagrowth.exceptions import DGResourceException
 from pol_harvester.models import HttpTikaResource, YouTubeDLResource, KaldiNLResource
 from edurep.models import EdurepFile
@@ -15,11 +18,32 @@ from ims.models import CommonCartridge
 log = logging.getLogger(__name__)
 
 
+nlp = spacy.load("nl_core_news_sm")
+nlp.add_pipe(LanguageDetector())
+
+
 class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('-i', '--input', type=str, required=True)
         parser.add_argument('-o', '--output', type=str, required=True)
+
+    def _create_document(self, text, meta, title=None, url=None, mime_type=None, language=None):
+        title = title or meta.get("title", None)
+        language = language or meta.get("language", None)
+        if title and not language:
+            language = self.get_language_from_snippet(title)
+        return {
+            "title": title,
+            "language": language,
+            "url": url or meta["source"],
+            "text": text,
+            "mime_type": mime_type or meta.get("mime_type", None)
+        }
+
+    def get_language_from_snippet(self, snippet):
+        doc = nlp(snippet)
+        return doc._.languages[0] if doc._.languages else None
 
     def get_documents_from_tika(self, record):
         text = None
@@ -31,47 +55,30 @@ class Command(BaseCommand):
             text = content.get("text", None)
         except (DGResourceException, HttpTikaResource.DoesNotExist):
             pass
-        return [{
-            "title": record["title"],
-            "url": record["source"],
-            "text": text,
-            "mime_type": record["mime_type"]
-        }]
+        return [
+            self._create_document(text, record)
+        ]
 
     def get_documents_from_kaldi(self, record):
         try:
             download = YouTubeDLResource().run(record["source"])
         except DGResourceException:
-            return [{
-                "title": record["title"],
-                "url": record["source"],
-                "text": None,
-                "mime_type": record["mime_type"]
-            }]
+            return [self._create_document(None, record)]
         _, file_paths = download.content
         if not len(file_paths):
             log.warning("Could not find download for: {}".format(record["source"]))
-            return [{
-                "title": record["title"],
-                "url": record["source"],
-                "text": None,
-                "mime_type": record["mime_type"]
-            }]
+            return [self._create_document(None, record)]
         transcripts = []
         for file_path in file_paths:
             resource = KaldiNLResource().run(file_path)
             _, transcript = resource.content
             if transcript is None:
                 log.warning("Could not find transcription for: {}".format(file_path))
-            transcripts.append({
-                "title": record["title"],
-                "url": record["source"],
-                "text": transcript,
-                "mime_type": record["mime_type"]
-            })
+            transcripts.append(self._create_document(transcript, record))
         return transcripts
 
     def get_documents_from_imscp(self, record):
+        del record["mime_type"]  # because this *never* makes sense for the package documents inside
         documents = []
         try:
             archive_resource = EdurepFile().get(record["source"] + "?p=imscp")
@@ -93,13 +100,17 @@ class Command(BaseCommand):
                 content_type, content = tika_resource.content
                 text = content.get("text", None)
                 url = record["source"] + file.replace(os.path.join(default_storage.base_location, destination), "")
-                title = content.get("title", [""])[0]
-                documents.append({
-                    "title": title if title else record["title"],
-                    "url": url,
-                    "text": text if text else None,
-                    "mime_type": content.get("mime-type", None)
-                })
+                title = content.get("title", [None])[0]
+                documents.append(
+                    self._create_document(
+                        text if text else None,
+                        record,
+                        title=title,
+                        url=url,
+                        mime_type=content.get("mime-type", None)
+                    ),
+
+                )
         except (DGResourceException, HttpTikaResource.DoesNotExist, CommonCartridge.DoesNotExist):
             pass
         return documents
@@ -128,7 +139,6 @@ class Command(BaseCommand):
                 "id": identifier,
                 "url": record["source"],
                 "keywords": record["keywords"],
-                "language": record["language"],
                 "documents": documents
             }
             with open(os.path.join(base_dir, identifier + ".json"), "w") as record_file:
