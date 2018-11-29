@@ -29,8 +29,13 @@ class Command(BaseCommand):
                 with open(os.path.join(path, file)) as json_file:
                     data = json.load(json_file)
                     for document in data.get("documents", []):
-                        if URLObject(document["url"]).hostname in VIDEO_DOMAINS:
-                            video_urls.append(document["url"])
+                        url = URLObject(document["url"])
+                        if url.hostname not in VIDEO_DOMAINS:
+                            continue
+                        if "youtube.com" in url.hostname:
+                            url = url.del_query_param('list')
+                            url = url.del_query_param('index')
+                        video_urls.append(str(url))
 
         config = {
             "resource": "pol_harvester.YouTubeDLResource",
