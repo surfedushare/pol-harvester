@@ -68,3 +68,11 @@ class YouTubeDLResource(ShellResource):
         # We filter --output flag, because it's always unique for every invoke
         cmd = [part for part in cmd if not part.startswith("--output=")]
         return ShellResource.uri_from_cmd(cmd)
+
+    def delete(self, using=None, keep_parents=False):
+        if self.success:
+            content_type, files = self.content
+            for file in files:
+                if os.path.exists(file):
+                    os.remove(file)
+        super().delete(using=using, keep_parents=keep_parents)
