@@ -1,19 +1,18 @@
 import json
 import pandas as pd
 
-import matplotlib.pyplot as plt
-
 from django.core.management.base import BaseCommand
 
 from datagrowth.resources.http.tasks import send_serie
 from edurep.models import EdurepFile
+from edurep.constants import TIKA_MIME_TYPES
 
 
 class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('-i', '--input', type=str, required=True)
-        parser.add_argument('-f', '--formats', type=str, default="")
+        parser.add_argument('-f', '--formats', type=str, default=",".join(TIKA_MIME_TYPES))
 
     def handle(self, *args, **options):
 
@@ -22,11 +21,6 @@ class Command(BaseCommand):
 
         df = pd.DataFrame(records)
         formats = options["formats"]
-        if not formats:
-            mime_type_count = df.groupby("mime_type").size().reset_index(name='counts')
-            mime_type_count.plot(kind="barh", x="mime_type", y="counts")
-            plt.show()
-            return
 
         formats = formats.split(",")
         df = df.loc[df['mime_type'].isin(formats)]
