@@ -1,4 +1,5 @@
 import logging
+import hashlib
 
 import spacy
 from spacy_cld import LanguageDetector
@@ -24,11 +25,15 @@ class DumpCommand(BaseCommand):
 
     def _create_document(self, text, meta, title=None, url=None, mime_type=None, language=None):
         url = url or meta.get("url", meta.get("source"))  # edurep and sharekit scrapes name url slightly different
+        hasher = hashlib.sha1()
+        hasher.update(url)
+        identifier = hasher.hexdigest()
         title = title or meta.get("title", None)
         language = language or meta.get("language", None)
         if title and not language:
             language = self.get_language_from_snippet(title)
         return {
+            "id": identifier,
             "title": title,
             "language": language,
             "url": url,
