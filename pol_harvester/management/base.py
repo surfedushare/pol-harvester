@@ -41,6 +41,7 @@ class DumpCommand(BaseCommand):
         return doc._.languages[0] if doc._.languages else None
 
     def get_documents_from_kaldi(self, record):
+        url = record.get("url", record.get("source"))  # edurep and sharekit scrapes name url slightly different
         title = record.get("title", None)
         if not title:
             return [self._create_document(None, record)]
@@ -48,12 +49,12 @@ class DumpCommand(BaseCommand):
         if not language == "nl":
             return [self._create_document(None, record)]
         try:
-            download = YouTubeDLResource().run(record["source"])
+            download = YouTubeDLResource().run(url)
         except DGResourceException:
             return [self._create_document(None, record)]
         _, file_paths = download.content
         if not len(file_paths):
-            log.warning("Could not find download for: {}".format(record["source"]))
+            log.warning("Could not find download for: {}".format(url))
             return [self._create_document(None, record)]
         transcripts = []
         for file_path in file_paths:
