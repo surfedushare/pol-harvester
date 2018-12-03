@@ -22,8 +22,10 @@ class Command(DumpCommand):
                     data = json.load(json_file)
                 documents = []
                 for document in data.get("documents", []):
-                    document["mime_type"] = document["content-type"]
-                    del document["content-type"]
+                    content_type = document.get("content-type", None)
+                    document["mime_type"] = content_type
+                    if content_type:
+                        del document["content-type"]
                     if URLObject(document["url"]).hostname in VIDEO_DOMAINS:
                         documents += self.get_documents_from_kaldi(document)
                     else:
