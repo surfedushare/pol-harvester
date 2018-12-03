@@ -38,6 +38,8 @@ class YouTubeDLResource(ShellResource):
         return super().run(*args, **kwargs)
 
     def transform(self, stdout):
+        if not stdout:
+            return []
         return re.findall("\[ffmpeg\] Destination: (.+)$", stdout, flags=re.MULTILINE)
 
     def _get_file_info(self, url):
