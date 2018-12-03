@@ -85,7 +85,12 @@ class Command(DumpCommand):
 
         for record in tqdm(records):
             identifier = str(uuid4())
-            if URLObject(record["source"]).hostname in VIDEO_DOMAINS:
+            url = URLObject(record["source"])
+            if url.hostname in VIDEO_DOMAINS:
+                if "youtube.com" in url.hostname:
+                    url = url.del_query_param('list')
+                    url = url.del_query_param('index')
+                record["source"] = str(url)
                 documents = self.get_documents_from_kaldi(record)
             elif record["mime_type"] == "application/x-Wikiwijs-Arrangement":
                 documents = self.get_documents_from_imscp(record)

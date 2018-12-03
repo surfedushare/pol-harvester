@@ -24,14 +24,23 @@ class Command(BaseCommand):
             "_private": ["_private", "_namespace", "_defaults"]
         }
 
+        video_urls = []
+        for record in records:
+            url = URLObject(record["source"])
+            if not url.hostname in VIDEO_DOMAINS:
+                continue
+            if "youtube.com" in url.hostname:
+                url = url.del_query_param('list')
+                url = url.del_query_param('index')
+                record["source"] = str(url)
+            video_urls.append(record["source"])
+
         run_serie(
             tqdm([
-                [record["source"]] for record in records
-                if URLObject(record["source"]).hostname in VIDEO_DOMAINS
+                [url] for url in video_urls
             ]),
             [
-                {} for record in records
-                if URLObject(record["source"]).hostname in VIDEO_DOMAINS
+                {} for _ in video_urls
             ],
             config=config
         )
