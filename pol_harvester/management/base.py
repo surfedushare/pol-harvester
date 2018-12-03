@@ -26,7 +26,7 @@ class DumpCommand(BaseCommand):
     def _create_document(self, text, meta, title=None, url=None, mime_type=None, language=None):
         url = url or meta.get("url", meta.get("source"))  # edurep and sharekit scrapes name url slightly different
         hasher = hashlib.sha1()
-        hasher.update(url)
+        hasher.update(url.encode("utf-8"))
         identifier = hasher.hexdigest()
         title = title or meta.get("title", None)
         language = language or meta.get("language", None)
