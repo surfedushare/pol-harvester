@@ -26,7 +26,12 @@ class Command(DumpCommand):
                     document["mime_type"] = content_type
                     if content_type:
                         del document["content-type"]
-                    if URLObject(document["url"]).hostname in VIDEO_DOMAINS:
+                    url = URLObject(document["url"])
+                    if url.hostname in VIDEO_DOMAINS:
+                        if "youtube.com" in url.hostname:
+                            url = url.del_query_param('list')
+                            url = url.del_query_param('index')
+                            document["url"] = str(url)
                         documents += self.get_documents_from_kaldi(document)
                     else:
                         documents.append(self._create_document(document["text"], document))
