@@ -49,7 +49,7 @@ class DumpCommand(BaseCommand):
         if not language == "nl":
             return [self._create_document(None, record)]
         try:
-            download = YouTubeDLResource().run(url)
+            download = YouTubeDLResource(config={"fetch_only": True}).run(url)
         except DGResourceException:
             return [self._create_document(None, record)]
         _, file_paths = download.content
@@ -58,7 +58,7 @@ class DumpCommand(BaseCommand):
             return [self._create_document(None, record)]
         transcripts = []
         for file_path in file_paths:
-            resource = KaldiNLResource().run(file_path)
+            resource = KaldiNLResource(config={"fetch_only": True}).run(file_path)
             _, transcript = resource.content
             if transcript is None:
                 log.warning("Could not find transcription for: {}".format(file_path))
