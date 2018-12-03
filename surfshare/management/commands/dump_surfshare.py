@@ -21,12 +21,16 @@ class Command(DumpCommand):
             for file in tqdm(files):
                 with open(os.path.join(path, file), "r") as json_file:
                     data = json.load(json_file)
+                if "original_article" in data:
+                    del data["original_article"]
                 documents = []
                 for document in data.get("documents", []):
                     content_type = document.get("content-type", None)
                     document["mime_type"] = content_type
                     if content_type:
                         del document["content-type"]
+                    if not document.get("title", None):
+                        document["title"] = data.get("title", None)
                     url = URLObject(document["url"])
                     if url.hostname in VIDEO_DOMAINS:
                         if "youtube.com" in url.hostname:
