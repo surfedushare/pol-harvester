@@ -1,6 +1,7 @@
 import os
 import json
 from urlobject import URLObject
+from tqdm import tqdm
 
 from pol_harvester.management.base import DumpCommand
 from surfshare.constants import VIDEO_DOMAINS
@@ -17,7 +18,7 @@ class Command(DumpCommand):
         with_text = []
 
         for path, dirs, files in os.walk(options["input"]):
-            for file in files:
+            for file in tqdm(files):
                 with open(os.path.join(path, file), "r") as json_file:
                     data = json.load(json_file)
                 documents = []
