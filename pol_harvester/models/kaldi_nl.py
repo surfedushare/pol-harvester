@@ -46,6 +46,8 @@ class KaldiNLResource(ShellResource):
         ))
 
     def transform(self, stdout):
+        if not stdout:
+            return
         is_transcript = False
         out = []
         for line in stdout.split("\n"):
