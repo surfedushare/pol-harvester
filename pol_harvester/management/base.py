@@ -50,7 +50,7 @@ class DumpCommand(BaseCommand):
         title = record.get("title", None)
         if not title:
             return [self._create_document(None, record)]
-        language = self.get_language_from_snippet(title)
+        language = self.get_language_from_snippet(title) or record.get("language", None)
         if not language == "nl":
             return [self._create_document(None, record)]
         try:
