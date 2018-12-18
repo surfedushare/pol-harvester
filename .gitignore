@@ -4,6 +4,7 @@
 *.iml
 .ipynb_checkpoints/
 __pycache__
+env/
 
 # Data and other too large files
 data/
