@@ -10,3 +10,6 @@ data/
 media/
 logs/
 *.sqlite3
+
+# Django
+pol_harvester/settings.py
