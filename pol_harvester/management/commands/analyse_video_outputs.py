@@ -37,7 +37,6 @@ class Command(BaseCommand):
                             else:
                                 transcribed += 1
 
-
         print("Found {} English video documents without transcription and {} with a text".format(len(rsl), transcribed))
         with open(options["output"], "w") as json_file:
             json.dump(rsl, json_file, indent=4)
