@@ -81,7 +81,8 @@ Notice how all these commands create a similar output file that we'll call the `
 
 #### 3.A) Download content
 
-Edurep only harvests meta data. To get the content of the learning materials you can run the following commands
+Edurep only harvests meta data. To get the content of the learning materials you can run the following commands.
+These commands internally use TIKA to extract texts from files.
 
 ```bash
 ./manage.py download_edurep --input <data-file>
@@ -93,7 +94,8 @@ You can find all downloaded content with paths as well as metadata from Tika in 
 
 #### 3.B) Download and transcribe video
 
-Some of the Edurep content consists of video. We need to download this content separately using:
+Some of the Edurep content consists of video. We need to download this content separately using the commands below.
+Internally these commands use YoutubeDL and Kaldi to download the audio and transcribe to text.
 
 ```bash
 ./manage.py download_edurep_video --input <data-file>
@@ -107,7 +109,8 @@ Note that only .wav files get stored permanently.
 
 #### 3.C) Download and extract IMS Content Packages
 
-Other content consists of content packages as defined by IMS. You can download and extract these with the following commands
+Other content consists of content packages as defined by IMS.
+You can download and extract these with the following commands:
 
 ```bash
 ./manage.py download_edurep_imscp --input <data-file>
@@ -129,3 +132,11 @@ To be able to do that simply run the following command:
 This dump does two things:
 1. It places all objects in files and assigns a unique id to these objects, which is then used as the filename.
 2. It places all objects with texts together in a file called with_text.json.
+
+For export of WUR data it works slightly different.
+This data is already formatted in a format close to the required format.
+To make the format completely compatible we just need to rewrite it slightly by running:
+
+```bash
+./manage.py reformat_dump --input <wur-json-file> --output <your-output-directory>
+```

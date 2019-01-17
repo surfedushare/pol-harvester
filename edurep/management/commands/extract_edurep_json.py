@@ -28,7 +28,6 @@ class Command(BaseCommand):
         }
         prc = ExtractProcessor(config=config)
 
-
         with open(options["input"], "r", encoding="utf-8") as json_file:
             content = json.load(json_file)
         rsl = list(prc.extract("application/json", content))
