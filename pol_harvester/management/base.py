@@ -24,14 +24,19 @@ class DumpCommand(BaseCommand):
         parser.add_argument('-o', '--output', type=str, required=True)
 
     def _create_document(self, text, meta, title=None, url=None, mime_type=None, language=None):
+
         url = url or meta.get("url", meta.get("source"))  # edurep and sharekit scrapes name url slightly different
         hasher = hashlib.sha1()
         hasher.update(url.encode("utf-8"))
         identifier = hasher.hexdigest()
         title = title or meta.get("title", None)
-        language = language or meta.get("language", None)
+        if text and not language:
+            language = self.get_language_from_snippet(text)
         if title and not language:
             language = self.get_language_from_snippet(title)
+        if not language:
+            language = meta.get("language", "unknown")
+
         return {
             "id": identifier,
             "title": title,
@@ -52,7 +57,7 @@ class DumpCommand(BaseCommand):
             return [self._create_document(None, record)]
         language = self.get_language_from_snippet(title) or record.get("language", None)
         if not language == "nl":
-            return [self._create_document(None, record)]
+            return [self._create_document(None, record, language=language)]
         try:
             download = YouTubeDLResource(config={"fetch_only": True}).run(url)
         except DGResourceException:
