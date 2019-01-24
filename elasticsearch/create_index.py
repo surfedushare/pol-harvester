@@ -13,16 +13,6 @@ import click
 
 import core
 
-def get_es_config(file_path):
-    """
-    Reads a json file containing the elastic search credentials and url.
-    The file is expected to have 'url', 'username' and 'password' keys
-    """
-    with open(file_path) as stream:
-        credentials = json.load(stream)
-    return (credentials['url'],
-            (credentials['username'], credentials['password']))
-
 
 def get_index_config():
     return {
@@ -90,7 +80,7 @@ def put_document(url, auth, name, document):
 @click.argument('documents_file')
 def main(name, credentials_file, documents_file):
     logger = logging.getLogger(__name__)
-    url, auth = get_es_config(credentials_file)
+    url, auth = core.get_es_config(credentials_file)
     # test if it works
     if not is_es_ok(url, auth):
         logger.error('Credentials do not work for Elastic search')

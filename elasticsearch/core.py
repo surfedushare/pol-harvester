@@ -1,6 +1,16 @@
 import json
 import subprocess
 
+def get_es_config(file_path):
+    """
+    Reads a json file containing the elastic search credentials and url.
+    The file is expected to have 'url', 'username' and 'password' keys
+    """
+    with open(file_path) as stream:
+        credentials = json.load(stream)
+    return (credentials['url'],
+            (credentials['username'], credentials['password']))
+
 def read_documents(file_path):
     with open(file_path, 'rt') as stream:
         return json.load(stream)
