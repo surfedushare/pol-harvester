@@ -8,6 +8,8 @@ from itertools import chain
 
 import click
 
+import core
+
 # We define the repositories in code, so that we know what was ingested.
 COLLECTION_NAMES = [
         'figshare',
@@ -45,22 +47,15 @@ def flatten_collections(items):
             # TODO: Add specific collection enrichment here
             yield document
 
-def write_documents(documents, file_name):
-    """
-    Writes all the documents to disk
-    """
-    with open(file_name, 'wt') as stream:
-        json.dump(list(documents), stream, indent=2)
-
 
 @click.command()
 @click.argument('input_directory')
 @click.argument('output_file')
 def main(input_directory, output_file):
-    items = chain.from_iterable([load_collection(input_directory, collection) 
-                   for collection in COLLECTION_NAMES])
+    items = chain.from_iterable([load_collection(input_directory, collection)
+                                 for collection in COLLECTION_NAMES])
     documents = flatten_collections(items)
-    write_documents(documents, output_file)
+    core.write_documents(documents, output_file, 'flatten')
 
 if __name__ == '__main__':
     main()
