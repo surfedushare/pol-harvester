@@ -4,7 +4,8 @@ from collections import Iterator
 from django.test import TestCase
 
 from datagrowth.configuration import (ConfigurationType, ConfigurationNotFoundError, ConfigurationProperty, load_config,
-                                      MOCK_CONFIGURATION)
+                                      get_standardized_configuration, MOCK_CONFIGURATION, DEFAULT_CONFIGURATION,
+                                      create_config, register_defaults)
 
 
 class TestConfigurationType(TestCase):
@@ -19,11 +20,24 @@ class TestConfigurationType(TestCase):
         })
 
     def test_init(self):
-        # Implicit init
+        # Implicit init without defaults
+        # Notice that apps can manipulate the DEFAULT_CONFIGURATION upon app.ready
+        # Therefor defaults are not loaded until first access
+        instance = ConfigurationType()
+        self.assertEqual(instance._defaults, None)
+        self.assertEqual(instance._namespace, ConfigurationType._global_prefix)
+        self.assertEqual(instance._private, ConfigurationType._private_defaults)
+        purge_immediately = instance.purge_immediately  # this loads the defaults
+        self.assertFalse(purge_immediately)
+        self.assertEqual(instance._defaults, DEFAULT_CONFIGURATION)
+        # Implicit init with defaults
         instance = ConfigurationType(defaults=MOCK_CONFIGURATION)
         self.assertEqual(instance._defaults, MOCK_CONFIGURATION)
         self.assertEqual(instance._namespace, ConfigurationType._global_prefix)
         self.assertEqual(instance._private, ConfigurationType._private_defaults)
+        purge_immediately = instance.purge_immediately  # this won't load defaults as defaults got set
+        self.assertFalse(purge_immediately)
+        self.assertEqual(instance._defaults, MOCK_CONFIGURATION)
         # Explicit init with double private key
         instance = ConfigurationType(namespace="name", private=["_test", "_test", "oops"], defaults=MOCK_CONFIGURATION)
         self.assertEqual(instance._defaults, MOCK_CONFIGURATION)
@@ -327,5 +341,63 @@ class TestLoadConfigDecorator(TestCase):
 
 class TestGetStandardizedConfiguration(TestCase):
 
+    def setUp(self):
+        self.config = ConfigurationType(namespace="name", private=["_test3"], defaults=MOCK_CONFIGURATION)
+        self.config.update({
+            "test": "public",
+            "_test2": "protected",
+            "_test3": "private"
+        })
+
     def test_standardized_configuration(self):
-        self.skipTest("not tested")
+        out = get_standardized_configuration(self.config)
+        self.assertEqual(out, "3601ce2b866f9ccff5e9e49b628e65108abb3d5ada72fce6511645212c0ce520")
+        out = get_standardized_configuration(self.config, as_hash=False)
+        self.assertEqual(out, "test=public")
+
+
+class TestCreateConfig(TestCase):
+
+    def test_create_config(self):
+        test_config = create_config("name", {
+            "test": "public",
+            "_test2": "protected",
+            "_test3": "protected 2"
+        })
+        self.assertIsNone(test_config._defaults)
+        self.assertIsInstance(test_config, ConfigurationType)
+        self.assertEqual(test_config.test, "public")
+        self.assertEqual(test_config.test2, "protected")
+        self.assertEqual(test_config.test3, "protected 2")
+        self.assertEqual(test_config._test2, "protected")
+        self.assertEqual(test_config._test3, "protected 2")
+
+    def test_create_config_registered_defaults(self):
+        register_defaults("name", {
+            "test4": "namespaced default"
+        })
+        test_config = create_config("name", {
+            "test": "public",
+            "_test2": "protected",
+            "_test3": "protected 2"
+        })
+        self.assertIsNone(test_config._defaults)
+        self.assertIsInstance(test_config, ConfigurationType)
+        self.assertEqual(test_config._namespace, "name")
+        self.assertEqual(test_config.test4, "namespaced default")
+        self.assertEqual(test_config._defaults, DEFAULT_CONFIGURATION)
+
+
+class TestRegisterConfigDefaults(TestCase):
+
+    def test_register_defaults(self):
+        self.assertFalse(DEFAULT_CONFIGURATION["global_purge_immediately"])
+        register_defaults("global", {
+            "purge_immediately": True
+        })
+        self.assertTrue(DEFAULT_CONFIGURATION["global_purge_immediately"])
+        self.assertNotIn("mock_test", DEFAULT_CONFIGURATION)
+        register_defaults("mock", {
+            "test": "create"
+        })
+        self.assertEqual(DEFAULT_CONFIGURATION["mock_test"], "create")
