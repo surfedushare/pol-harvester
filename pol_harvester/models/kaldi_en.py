@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from datagrowth.resources import ShellResource
 
 
@@ -10,24 +12,40 @@ class KaldiAspireResource(ShellResource):
     """
 
     CMD_TEMPLATE = [
-        "online2-wav-nnet3-latgen-faster",
-        "--online=false",
-        "--do-endpointing=false",
-        "–frame-subsampling-factor=3",
-        "–config=exp/tdnn_7b_chain_online/conf/online.conf",
-        "--max-active=7000",
-        " --beam=15.0",
-        "--lattice-beam=6.0",
-        "–acoustic-scale=1.0",
-        "–word-symbol-table=exp/tdnn_7b_chain_online/graph_pp/words.txt exp/tdnn_7b_chain_online/final.mdl exp/tdnn_7b_chain_online/graph_pp/HCLG.fst",
-        "'ark:echo utterance-id1 utterance-id1|'",
-        "'scp:echo utterance-id1 {}|'",
-        "'ark:/dev/null'"
+        "bash",
+        "kaldi_en.bash",  # NB: copy this file into the Kaldi Aspire directory
+        "{}"
     ]
     FLAGS = {}
+    VARIABLES = {
+        "KALDI_ROOT": settings.KALDI_BASE_PATH
+    }
     CONTENT_TYPE = "text/plain"
     DIRECTORY_SETTING = "KALDI_ASPIRE_BASE_PATH"
 
+    def _update_from_results(self, results):
+        super()._update_from_results(results)
+        if self.status == 0:  # no error code from command, so stderr contains the transcript
+            self.stdout = self.stderr
+            self.stderr = ""
+
     def transform(self, stdout):
-        # TODO: clear LOG lines and strip "utterance-id1"
-        return stdout
+        if not stdout:
+            return
+        is_transcript = False
+        transcript_marker = "utterance-id1 "
+        out = []
+        for line in stdout.split("\n"):
+            if line.startswith("utterance-id1 "):
+                is_transcript = True
+                out.append(line[len(transcript_marker):])
+            elif line.startswith("LOG"):
+                is_transcript = False
+            elif is_transcript:
+                out.append(line)
+        transcript = "\n".join(out)
+        transcript = transcript \
+            .replace("<unk>", "") \
+            .replace("mm", "") \
+            .replace("[noise]", "")
+        return transcript
