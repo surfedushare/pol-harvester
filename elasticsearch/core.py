@@ -6,7 +6,7 @@ def read_documents(file_path):
         return json.load(stream)
 
 def _get_git_marker():
-    return subprocess.check_output(['git', 'describe', '--always']).strip()
+    return subprocess.check_output(['git', 'describe', '--always']).decode('utf-8').strip()
 
 def write_documents(documents, file_path, stage):
     for document in documents:
