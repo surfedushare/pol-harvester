@@ -7,7 +7,7 @@ from spacy_cld import LanguageDetector
 from django.core.management.base import BaseCommand
 
 from datagrowth.exceptions import DGResourceException
-from pol_harvester.models import YouTubeDLResource, KaldiNLResource
+from pol_harvester.models import YouTubeDLResource, KaldiNLResource, KaldiAspireResource
 
 
 nlp = spacy.load("nl_core_news_sm")
@@ -46,6 +46,13 @@ class DumpCommand(BaseCommand):
             "mime_type": mime_type or meta.get("mime_type", None)
         }
 
+    @staticmethod
+    def _get_kaldi(language):
+        if language == "nl":
+            return KaldiNLResource
+        elif language == "en":
+            return KaldiAspireResource
+
     def get_language_from_snippet(self, snippet):
         doc = nlp(snippet)
         return doc._.languages[0] if doc._.languages else None
@@ -56,7 +63,8 @@ class DumpCommand(BaseCommand):
         if not title:
             return [self._create_document(None, record)]
         language = self.get_language_from_snippet(title) or record.get("language", None)
-        if not language == "nl":
+        Kaldi = self._get_kaldi(language)
+        if Kaldi is None:
             return [self._create_document(None, record, language=language)]
         try:
             download = YouTubeDLResource(config={"fetch_only": True}).run(url)
@@ -68,7 +76,7 @@ class DumpCommand(BaseCommand):
             return [self._create_document(None, record)]
         transcripts = []
         for file_path in file_paths:
-            resource = KaldiNLResource(config={"fetch_only": True}).run(file_path)
+            resource = Kaldi(config={"fetch_only": True}).run(file_path)
             _, transcript = resource.content
             if transcript is None:
                 log.warning("Could not find transcription for: {}".format(file_path))
