@@ -6,9 +6,11 @@ from urlobject import URLObject
 
 from django.core.management.base import BaseCommand
 
+from datagrowth.configuration import create_config
 from datagrowth.resources.shell.tasks import run
 from datagrowth.exceptions import DGShellError
 from pol_harvester.models import YouTubeDLResource
+from pol_harvester.utils.language import get_kaldi_model_from_snippet
 from edurep.constants import VIDEO_DOMAINS
 
 
@@ -24,12 +26,6 @@ class Command(BaseCommand):
 
         with open(options["input"], "r") as json_file:
             records = json.load(json_file)
-
-        config = {
-            "resource": "pol_harvester.KaldiNLResource",
-            "_namespace": "shell_resource",
-            "_private": ["_private", "_namespace", "_defaults"]
-        }
 
         video_records = []
         for record in records:
@@ -51,8 +47,15 @@ class Command(BaseCommand):
             if not len(file_paths):
                 log.warning("Could not find download for: {}".format(video_record["source"]))
                 continue
+            title = video_record.get("title", None)
+            kaldi_model = get_kaldi_model_from_snippet(title)
+            if kaldi_model is None:
+                log.warning("Unknown language for: {}".format(video_record["id"]))
+                continue
+            config = create_config("shell_resource", {
+                "resource": kaldi_model
+            })
             for file_path in file_paths:
-                file_path = file_path.replace("/home/surf/pol-harvester", "/mnt")  # TODO: migrate absolute to relative
                 if not os.path.exists(file_path):
                     log.warning("Path does not exist:", file_path)
                 run(file_path, config=config)

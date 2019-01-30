@@ -11,8 +11,8 @@ VIDEO_DOMAINS = [
     "youtu.be",
     "www.youtube.com",
     "youtube.com",
-    "www.leraar24.nl"  # TODO: problematic, because not everything on this is a video ...
+    "www.leraar24.nl",  # TODO: problematic, because not everything on this is a video ...
     # "mediasite.hro.nl",  # TODO: https://github.com/SURFpol/pol-harvester/issues/2
     # "video.saxion.nl",  # TODO: https://github.com/SURFpol/pol-harvester/issues/3
-    # NB: Ted is the only English one at the moment, we exclude it for now
+    "www.ted.com"
 ]

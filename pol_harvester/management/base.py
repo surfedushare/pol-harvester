@@ -1,17 +1,12 @@
 import logging
 import hashlib
 
-import spacy
-from spacy_cld import LanguageDetector
-
 from django.core.management.base import BaseCommand
+from django.apps import apps
 
 from datagrowth.exceptions import DGResourceException
-from pol_harvester.models import YouTubeDLResource, KaldiNLResource, KaldiAspireResource
-
-
-nlp = spacy.load("nl_core_news_sm")
-nlp.add_pipe(LanguageDetector())
+from pol_harvester.models import YouTubeDLResource
+from pol_harvester.utils.language import get_language_from_snippet, get_kaldi_model_from_snippet
 
 
 log = logging.getLogger(__name__)
@@ -31,9 +26,9 @@ class DumpCommand(BaseCommand):
         identifier = hasher.hexdigest()
         title = title or meta.get("title", None)
         if text and not language:
-            language = self.get_language_from_snippet(text)
+            language = get_language_from_snippet(text)
         if title and not language:
-            language = self.get_language_from_snippet(title)
+            language = get_language_from_snippet(title)
         if not language:
             language = meta.get("language", "unknown")
 
@@ -46,26 +41,14 @@ class DumpCommand(BaseCommand):
             "mime_type": mime_type or meta.get("mime_type", None)
         }
 
-    @staticmethod
-    def _get_kaldi(language):
-        if language == "nl":
-            return KaldiNLResource
-        elif language == "en":
-            return KaldiAspireResource
-
-    def get_language_from_snippet(self, snippet):
-        doc = nlp(snippet)
-        return doc._.languages[0] if doc._.languages else None
-
     def get_documents_from_kaldi(self, record):
         url = record.get("url", record.get("source"))  # edurep and sharekit scrapes name url slightly different
-        title = record.get("title", None)
-        if not title:
+        kaldi_model = get_kaldi_model_from_snippet(
+            record.get("title", None),
+            default_language=record.get("language", None)
+        )
+        if kaldi_model is None:
             return [self._create_document(None, record)]
-        language = self.get_language_from_snippet(title) or record.get("language", None)
-        Kaldi = self._get_kaldi(language)
-        if Kaldi is None:
-            return [self._create_document(None, record, language=language)]
         try:
             download = YouTubeDLResource(config={"fetch_only": True}).run(url)
         except DGResourceException:
@@ -74,6 +57,7 @@ class DumpCommand(BaseCommand):
         if not len(file_paths):
             log.warning("Could not find download for: {}".format(url))
             return [self._create_document(None, record)]
+        Kaldi = apps.get_model(kaldi_model)
         transcripts = []
         for file_path in file_paths:
             resource = Kaldi(config={"fetch_only": True}).run(file_path)
