@@ -13,6 +13,9 @@ dependencies:
   - urlobject
   - youtube-dl
   - conda-forge::spacy
+  - protobuf
+  - cython
+  # cld3 installable through source: https://github.com/houp/cld3
   - pip:
     - django==1.11.18
     - jsonschema==2.6.0
