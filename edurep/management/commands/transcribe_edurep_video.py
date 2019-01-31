@@ -50,7 +50,7 @@ class Command(BaseCommand):
             title = video_record.get("title", None)
             kaldi_model = get_kaldi_model_from_snippet(title)
             if kaldi_model is None:
-                log.warning("Unknown language for: {}".format(video_record["id"]))
+                log.warning("Unknown language for: {}".format(video_record["title"]))
                 continue
             config = create_config("shell_resource", {
                 "resource": kaldi_model

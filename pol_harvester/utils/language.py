@@ -9,7 +9,7 @@ nlp.add_pipe(LanguageDetector())
 def get_language_from_snippet(snippet, default=None):
     if not snippet:
         return default
-    doc = nlp(snippet)
+    doc = nlp(snippet[:1000])  # somewhat arbitrary, but 1000 should cover it I think
     return doc._.languages[0] if doc._.languages else default
 
 

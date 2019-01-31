@@ -36,8 +36,8 @@ class Command(BaseCommand):
                         if "youtube.com" in url.hostname:
                             url = url.del_query_param('list')
                             url = url.del_query_param('index')
-                        data["url"] = str(url)
-                        video_sources.append(data)
+                        document["url"] = str(url)
+                        video_sources.append(document)
 
         for video_source in tqdm(video_sources):
             video_url = video_source["url"]
