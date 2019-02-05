@@ -78,14 +78,14 @@ def clean_text(document):
 def main(input_file, output_file):
     documents = core.read_documents(input_file)
     # we only keep 'nl' and 'en' languages
-    filter(lambda document: 'language' in document and
+    documents = filter(lambda document: 'language' in document and
            (document['language'] == 'en' or document['language'] == 'nl'),
            documents)
     for document in documents:
         document['conformed_mime_type'] = conform_mime_type(document)
     # Only keep certain types of documents
-    filter(lambda document: ['video', 'word', 'powerp.', 'pdf'] in document['conform_mime_type'],
-           documents)
+    documents = filter(lambda document: ['video', 'word', 'powerp.', 'pdf'] 
+            in document['conform_mime_type'], documents)
     # clean up the text
     for document in documents:
         document['text'] = clean_text(document)

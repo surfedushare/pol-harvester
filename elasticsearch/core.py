@@ -1,6 +1,8 @@
 import json
 import subprocess
 
+GIT_MARKER = None
+
 def get_es_config(file_path):
     """
     Reads a json file containing the elastic search credentials and url.
@@ -16,7 +18,10 @@ def read_documents(file_path):
         return json.load(stream)
 
 def _get_git_marker():
-    return subprocess.check_output(['git', 'describe', '--always']).decode('utf-8').strip()
+    global GIT_MARKER
+    if not GIT_MARKER:
+        GIT_MARKER = subprocess.check_output(['git', 'describe', '--always']).decode('utf-8').strip()
+    return GIT_MARKER
 
 def write_documents(documents, file_path, stage):
     for document in documents:

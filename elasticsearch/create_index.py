@@ -7,6 +7,7 @@ import json
 import logging
 import glob
 import os
+import copy
 
 import requests
 import click
@@ -52,7 +53,7 @@ def create_index(url, auth, name):
     return requests.put(
         '{}/{}'.format(url, name),
         json=get_index_config(),
-        auth=auth).status_code == 201
+        auth=auth)
 
 def delete_index(url, auth, name):
     """
@@ -72,7 +73,23 @@ def put_document(url, auth, name, document):
     Uploads a document to elastic search index
     """
     doc_id_url = '{}/{}/_doc/{}'.format(url, name, document['id'])
-    requests.put(doc_id_url, auth=auth, json=document)
+    return requests.put(doc_id_url, auth=auth, json=to_es_document(document))
+
+def to_es_document(document):
+    """
+    Translate our internal document to an ES document.
+    This will skip some fields and move properties around.
+    """
+    es_doc = copy.deepcopy(document)
+    text = es_doc['text']
+    es_doc['text'] = dict()
+    if es_doc['language'] == 'nl':
+        es_doc['text']['nl'] = text
+    elif es_doc['language'] == 'en':
+        es_doc['text']['en'] = text
+    else:
+        raise ValueError('Unsupported language {}'.format(es_doc['language']))
+    return es_doc
 
 @click.command()
 @click.argument('name')
@@ -88,8 +105,9 @@ def main(name, credentials_file, documents_file):
     logger.info('Creating index')
     create_index(url, auth, name)
     for document in core.read_documents(documents_file):
-        put_document(url, auth, name, document)
-
+        response = put_document(url, auth, name, document)
+        if response.status_code != 201:
+            print(response.text)
 
 if __name__ == '__main__':
     main()
