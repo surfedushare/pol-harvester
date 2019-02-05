@@ -3,6 +3,7 @@ Reads in a json file containing all the documents and filters them.
 """
 import re
 import json
+from itertools import chain
 
 import click
 
@@ -78,16 +79,21 @@ def clean_text(document):
 def main(input_file, output_file):
     documents = core.read_documents(input_file)
     # we only keep 'nl' and 'en' languages
-    documents = filter(lambda document: 'language' in document and
+    documents = list(filter(lambda document: 'language' in document and
            (document['language'] == 'en' or document['language'] == 'nl'),
-           documents)
+           documents))
     for document in documents:
         document['conformed_mime_type'] = conform_mime_type(document)
     # Only keep certain types of documents
-    documents = filter(lambda document: ['video', 'word', 'powerp.', 'pdf'] 
-            in document['conform_mime_type'], documents)
+    
+    conform = []
+    for mime_type in ['video', 'word', 'powerp.', 'pdf']:
+        conform.extend(list(
+            filter(lambda document: mime_type
+            in document['conformed_mime_type'], documents)
+            ))
     # clean up the text
-    for document in documents:
+    for document in conform:
         document['text'] = clean_text(document)
     core.write_documents(documents, output_file, 'clean')
 

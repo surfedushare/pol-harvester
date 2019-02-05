@@ -1,4 +1,5 @@
 #!/bin/bash
+INDEX=$1
 echo "DCG"
 cat ${INDEX}_dcg.json | jq '.metric_score'
 echo "expected reciprocal rank"

@@ -7,7 +7,6 @@ import json
 import logging
 import glob
 import os
-import copy
 
 import requests
 import click
@@ -80,16 +79,15 @@ def to_es_document(document):
     Translate our internal document to an ES document.
     This will skip some fields and move properties around.
     """
-    es_doc = copy.deepcopy(document)
-    text = es_doc['text']
-    es_doc['text'] = dict()
-    if es_doc['language'] == 'nl':
-        es_doc['text']['nl'] = text
-    elif es_doc['language'] == 'en':
-        es_doc['text']['en'] = text
+    text = document['text']
+    document['text'] = dict()
+    if document['language'] == 'nl':
+        document['text']['nl'] = text
+    elif document['language'] == 'en':
+        document['text']['en'] = text
     else:
-        raise ValueError('Unsupported language {}'.format(es_doc['language']))
-    return es_doc
+        raise ValueError('Unsupported language {}'.format(document['language']))
+    return document
 
 @click.command()
 @click.argument('name')
@@ -106,8 +104,7 @@ def main(name, credentials_file, documents_file):
     create_index(url, auth, name)
     for document in core.read_documents(documents_file):
         response = put_document(url, auth, name, document)
-        if response.status_code != 201:
-            print(response.text)
+        print(response.text)
 
 if __name__ == '__main__':
     main()
