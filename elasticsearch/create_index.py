@@ -29,12 +29,17 @@ def get_index_config(lang):
         'mappings': {
             '_doc': {
                 'properties': {
-                    'title': {'type': 'text'},
+                    'title': {
+                        'type': 'text',
+                        'analyzer': ANALYZERS[lang]
+                    },
                     'text': {
                         'type': 'text',
                         'analyzer': ANALYZERS[lang]
                     },
                     'url': {'type': 'text'},
+                    'title_plain': {'type': 'text'},
+                    'text_plain': {'type': 'text'},
                     'keywords': {'type': 'text'},
                     'mime_type': {'type': 'text'},
                     'conformed_mime_type': {'type': 'text'},

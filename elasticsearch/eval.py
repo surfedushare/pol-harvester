@@ -85,7 +85,8 @@ def get_metric(name, k):
 @click.argument('index')
 @click.argument('credentials', type=core.get_es_config)
 @click.option('--metrics', multiple=True, default=METRICS.keys())
-@click.option('--fields', multiple=True, default=['title', 'text'])
+@click.option('--fields', multiple=True, default=['title', 'text',
+    'title_plain', 'text_plain'])
 @click.option('-k', type=int, default=20, help='max. #documents per query')
 def main(queries, index, metrics, credentials, k, fields):
     os.makedirs('evaluations', exist_ok=True)
