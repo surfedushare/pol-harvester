@@ -49,12 +49,12 @@ class Command(BaseCommand):
                 continue
             _, file_paths = download.content
             if not file_paths:
-                log.warning("Could not find download(s) for: {}".format(video_source["id"]))
+                log.warning("Could not find download(s) for: {}".format(video_source["title"]))
                 continue
             title = video_source.get("title", None)
             kaldi_model = get_kaldi_model_from_snippet(title)
             if kaldi_model is None:
-                log.warning("Unknown language for: {}".format(video_source["id"]))
+                log.warning("Unknown language for: {}".format(video_source["title"]))
                 continue
             config = create_config("shell_resource", {
                 "resource": kaldi_model
