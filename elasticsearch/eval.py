@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import os
 import re
 from itertools import chain
 
@@ -84,9 +85,10 @@ def get_metric(name, k):
 @click.argument('index')
 @click.argument('credentials', type=core.get_es_config)
 @click.option('--metrics', multiple=True, default=METRICS.keys())
-@click.option('--fields', multiple=True, default=['title', 'text.nl', 'text.en'])
+@click.option('--fields', multiple=True, default=['title', 'text'])
 @click.option('-k', type=int, default=20, help='max. #documents per query')
 def main(queries, index, metrics, credentials, k, fields):
+    os.makedirs('evaluations', exist_ok=True)
     for metric in metrics:
 
         body = {
@@ -99,8 +101,10 @@ def main(queries, index, metrics, credentials, k, fields):
             auth=auth,
             json=body
         )
-        with open('{}_{}.json'.format(index, metric), 'wt') as f:
-            f.write(result.text)
+        results = json.loads(result.text)
+        with open(os.path.join(f'evaluations/{index}_{metric}.json'), 'wt') as f:
+            json.dump(results, f)
+        print(f'{metric:<27}: {results["metric_score"]:>20}')
 
 
 if __name__ == '__main__':
