@@ -1,5 +1,7 @@
 from urllib.parse import urlencode
 
+import os
+import re
 import hashlib
 import json
 from copy import copy, deepcopy
@@ -13,12 +15,12 @@ from bs4 import BeautifulSoup
 
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.conf import settings
 
 import json_field
 
+from datagrowth import settings as datagrowth_settings
 from datagrowth.resources.base import Resource
-from datagrowth.exceptions import DGHttpError50X as DSHttpError50X, DGHttpError40X as DSHttpError40X
+from datagrowth.exceptions import DGHttpError50X, DGHttpError40X
 
 
 class HttpResource(Resource):
@@ -152,6 +154,10 @@ class HttpResource(Resource):
         """
         return None
 
+    def close(self):
+        self.clean()
+        self.save()
+
     #######################################################
     # CREATE REQUEST
     #######################################################
@@ -269,7 +275,7 @@ class HttpResource(Resource):
             return None, None
         files = {}
         for file_key in self.FILE_DATA_KEYS:
-            file_path = data.pop(file_key)
+            file_path = os.path.join(datagrowth_settings.DATAGROWTH_MEDIA_ROOT, data.pop(file_key))
             files[file_key] = open(file_path, "rb")
         return data, files if files else None
 
@@ -278,6 +284,9 @@ class HttpResource(Resource):
     #######################################################
     # Methods to enable auth for the resource.
     # Override auth_parameters to provide authentication.
+
+    def auth_headers(self):
+        return {}
 
     def auth_parameters(self):
         return {}
@@ -289,6 +298,7 @@ class HttpResource(Resource):
         url = url.set_query_params(params)
         request = deepcopy(self.request)
         request["url"] = str(url)
+        request["headers"].update(self.auth_headers())
         return request
 
     def request_without_auth(self):
@@ -296,6 +306,9 @@ class HttpResource(Resource):
         url = url.del_query_params(self.auth_parameters())
         request = deepcopy(self.request)
         request["url"] = str(url)
+        for key in self.auth_headers().keys():
+            if key in request["headers"]:
+                del request["headers"][key]
         return request
 
     #######################################################
@@ -349,15 +362,21 @@ class HttpResource(Resource):
         try:
             response = self.session.send(
                 preq,
-                proxies=settings.REQUESTS_PROXIES,
-                verify=settings.REQUESTS_VERIFY,
+                proxies=datagrowth_settings.DATAGROWTH_REQUESTS_PROXIES,
+                verify=datagrowth_settings.DATAGROWTH_REQUESTS_VERIFY,
                 timeout=self.timeout
             )
+        except requests.exceptions.SSLError:
+            self.set_error(496, connection_error=True)
+            return
         except (requests.ConnectionError, IOError):
             self.set_error(502, connection_error=True)
             return
         except requests.Timeout:
             self.set_error(504, connection_error=True)
+            return
+        except UnicodeDecodeError:
+            self.set_error(600, connection_error=True)
             return
         self._update_from_response(response)
 
@@ -376,10 +395,10 @@ class HttpResource(Resource):
         class_name = self.__class__.__name__
         if self.status >= 500:
             message = "{} > {} \n\n {}".format(class_name, self.status, self.body)
-            raise DSHttpError50X(message, resource=self)
+            raise DGHttpError50X(message, resource=self)
         elif self.status >= 400:
             message = "{} > {} \n\n {}".format(class_name, self.status, self.body)
-            raise DSHttpError40X(message, resource=self)
+            raise DGHttpError40X(message, resource=self)
         else:
             return True
 
@@ -435,6 +454,16 @@ class HttpResource(Resource):
         elif headers:
             return "json" if headers.get("Content-Type") == "application/json" else "data"
         raise AssertionError("Could not determine data_key for request {} or headers {}".format(request, headers))
+
+    @staticmethod
+    def parse_content_type(content_type, default_encoding="utf-8"):
+        match = re.match(
+            "(?P<mime_type>[A-Za-z]+/[A-Za-z]+);? ?(charset=(?P<encoding>[A-Za-z0-9\-]+))?",
+            content_type
+        )
+        if match is None:
+            raise ValueError("Could not parse content_type")
+        return match.group("mime_type"), match.group("encoding") or default_encoding
 
     def set_error(self, status, connection_error=False):
         if connection_error:

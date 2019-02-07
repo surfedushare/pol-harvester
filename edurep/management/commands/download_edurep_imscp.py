@@ -42,6 +42,6 @@ class Command(BaseCommand):
         for success_id in successes:
             edurep_file = EdurepFile.objects.get(id=success_id)
             common_cartridge = CommonCartridge()
-            common_cartridge.file.name = edurep_file.body.replace(default_storage.base_location, "")
+            common_cartridge.file.name = edurep_file.body
             common_cartridge.clean()
             common_cartridge.save()

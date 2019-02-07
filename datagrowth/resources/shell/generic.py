@@ -5,11 +5,11 @@ from copy import copy
 from datetime import datetime
 from jsonschema.exceptions import ValidationError as SchemaValidationError
 
-from django.conf import settings
 from django.db import models
 from django.core.exceptions import ValidationError
 import json_field
 
+from datagrowth import settings as datagrowth_settings
 from datagrowth.resources.base import Resource
 from datagrowth.exceptions import DGShellError
 
@@ -33,10 +33,8 @@ class ShellResource(Resource):
     stderr = models.TextField(default=None, null=True, blank=True)
 
     # Class constants that determine behavior
-    CMD_TEMPLATE = ["python", "manage.py", "shell", "CMD_FLAGS"]
-    FLAGS = {
-        "settings": "--settings="
-    }
+    CMD_TEMPLATE = []  # Example: ["python", "manage.py", "shell", "CMD_FLAGS"]
+    FLAGS = {}  # Example: {"settings": "--settings="}
     VARIABLES = {}
     DIRECTORY_SETTING = None
     CONTENT_TYPE = "text/plain"
@@ -223,7 +221,7 @@ class ShellResource(Resource):
         cwd = None
         env = self.environment(*self.command.get("args"), **self.command.get("kwargs"))
         if self.DIRECTORY_SETTING:
-            cwd = getattr(settings, self.DIRECTORY_SETTING)
+            cwd = getattr(datagrowth_settings, self.DIRECTORY_SETTING)
         results = subprocess.run(
             cmd,
             stdin=subprocess.PIPE,

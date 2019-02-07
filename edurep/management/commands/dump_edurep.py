@@ -39,8 +39,7 @@ class Command(DumpCommand):
         documents = []
         try:
             archive_resource = EdurepFile().get(record["source"] + "?p=imscp")
-            archive_file = archive_resource.body.replace(default_storage.base_location, "")
-            archive = CommonCartridge.objects.get(file=archive_file)
+            archive = CommonCartridge.objects.get(file=archive_resource.body)
             files = []
             resources = archive.get_resources().values()
             destination = archive.get_extract_destination()
