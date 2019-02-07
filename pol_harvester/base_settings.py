@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'datagrowth',
     'pol_harvester',
     'edurep',
     'ims',
@@ -134,6 +135,10 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': BASE_DIR + '/pol_harvester/logs/debug.log',
         },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler'
+        },
     },
     'loggers': {
         'pol_harvester': {
@@ -141,6 +146,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
+        'datagrowth.command': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        }
     },
 }
 

@@ -43,10 +43,11 @@ class Command(DumpCommand):
             files = []
             resources = archive.get_resources().values()
             destination = archive.get_extract_destination()
+            destination = destination.replace(default_storage.base_location, "").lstrip(os.sep)
             for resource in resources:
                 if resource["content_type"] == "webcontent":
                     paths = [
-                        os.path.join(default_storage.base_location, destination, file)
+                        os.path.join(destination, file)
                         for file in resource["files"]
                     ]
                     files += paths
