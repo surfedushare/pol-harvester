@@ -1,8 +1,8 @@
 """
 Reads in a json file containing all the documents and filters them.
 """
+import os
 import re
-import json
 from itertools import chain
 
 import click
@@ -27,28 +27,28 @@ HUMANIZED_MIME_TYPES = {
     'application/octet-stream': 'other'
 }
 
-def conform_mime_type(document):
+def get_mime_type(document):
     """
     Attempts to conform the type of document to a predefined list.
     """
-    if 'mime_type' not in document:
-        if 'content_type' in document:
-            mime_type = document['content_type']
+    mime_type = document.get('mime_type', None)
+    if mime_type is None:
+        mime_type = document.get('arrangement_mime_type', None)
+    if mime_type is None:
+        mime_type = document.get('content_type', None)
+    if mime_type is None:
+        mime_type = document.get('arrangement_content_type', None)
+    if mime_type is None:
+        # Try to infer mime type
+        if 'youtube' in document['url']:
+            mime_type = 'video'
+        elif 'wurtv' in document['url']:
+            mime_type = 'video'
         else:
-            # Try to infer mime type
-            if 'youtube' in document['url']:
-                mime_type = 'video'
-            elif 'wurtv' in document['url']:
-                mime_type = 'video'
-            else:
-                mime_type = 'unknown'
-    else:
-        mime_type = document['mime_type']
-    if not mime_type:
-        mime_type = 'unknown'
+            mime_type = 'unknown'
 
     # we are still not done, as the content type might be incorrect!
-    if document['collection_name'] == 'leraar24' and 'html' in mime_type:
+    if document['arrangement_collection_name'] == 'leraar24' and 'html' in mime_type:
         mime_type = 'video'
     # or not 'standard'
     if 'html' in mime_type:
@@ -62,7 +62,8 @@ def conform_mime_type(document):
 
     return HUMANIZED_MIME_TYPES[mime_type]
 
-def clean_text(document):
+
+def get_text(document):
     """
     Cleans the text in a document or sets it to an empty string
     """
@@ -73,29 +74,50 @@ def clean_text(document):
     # we don't do anything else at this time
     return text
 
+
 @click.command()
-@click.argument('input_file')
-@click.argument('output_file')
-def main(input_file, output_file):
-    documents = core.read_documents(input_file)
-    # we only keep 'nl' and 'en' languages
-    documents = list(filter(lambda document: 'language' in document and
-           (document['language'] == 'en' or document['language'] == 'nl'),
-           documents))
-    for document in documents:
-        document['conformed_mime_type'] = conform_mime_type(document)
-    # Only keep certain types of documents
-    
-    conform = []
-    for mime_type in ['video', 'word', 'powerp.', 'pdf']:
-        conform.extend(list(
-            filter(lambda document: mime_type
-            in document['conformed_mime_type'], documents)
-            ))
+@click.argument('input_directory')
+@click.argument('output_directory')
+def main(input_directory, output_directory):
+    logger = core.get_logger(__name__)
+    logger.info(f'Reading collections')
+    documents = list(core.read_raw_documents(input_directory))
+
+    logger.info(f'#Documents: {len(documents)}')
+    logger.info(f'Cleaning fields')
     # clean up the text
-    for document in conform:
-        document['text'] = clean_text(document)
-    core.write_documents(documents, output_file, 'clean')
+    for document in documents:
+        document['text'] = get_text(document)
+        document['conformed_mime_type'] = get_mime_type(document)
+
+    logger.info(f'Filtering based on mime types')
+    # Only keep certain types of documents
+    tmp = []
+    for mime_type in ['video', 'word', 'powerp.', 'pdf']:
+        tmp.extend(filter(
+                lambda document: mime_type in document['conformed_mime_type'],
+                documents
+                ))
+    documents = tmp
+    logger.info(f'#Documents: {len(documents)}')
+    logger.info(f'Filtering languages')
+    # we only keep 'nl' and 'en' languages
+    nl_documents = list(filter(lambda document: 'language' in document and
+                          document['language'] == 'nl',
+                          documents))
+    en_documents = list(filter(lambda document: 'language' in document and
+                          document['language'] == 'en',
+                          documents))
+    logger.info(f'nl #Documents: {len(nl_documents)}')
+    logger.info(f'en #Documents: {len(en_documents)}')
+
+    logger.info(f'Writing files')
+    core.write_documents(en_documents,
+                         os.path.join(output_directory, 'en'),
+                         'clean')
+    core.write_documents(nl_documents,
+                         os.path.join(output_directory, 'nl'),
+                         'clean')
 
 if __name__ == '__main__':
     main()

@@ -13,45 +13,45 @@ import click
 
 import core
 
+ANALYZERS = {
+        'en': 'english',
+        'nl': 'dutch'
+    }
 
-def get_index_config():
+def get_index_config(lang):
     return {
+        "settings" : {
+            "index" : {
+                "number_of_shards" : 1,
+                "number_of_replicas" : 1
+            }
+        },
         'mappings': {
             '_doc': {
                 'properties': {
                     'title': {'type': 'text'},
                     'text': {
-                        'type': 'object',
-                        'properties': {
-                            'en': {
-                                'type': 'text',
-                                'analyzer': 'english'
-                            },
-                            'nl': {
-                                'type': 'text',
-                                'analyzer': 'dutch'
-                            }
-                        }
+                        'type': 'text',
+                        'analyzer': ANALYZERS[lang]
                     },
                     'url': {'type': 'text'},
                     'keywords': {'type': 'text'},
                     'mime_type': {'type': 'text'},
-                    'humanized_mime_type': {'type': 'text'},
-                    'item_id': {'type': 'text'},
-                    'item_url': {'type': 'text'},
-                    'collection_name': {'type': 'text'}
+                    'conformed_mime_type': {'type': 'text'},
+                    'id': {'type': 'text'},
+                    'arrangement_collection_name': {'type': 'text'}
                 }
             }
         }
     }
 
-def create_index(url, auth, name):
+def create_index(url, auth, name, lang):
     """
     Creates an index with the supplied name, using the config
     """
     return requests.put(
         '{}/{}'.format(url, name),
-        json=get_index_config(),
+        json=get_index_config(lang),
         auth=auth)
 
 def delete_index(url, auth, name):
@@ -72,38 +72,26 @@ def put_document(url, auth, name, document):
     Uploads a document to elastic search index
     """
     doc_id_url = '{}/{}/_doc/{}'.format(url, name, document['id'])
-    return requests.put(doc_id_url, auth=auth, json=to_es_document(document))
+    return requests.put(doc_id_url, auth=auth, json=document)
 
-def to_es_document(document):
-    """
-    Translate our internal document to an ES document.
-    This will skip some fields and move properties around.
-    """
-    text = document['text']
-    document['text'] = dict()
-    if document['language'] == 'nl':
-        document['text']['nl'] = text
-    elif document['language'] == 'en':
-        document['text']['en'] = text
-    else:
-        raise ValueError('Unsupported language {}'.format(document['language']))
-    return document
 
 @click.command()
 @click.argument('name')
 @click.argument('credentials_file')
-@click.argument('documents_file')
-def main(name, credentials_file, documents_file):
-    logger = logging.getLogger(__name__)
+@click.argument('folder')
+@click.argument('language')
+def main(name, credentials_file, folder, language):
+    logger = core.get_logger(__name__)
     url, auth = core.get_es_config(credentials_file)
     # test if it works
     if not is_es_ok(url, auth):
         logger.error('Credentials do not work for Elastic search')
 
     logger.info('Creating index')
-    create_index(url, auth, name)
-    for document in core.read_documents(documents_file):
-        response = put_document(url, auth, name, document)
+    index_name = f'{name}-{language}'
+    create_index(url, auth, index_name, language)
+    for document in core.read_documents(os.path.join(folder, language)):
+        response = put_document(url, auth, index_name, document)
         print(response.text)
 
 if __name__ == '__main__':

@@ -1,0 +1,334 @@
+[
+    {
+        "items": [
+            {
+                "hash": "18604a456db12d50da67af95f596ab795ea4eb1a",
+                "rating": 7,
+                "title": "Academic Reflection skills: How?"
+            },
+            {
+                "hash": "8c87b0c6111df4d2fe8633a8b274851b2ec4a2c0",
+                "rating": 5,
+                "title": "Self-Directed Learning"
+            },
+            {
+                "hash": "fe118ba3f8b3d49a0152f7e1f1bdfbb31490b808",
+                "rating": 6,
+                "title": "Academic Reflection Skills: Why?"
+            }
+        ],
+        "queries": [
+            "learning to learn"
+        ]
+    },
+    {
+        "items": [
+            {
+                "hash": "18604a456db12d50da67af95f596ab795ea4eb1a",
+                "rating": 10,
+                "title": "Academic Reflection skills: How?"
+            },
+            {
+                "hash": "8c87b0c6111df4d2fe8633a8b274851b2ec4a2c0",
+                "rating": 6,
+                "title": "Self-Directed Learning"
+            },
+            {
+                "hash": "fe118ba3f8b3d49a0152f7e1f1bdfbb31490b808",
+                "rating": 10,
+                "title": "Academic Reflection Skills: Why?"
+            }
+        ],
+        "queries": [
+            "reflection skills"
+        ]
+    },
+    {
+        "items": [
+            {
+                "hash": "ac99fb49d11e751a2f8f4c4a4495ba73fccb31f8",
+                "rating": 10,
+                "title": "Written feedback"
+            },
+            {
+                "hash": "d2842a164cdb1ced8e930e5014d9b2f62098e383",
+                "rating": 10,
+                "title": "Giving and receiving feedback"
+            },
+            {
+                "hash": "88923102285c16451edf543177e5695c092e8396",
+                "rating": 2,
+                "title": "Teamwork - Active listening and styles of listening"
+            }
+        ],
+        "queries": [
+            "giving feedback"
+        ]
+    },
+    {
+        "items": [
+            {
+                "hash": "4e16abcb1e8588b748acf251000f88e016784851",
+                "rating": 10,
+                "title": "Transformation technologies"
+            },
+            {
+                "hash": "cc3e4a33e622777ba7148bdeebe438af22d5db8d",
+                "rating": 9,
+                "title": "Post Transcriptional Gene Silencing"
+            },
+            {
+                "hash": "eac410ea67d53c2c68ece9f17e37485d4d585e5b",
+                "rating": 4,
+                "title": "Golden rice - A case study in plant biotechnology"
+            },
+            {
+                "hash": "f7c28b1b14cb1b5c9a31c0b50f8f682d43aa6c71",
+                "rating": 8,
+                "title": "New developments in Plant Biotechnology"
+            },
+            {
+                "hash": "8b441b6d7b0430379ffd20722e2374e216d3524d",
+                "rating": 7,
+                "title": "Agrobacterium 1"
+            },
+            {
+                "hash": "bf1e6ebc55e3b82d5ddd7cf070c5afa18f28ada3",
+                "rating": 8,
+                "title": "Agrobacterium 2"
+            },
+            {
+                "hash": "64ddbd677d33432e93ff02fde06975e5d5d76e0a",
+                "rating": 3,
+                "title": "What is Plant Biotechnology"
+            },
+            {
+                "hash": "2ed46d8cec0de60faa3f6066e09ad8f43befe17d",
+                "rating": 7,
+                "title": "Chromosome structural change"
+            },
+            {
+                "hash": "4dc7c22ffd942a6e4615ec3fb297f57d87c8320c",
+                "rating": 5,
+                "title": "Tissue culture and regeneration"
+            },
+            {
+                "hash": "c8c4e26a56bebfa7cec05bbf59898fa364c6ea24",
+                "rating": 4,
+                "title": "Introduction to the course"
+            },
+            {
+                "hash": "c5bf6a5601ee0b248ad96f9482f021f60638dbbb",
+                "rating": 8,
+                "title": "The next level of regulation"
+            },
+            {
+                "hash": "416218c8e4ba406507afb591b51df9ebe5a0264b",
+                "rating": 8,
+                "title": "Enhancing genetic variation"
+            }
+        ],
+        "queries": [
+            "biology transformation"
+        ]
+    },
+    {
+        "items": [
+            {
+                "hash": "2f4c55ef5047103d2b77e9b01e2a2d49c596ebc0",
+                "rating": 10,
+                "title": "Harmony"
+            },
+            {
+                "hash": "4a1dd26b16eeae40e8bb5e7aa9be379a0650b2c9",
+                "rating": 2,
+                "title": "Use of consonance and dissonance"
+            },
+            {
+                "hash": "e24c8df28483889dcf80102d13b82fbc073ce8ba",
+                "rating": 2,
+                "title": "Advanced scales"
+            },
+            {
+                "hash": "ed28b5863365cb1268caa55bda2e1a5cd6daf9ac",
+                "rating": 4,
+                "title": "Basic diatonic scales"
+            },
+            {
+                "hash": "388e5be19fd6cb24126ded21a66d690533dec6df",
+                "rating": 2,
+                "title": "Traditional classification of intervals in consonant and dissonant"
+            },
+            {
+                "hash": "f3da2e7b135bbfd7d59c8136d890d3729e1fbdae",
+                "rating": 1,
+                "title": "Score indications concerning form"
+            },
+            {
+                "hash": "633ca8026256dae257b5660c923fc5b544c14e8e",
+                "rating": 5,
+                "title": "Advanced triads"
+            },
+            {
+                "hash": "9a2fddaa7ca8e7f2991c8e5f08b8725f174fa897",
+                "rating": 1,
+                "title": "Basic 4-voice positions of triads"
+            },
+            {
+                "hash": "7d3d3ec465321f5853ed2e41e20aa17e2ea99683",
+                "rating": 1,
+                "title": "Notation of intervals, chords and harmony"
+            },
+            {
+                "hash": "be02d85cda842cb255ec682cdb31a19a5891eba6",
+                "rating": 3,
+                "title": "Triads as basic degrees in major and minor"
+            }
+        ],
+        "queries": [
+            "harmony",
+            "harmony music"
+        ]
+    },
+    {
+        "items": [
+            {
+                "hash": "a1e38ce2d4e07590117abf89340bf5fd51b94805",
+                "rating": 8,
+                "title": "Youtubefilm 'Living with a black dog' WHO"
+            },
+            {
+                "hash": "21df87d060fa3429233e9e973154ac566a1d5c3f",
+                "rating": 8,
+                "title": "Depression - Example of determinants of health"
+            },
+            {
+                "hash": "ec31d475621e5be2a7944f99664182e7deed5269",
+                "rating": 8,
+                "title": "Youtubefilm 'I had a black dog, his name was depression', WHO"
+            },
+            {
+                "hash": "39cbf57e14f8eca2174f1523972669eb91e5c5ef",
+                "rating": 1,
+                "title": "RCTs quality and validity"
+            }
+        ],
+        "queries": [
+            "depression"
+        ]
+    },
+    {
+        "items": [
+            {
+                "hash": "210919468eea438e55798719f2faa1f6f361c5c1",
+                "rating": 4,
+                "title": "Epidemiology of cardiovascular diseases"
+            },
+            {
+                "hash": "5c3b995a7db291a1c8d85e0104fe611bc1ad9e22",
+                "rating": 10,
+                "title": "What is epidemiology about?"
+            },
+            {
+                "hash": "2b1413c7cd70b2f8967377fad7e640166327c0de",
+                "rating": 8,
+                "title": "Introduction course Epidemiology and Public Health Policies"
+            },
+            {
+                "hash": "acb69eed6c98b465507deb58ce79933c1a05bf9f",
+                "rating": 8,
+                "title": "Introduction to Analytical Epidemiology and Public Health"
+            },
+            {
+                "hash": "28d2739802a935c90a1829b774050bc6308cdc5c",
+                "rating": 6,
+                "title": "Project instructions for Epidemiology and Public Health Policies"
+            },
+            {
+                "hash": "5b135c821754b457032bac9ca947dd2349c97c85",
+                "rating": 8,
+                "title": "Descriptive epidemiology"
+            },
+            {
+                "hash": "eed8d23e4f4b142bf04a9a962ab4aef6e390a3f1",
+                "rating": 8,
+                "title": "Introduction to infectious diseases"
+            },
+            {
+                "hash": "cf92f2726f45908b33d006de64d5f42153dcc1ca",
+                "rating": 7,
+                "title": "Study designs in analytical epidemiology"
+            },
+            {
+                "hash": "f5a6dbdd62e9e329ca92066ea1a592defd5c7f04",
+                "rating": 7,
+                "title": "Reflection of different measures"
+            },
+            {
+                "hash": "eef2df3658e0eea6da1bf3b778a05242601f8ac5",
+                "rating": 5,
+                "title": "Introduction to Descriptive Epidemiology and Public Health"
+            },
+            {
+                "hash": "401035affeb86d1dcba441593b2ff22d78e9910a",
+                "rating": 9,
+                "title": "Epidemiology : an academic and applied science"
+            }
+        ],
+        "queries": [
+            "epidemiology"
+        ]
+    },
+    {
+        "items": [
+            {
+                "hash": "330d36593b97ec9864b9557f8a0a4b3c400d4a06",
+                "rating": 7,
+                "title": "Genomics has revolutionized genetics"
+            },
+            {
+                "hash": "a329d8328109c884b83a372e3c7ef6889d8c7a5c",
+                "rating": 8,
+                "title": "Forward and reverse genetics"
+            },
+            {
+                "hash": "b46085dd10f88c58c3bece1d325a0c1d2a9a6f18",
+                "rating": 10,
+                "title": "The history of a definition of a gene"
+            },
+            {
+                "hash": "ad8c53134e5d1c8293895eb1cfb46ba4e25b5ec5",
+                "rating": 10,
+                "title": "What's a gene?"
+            },
+            {
+                "hash": "06922d3284ebb5e9a881fbf2bf7daa9bc604de90",
+                "rating": 6,
+                "title": "Homology"
+            },
+            {
+                "hash": "416218c8e4ba406507afb591b51df9ebe5a0264b",
+                "rating": 6,
+                "title": "Enhancing genetic variation"
+            },
+            {
+                "hash": "f7c28b1b14cb1b5c9a31c0b50f8f682d43aa6c71",
+                "rating": 5,
+                "title": "New developments in Plant Biotechnology"
+            },
+            {
+                "hash": "64ddbd677d33432e93ff02fde06975e5d5d76e0a",
+                "rating": 4,
+                "title": "What is Plant Biotechnology"
+            },
+            {
+                "hash": "e108b17b5bb701fb21ba15bdb6ca66df97b711ae",
+                "rating": 4,
+                "title": "Lifestyles of filamentous plant pathogens: fungi and oomycetes"
+            }
+        ],
+        "queries": [
+            "gene"
+        ]
+    }
+]
