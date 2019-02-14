@@ -7,8 +7,9 @@ ipdb==0.11
 urlobject==2.4.3
 pandas
 git+https://github.com/fako/django-json-field.git
-spacy_cld
+git+https://github.com/nickdavidhaynes/spacy-cld.git@2eb659d956924e26b47cba9e2c2a8ce3ebfe8b1f
 https://github.com/explosion/spacy-models/releases/download/nl_core_news_sm-2.0.0/nl_core_news_sm-2.0.0.tar.gz
 lxml
 beautifulsoup4
 youtube-dl
+pillow

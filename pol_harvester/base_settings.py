@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'datagrowth',
     'pol_harvester',
     'edurep',
     'ims',
@@ -134,6 +135,10 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': BASE_DIR + '/pol_harvester/logs/debug.log',
         },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler'
+        },
     },
     'loggers': {
         'pol_harvester': {
@@ -141,6 +146,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
+        'datagrowth.command': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        }
     },
 }
 
@@ -152,13 +162,10 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = BASE_DIR + '/media/'
 
-REQUESTS_PROXIES = None
-REQUESTS_VERIFY = True
-REQUESTS_PROXIES_ENABLED = {
-    "http": "localhost:8888"
-}
-
+DATAGROWTH_REQUESTS_PROXIES = None
+DATAGROWTH_REQUESTS_VERIFY = True
 DATAGROWTH_DATETIME_FORMAT = "%Y%m%d%H%M%S%f"
+
 KALDI_BASE_PATH = '/home/surf/kaldi'
 KALDI_ASPIRE_BASE_PATH = '/home/surf/kaldi/egs/aspire/s5'
 KALDI_NL_BASE_PATH = '/home/surf/Kaldi_NL'

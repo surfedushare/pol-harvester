@@ -25,10 +25,10 @@ DATAGROWTH_REQUESTS_VERIFY = getattr(settings, "DATAGROWTH_REQUESTS_VERIFY", Tru
 ######################################
 
 
-DATAGROWTH_DEFAULT_CONFIGURATION = {
+DATAGROWTH_DEFAULT_CONFIGURATION = getattr(settings, "DATAGROWTH_DEFAULT_CONFIGURATION", {
     "global_allowed_origins": [],
     "global_async": True,  # by default offload to celery where possible
-    "global_user_agent": "DataScope (v{})".format("0.9.3"),
+    "global_user_agent": "POL",
     "global_token": "",
     "global_purge_immediately": False,  # by default keep resources around
     "global_sample_size": 0,
@@ -39,6 +39,7 @@ DATAGROWTH_DEFAULT_CONFIGURATION = {
     "http_resource_interval_duration": 0,  # NB: milliseconds!
     "http_resource_concat_args_size": 0,
     "http_resource_concat_args_symbol": "|",
-}
+})
+
 
 DATAGROWTH_MOCK_CONFIGURATION = {}
