@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:11.1
+    command: postgres -c 'config_file=/etc/postgresql/postgresql.conf'
+    environment:
+      POSTGRES_PASSWORD: GfiiKT3Q98UFfjHJd4jirrgp8n8ZDSdY
+      POSTGRES_USER: postgres
+      POSTGRES_DB: pol
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./postgres/conf/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - 5432:5432
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
