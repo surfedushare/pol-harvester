@@ -13,4 +13,4 @@ logs/
 *.sqlite3
 
 # Django
-pol_harvester/settings.py
+harvester/pol_harvester/settings.py
