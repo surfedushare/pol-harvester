@@ -1,2 +1,4 @@
-from .documents.document import DocumentBase, DocumentMysql, DocumentPostgres
-from .documents.collection import CollectionBase
+from .documents.db.document import DocumentBase, DocumentMysql, DocumentPostgres
+from .documents.db.collection import CollectionBase
+
+from .annotations.base import AnnotationBase

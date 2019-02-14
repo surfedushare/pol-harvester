@@ -6,8 +6,8 @@ from django.db import models
 from django.conf import settings
 from django.core.serializers.json import DjangoJSONEncoder
 
-from datagrowth.datatypes.documents.base import DataStorage
 from datagrowth.utils import ibatch, reach
+from .base import DataStorage
 
 
 class CollectionBase(DataStorage):
