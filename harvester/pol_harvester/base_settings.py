@@ -175,3 +175,5 @@ DATAGROWTH_DATETIME_FORMAT = "%Y%m%d%H%M%S%f"
 KALDI_BASE_PATH = '/home/surf/kaldi'
 KALDI_ASPIRE_BASE_PATH = '/home/surf/kaldi/egs/aspire/s5'
 KALDI_NL_BASE_PATH = '/home/surf/Kaldi_NL'
+
+MAX_BATCH_SIZE = 500
