@@ -3,9 +3,6 @@ Creates an index in elastic search.
 We use the embedded elastic search config in the code.
 See --help for options and arguments.
 """
-import json
-import logging
-import glob
 import os
 
 import requests
@@ -23,7 +20,7 @@ def get_index_config(lang):
         "settings" : {
             "index" : {
                 "number_of_shards" : 1,
-                "number_of_replicas" : 1
+                "number_of_replicas" : 0
             }
         },
         'mappings': {
@@ -48,6 +45,20 @@ def get_index_config(lang):
                 }
             }
         }
+    }
+
+def to_es_document(doc):
+    return {
+        'title': doc['title'],
+        'text': doc['text'],
+        'url': doc['url'],
+        'title_plain': doc['title'],
+        'text_plain': doc['text'],
+        'keywords': doc['arrangement_keywords'],
+        'mime_type': doc['mime_type'],
+        'conformed_mime_type': doc['conformed_mime_type'],
+        'id': doc['id'],
+        'arrangement_collection_name': doc['arrangement_collection_name']
     }
 
 def create_index(url, auth, name, lang):
@@ -77,8 +88,7 @@ def put_document(url, auth, name, document):
     Uploads a document to elastic search index
     """
     doc_id_url = '{}/{}/_doc/{}'.format(url, name, document['id'])
-    return requests.put(doc_id_url, auth=auth, json=document)
-
+    return requests.put(doc_id_url, auth=auth, json=to_es_document(document))
 
 @click.command()
 @click.argument('name')

@@ -1,40 +1,36 @@
+# Elasticsearch
+To create an index in elasticsearch using data from Fako a few steps need to be taken.
 
-# Processing
-To create an index in elastic search from data from Fako,
-a few steps need to be taken.
+The output from fako is a zip file (a freeze).
+From the unzipped file "output/<collection>/with_text.json" is read.
 
-The output from fako is a zip file, with some directory structure.
-In that structure there are "objects", objects can contain many "documents".
-The first step is to flatten the objects into documents.
-Then we clean these docuemnts.
-Lastly, we create indices based on languages.
+That file is a collection of "arrangments".
+These are then further flattened to "documents".
+Then some cleaning is applied and the documents are split to "nl" and "en".
+Last, a separate index is created for each language.
 
-## Map from raw
-Maps the unzipped output received from Fako to "documents".
-This is the flattening step.
-
-    python map_from_raw.py input_directory flat.json
-
-## Clean the documents
-Cleans the documents by filtering out documents which do not conform.
-
-    python clean_docs.py flat.json clean.json
-
-## Create index
-Creates an index (possibly multiple indices) in elastic search from documents.
-
-    python create_index.py index_name es-credentials.json clean.json
-
-Here we expect the es-credentials.json to be a json file with the following structure.
-
+## Setup
+You need to have elasticsearch credentials in a json file with the following structure.
 {
   "username": "",
   "password": "",
   "url": "https://surfpol.sda.surf-hosted.nl"
 }
 
-Multiple indices will be created per call, and the "index_name" is a prefix.
-See the output of indices created.
+## Read and flatten
+Maps the unzipped output received from Fako to "documents".
+
+    python read_freeze.py data/freeze3/output data/freeze3/elasticsearch
+
+## Create index
+Create an index given a directory.
+We read the directory and expect to find a directory per language.
+We attempt to create an index from each language found.
+
+    python create_index.py index_name es-credentials.json clean.json
+
+The index name with be suffixed with the language as in the folder.
+The languages we support are "nl" and "en"
 
 ## Evaluate index
 Evaluate an index given some metric (or omit for all).
@@ -43,13 +39,14 @@ Evaluate an index given some metric (or omit for all).
 
 ## Digest evaluation
 
-    bash digest_evaluation.sh
+    bash digest_evaluation.sh index_name
+
 # Managing the index
 
 ## List
 
-    USER=
-    PASS=
+    USER=$(cat es-credentials.json | jq '.username')
+    PASS=$(cat es-credentials.json | jq '.password')
     curl --user $USER:$PASS -X GET "https://surfpol.sda.surf-hosted.nl/_cat/indices?v"
 
 ## Delete

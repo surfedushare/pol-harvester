@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+"""
+This module contains utility functions.
+"""
 import json
 import subprocess
 import os
@@ -5,19 +9,10 @@ import glob
 import logging
 
 GIT_MARKER = None
-COLLECTION_NAMES = [
-        'figshare',
-        'hbovpk',
-        'leraar24',
-        'stimuleringsmaatregel',
-        'wur',
-        'wwmhbo'
-    ]
-
 
 def get_logger(name):
     logging.basicConfig(format='[%(asctime)-15s][%(levelname)-7s] %(message)s',
-            level=logging.DEBUG)
+            level=logging.INFO)
     logger = logging.getLogger(name)
     return logger
 
@@ -30,7 +25,8 @@ def get_es_config(file_path):
     with open(file_path) as stream:
         credentials = json.load(stream)
     return (credentials['url'],
-            (credentials['username'], credentials['password']))
+            (credentials['username'], credentials['password']),
+            credentials['host'])
 
 
 def read_documents(folder):
