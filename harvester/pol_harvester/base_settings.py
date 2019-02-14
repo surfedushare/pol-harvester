@@ -160,8 +160,9 @@ LOGGING = {
 
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = BASE_DIR + '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media', os.sep)
 
+DATAGROWTH_DATA_DIR = os.path.join(BASE_DIR, '..', 'data')
 DATAGROWTH_REQUESTS_PROXIES = None
 DATAGROWTH_REQUESTS_VERIFY = True
 DATAGROWTH_DATETIME_FORMAT = "%Y%m%d%H%M%S%f"
