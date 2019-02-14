@@ -8,7 +8,7 @@ import click
 import requests
 from toolz.dicttoolz import assoc
 
-import core
+import util
 
 METRICS = {
     'precision': {
@@ -83,26 +83,28 @@ def get_metric(name, k):
 @click.command()
 @click.argument('queries', type=load_json)
 @click.argument('index')
-@click.argument('credentials', type=core.get_es_config)
+@click.argument('credentials_file')
+@click.argument('output_folder')
 @click.option('--metrics', multiple=True, default=METRICS.keys())
 @click.option('--fields', multiple=True, default=['title^2', 'text'])
 @click.option('-k', type=int, default=20, help='max. #documents per query')
-def main(queries, index, metrics, credentials, k, fields):
-    os.makedirs('evaluations', exist_ok=True)
+def main(queries, index, metrics, credentials_file, output_folder, k, fields):
+    os.makedirs(output_folder, exist_ok=True)
+    es_client = util.get_es_client(credentials_file)
     for metric in metrics:
 
         body = {
-                'requests': list(chain(*[format_requests(_, index, fields) for _ in queries])),
+            'requests': list(chain(*[format_requests(_, index, fields) for _ in queries])),
             'metric': get_metric(metric, k)
         }
-        endpoint, auth, _ = credentials
+        endpoint, auth, _ = util.get_es_config(credentials_file)
         result = requests.get(
             '{}/{}/_rank_eval'.format(endpoint, index),
             auth=auth,
             json=body
         )
         results = json.loads(result.text)
-        with open(os.path.join(f'evaluations/{index}_{metric}.json'), 'wt') as f:
+        with open(os.path.join(output_folder, f'{index}_{metric}.json'), 'w+t') as f:
             json.dump(results, f)
         print(f'{metric:<27}: {results["metric_score"]:>20}')
 

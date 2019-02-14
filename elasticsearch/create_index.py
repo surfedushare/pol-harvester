@@ -5,22 +5,27 @@ See --help for options and arguments.
 """
 import os
 
-import requests
 import click
+from elasticsearch.helpers import streaming_bulk
 
-import core
+import util
 
-ANALYZERS = {
-        'en': 'english',
-        'nl': 'dutch'
-    }
+ANALYSERS = {
+    'en': 'english',
+    'nl': 'dutch'
+}
+
 
 def get_index_config(lang):
+    """
+    Returns the elasticsearch index configuration.
+    Configures the analysers based on the language passed in.
+    """
     return {
-        "settings" : {
-            "index" : {
-                "number_of_shards" : 1,
-                "number_of_replicas" : 0
+        "settings": {
+            "index": {
+                "number_of_shards": 1,
+                "number_of_replicas": 0
             }
         },
         'mappings': {
@@ -28,11 +33,11 @@ def get_index_config(lang):
                 'properties': {
                     'title': {
                         'type': 'text',
-                        'analyzer': ANALYZERS[lang]
+                        'analyzer': ANALYSERS[lang]
                     },
                     'text': {
                         'type': 'text',
-                        'analyzer': ANALYZERS[lang]
+                        'analyzer': ANALYSERS[lang]
                     },
                     'url': {'type': 'text'},
                     'title_plain': {'type': 'text'},
@@ -47,7 +52,13 @@ def get_index_config(lang):
         }
     }
 
+
 def to_es_document(doc):
+    """
+    Returns a correctly formatted elasticsearch document from a given document.
+    This needs to correspond correctly with the properties defined in the
+    index.
+    """
     return {
         'title': doc['title'],
         'text': doc['text'],
@@ -57,57 +68,68 @@ def to_es_document(doc):
         'keywords': doc['arrangement_keywords'],
         'mime_type': doc['mime_type'],
         'conformed_mime_type': doc['conformed_mime_type'],
-        'id': doc['id'],
+        '_id': doc['id'],
         'arrangement_collection_name': doc['arrangement_collection_name']
     }
 
-def create_index(url, auth, name, lang):
-    """
-    Creates an index with the supplied name, using the config
-    """
-    return requests.put(
-        '{}/{}'.format(url, name),
-        json=get_index_config(lang),
-        auth=auth)
 
-def delete_index(url, auth, name):
+def create_index(client, name, config):
     """
-    Deletes an index with the supplied name
+    Creates an index with the supplied name, using the config.
     """
-    return requests.delete('{}/{}'.format(url, name),
-                           auth=auth).status_code == 200
+    return client.indices.create(
+        index=name,
+        body=config)
 
-def is_es_ok(url, auth):
-    """
-    Returns true if ES connection is ok
-    """
-    return requests.get('{}/{}'.format(url, '_cat/indices'), auth=auth).status_code == 200
 
-def put_document(url, auth, name, document):
+def bulk_insert_documents(client, index_name, documents):
     """
-    Uploads a document to elastic search index
+    Inserts a collection of documents to an index in bulk.
     """
-    doc_id_url = '{}/{}/_doc/{}'.format(url, name, document['id'])
-    return requests.put(doc_id_url, auth=auth, json=to_es_document(document))
+    es_documents = (to_es_document(document) for document in documents)
+    for is_ok, result in streaming_bulk(client,
+                                        es_documents,
+                                        index=index_name,
+                                        doc_type="_doc",
+                                        chunk_size=100,
+                                        ):
+        if not is_ok:
+            print(result)
+
+
+def read_languages(folder):
+    """
+    Returns the languages defined the folder structure.
+    """
+    return [entity for entity in os.listdir(folder)]
+
 
 @click.command()
 @click.argument('name')
 @click.argument('credentials_file')
 @click.argument('folder')
-@click.argument('language')
-def main(name, credentials_file, folder, language):
-    logger = core.get_logger(__name__)
-    url, auth = core.get_es_config(credentials_file)
-    # test if it works
-    if not is_es_ok(url, auth):
-        logger.error('Credentials do not work for Elastic search')
+@click.option('--recreate', type=bool, default=True)
+def main(name, credentials_file, folder, recreate):
+    logger = util.get_logger(__name__)
 
-    logger.info('Creating index')
-    index_name = f'{name}-{language}'
-    create_index(url, auth, index_name, language)
-    for document in core.read_documents(os.path.join(folder, language)):
-        response = put_document(url, auth, index_name, document)
-        print(response.text)
+    languages = read_languages(folder)
+    for language in languages:
+        index_name = f'{name}-{language}'
+        logger.info(f'Creating index: {index_name}')
+
+        es = util.get_es_client(credentials_file)
+
+        config = get_index_config(language)
+        if es.indices.exists(index_name):
+            if recreate:
+                es.indices.delete(index_name)
+            else:
+                raise Exception(f"Index {index_name} already exists.")
+
+        create_index(es, index_name, config)
+        bulk_insert_documents(es, index_name, util.read_documents(
+            os.path.join(folder, language)))
+
 
 if __name__ == '__main__':
     main()

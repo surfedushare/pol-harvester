@@ -15,6 +15,7 @@ You need to have elasticsearch credentials in a json file with the following str
   "username": "",
   "password": "",
   "url": "https://surfpol.sda.surf-hosted.nl"
+  "host": "surfpol.sda.surf-hosted.nl"
 }
 
 ## Read and flatten
@@ -27,7 +28,7 @@ Create an index given a directory.
 We read the directory and expect to find a directory per language.
 We attempt to create an index from each language found.
 
-    python create_index.py index_name es-credentials.json clean.json
+    python create_index.py freeze3 es-credentials.json data/freeze3/elasticsearch
 
 The index name with be suffixed with the language as in the folder.
 The languages we support are "nl" and "en"
@@ -35,21 +36,5 @@ The languages we support are "nl" and "en"
 ## Evaluate index
 Evaluate an index given some metric (or omit for all).
 
-    python eval.py queries.json index_name es-credentials.json 
+    python eval.py queries-nl.json freeze3-nl es-credentials.json data/freeze3/evaluation
 
-## Digest evaluation
-
-    bash digest_evaluation.sh index_name
-
-# Managing the index
-
-## List
-
-    USER=$(cat es-credentials.json | jq '.username')
-    PASS=$(cat es-credentials.json | jq '.password')
-    curl --user $USER:$PASS -X GET "https://surfpol.sda.surf-hosted.nl/_cat/indices?v"
-
-## Delete
-
-    INDEX=haukur-test
-    curl --user $USER:$PASS -X DELETE "https://surfpol.sda.surf-hosted.nl/$INDEX"
