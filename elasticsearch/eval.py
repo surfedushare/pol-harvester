@@ -104,8 +104,8 @@ def main(queries, index, metrics, credentials_file, output_folder, k, fields):
             json=body
         )
         results = json.loads(result.text)
-        with open(os.path.join(output_folder, f'{index}_{metric}.json'), 'w+t') as f:
-            json.dump(results, f)
+        with open(os.path.join(output_folder, f'{index}_{metric}.json'), 'w+t') as file:
+            json.dump(results, file)
         print(f'{metric:<27}: {results["metric_score"]:>20}')
 
 
