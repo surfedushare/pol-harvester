@@ -4,6 +4,7 @@ Reads in a json file containing all the documents and filters them.
 """
 import os
 import re
+from collections import Counter
 from itertools import chain
 
 import click
@@ -27,6 +28,7 @@ HUMANIZED_MIME_TYPES = {
     'audio/mpeg': 'audio',
     'application/octet-stream': 'other'
 }
+
 
 def get_mime_type(document):
     """
@@ -76,49 +78,45 @@ def get_text(document):
     return text
 
 
+def process_documents(documents):
+    for document in documents:
+        document['text'] = get_text(document)
+        document['conformed_mime_type'] = get_mime_type(document)
+
+        # Only keep certain types of documents
+        for mime_type in ['video', 'word', 'powerp.', 'pdf']:
+            if mime_type not in document['conformed_mime_type']:
+                continue
+
+        # we only keep 'nl' and 'en' languages
+        if document['language'] not in ['nl', 'en']:
+            continue
+
+        yield document
+
+
 @click.command()
 @click.argument('input_directory')
 @click.argument('output_directory')
 def main(input_directory, output_directory):
     logger = util.get_logger(__name__)
+
     logger.info(f'Reading collections')
-    documents = list(util.read_raw_documents(input_directory))
+    documents = util.read_raw_documents(input_directory)
 
-    logger.info(f'#Documents: {len(documents)}')
     logger.info(f'Cleaning fields')
-    # clean up the text
-    for document in documents:
-        document['text'] = get_text(document)
-        document['conformed_mime_type'] = get_mime_type(document)
-
-    logger.info(f'Filtering based on mime types')
-    # Only keep certain types of documents
-    tmp = []
-    for mime_type in ['video', 'word', 'powerp.', 'pdf']:
-        tmp.extend(filter(
-                lambda document: mime_type in document['conformed_mime_type'],
-                documents
-                ))
-    documents = tmp
-    logger.info(f'#Documents: {len(documents)}')
-    logger.info(f'Filtering languages')
-    # we only keep 'nl' and 'en' languages
-    nl_documents = list(filter(lambda document: 'language' in document and
-                          document['language'] == 'nl',
-                          documents))
-    en_documents = list(filter(lambda document: 'language' in document and
-                          document['language'] == 'en',
-                          documents))
-    logger.info(f'nl #Documents: {len(nl_documents)}')
-    logger.info(f'en #Documents: {len(en_documents)}')
+    documents = process_documents(documents)
 
     logger.info(f'Writing files')
-    util.write_documents(en_documents,
-                         os.path.join(output_directory, 'en'),
-                         'clean')
-    util.write_documents(nl_documents,
-                         os.path.join(output_directory, 'nl'),
-                         'clean')
+    util.write_documents(
+        (doc for doc in documents if doc['language'] == 'en'),
+        os.path.join(output_directory, 'en'),
+        'clean')
+    util.write_documents(
+        (doc for doc in documents if doc['language'] == 'nl'),
+        os.path.join(output_directory, 'nl'),
+        'clean')
+
 
 if __name__ == '__main__':
     main()
