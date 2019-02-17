@@ -12,11 +12,11 @@ import util
 
 METRICS = {
     'precision': {
-        'relevant_rating_threshold': 1,
+        'relevant_rating_threshold': 4,
         'ignore_unlabeled': False
     },
     'mean_reciprocal_rank': {
-        'relevant_rating_threshold': 1
+        'relevant_rating_threshold': 4
     },
     'dcg': {
         'normalize': True
@@ -68,7 +68,11 @@ def format_requests(query, index, fields):
                 }
             },
             'ratings': [
-                {'_index': index, '_id': doc['hash'], 'rating': doc['rating']}
+                {
+                    '_index': index,
+                    '_id': doc['hash'],
+                    'rating': doc['rating']
+                 }
                 for doc in query['items']
             ]
         }
