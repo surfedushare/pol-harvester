@@ -4,13 +4,13 @@ Reads in a json file containing all the documents and filters them.
 """
 import os
 import re
-from collections import Counter
-from itertools import chain
+from itertools import tee
 
 import click
 
 import util
 
+LANGUAGES = ['en', 'nl']
 HUMANIZED_MIME_TYPES = {
     'unknown': 'unknown',
     'application/pdf': 'pdf',
@@ -105,17 +105,16 @@ def main(input_directory, output_directory):
     documents = util.read_raw_documents(input_directory)
 
     logger.info(f'Cleaning fields')
-    documents = process_documents(documents)
 
-    logger.info(f'Writing files')
-    util.write_documents(
-        (doc for doc in documents if doc['language'] == 'en'),
-        os.path.join(output_directory, 'en'),
-        'clean')
-    util.write_documents(
-        (doc for doc in documents if doc['language'] == 'nl'),
-        os.path.join(output_directory, 'nl'),
-        'clean')
+    for documents_iterator, lang in zip(
+            tee(process_documents(documents),
+                len(LANGUAGES)),
+            LANGUAGES):
+        logger.info(f'Writing files for {lang}')
+        util.write_documents(
+            (doc for doc in documents_iterator if doc['language'] == lang),
+            os.path.join(output_directory, lang),
+            'clean')
 
 
 if __name__ == '__main__':

@@ -17,7 +17,7 @@
                 "title": "Academic Reflection Skills: Why?"
             },
             {
-                "hash": "8a59c87c40688742824391b02e85bad98373ea0c",
+                "hash": "eb6c2ae9d0f29b7de72a6dc6acfa96a3dcff111f",
                 "rating": 2,
                 "title": "Weetjes over het Schotse onderwijs"
             },
@@ -150,6 +150,11 @@
                 "title": "Harmony"
             },
             {
+                "hash": "08608efaefcd0e56c533058b7b275af5e13d0ff7",
+                "rating": 10,
+                "title": "Harmonic and melodic minor scales"
+            }, 
+            {
                 "hash": "4a1dd26b16eeae40e8bb5e7aa9be379a0650b2c9",
                 "rating": 2,
                 "title": "Use of consonance and dissonance"
@@ -231,10 +236,28 @@
                 "hash": "39cbf57e14f8eca2174f1523972669eb91e5c5ef",
                 "rating": 1,
                 "title": "RCTs quality and validity"
+            },
+            {
+                "hash": "7701df9213c5e144e4017c269c2f745cd9c7589d",
+                "rating": 1,
+                "title": "Engels - radicalisation"
             }
         ],
         "queries": [
             "depression"
+        ]
+    },
+    {
+        "items": [
+        {
+                "hash": "4e64085e43f526be3a804537383ba63381a2f545",
+                "rating": 10,
+                "title": "Info over de opzet van een partituur"
+            }    
+        ],
+        "queries": [
+            "musical notes",
+            "writing notes"
         ]
     },
     {
