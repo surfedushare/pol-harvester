@@ -56,7 +56,7 @@ class Command(FreezeCommand, DumpCommand):
                 tika_resource = HttpTikaResource.objects.get(data_hash=tika_hash)
                 content_type, content = tika_resource.content
                 text = content.get("text", None)
-                url = record["source"] + file.replace(os.path.join(default_storage.base_location, destination), "")
+                url = record["source"] + file.replace(destination, "")
                 title = content.get("title", [None])[0]
                 documents.append(
                     self._create_document(
