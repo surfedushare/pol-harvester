@@ -13,3 +13,4 @@ lxml
 beautifulsoup4
 youtube-dl
 pillow
+gitpython==2.1.11

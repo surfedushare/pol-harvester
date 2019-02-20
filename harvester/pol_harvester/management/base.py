@@ -1,6 +1,7 @@
 import logging
 import hashlib
 
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.apps import apps
 
@@ -40,7 +41,10 @@ class DumpCommand(BaseCommand):
             },
             "url": url,
             "text": text,
-            "mime_type": mime_type or meta.get("mime_type", None)
+            "mime_type": mime_type or meta.get("mime_type", None),
+            "pipeline": {
+                "harvest": settings.GIT_COMMIT
+            }
         }
 
     def get_documents_from_kaldi(self, record):
