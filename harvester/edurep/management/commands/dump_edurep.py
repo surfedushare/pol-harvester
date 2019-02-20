@@ -65,8 +65,7 @@ class Command(DumpCommand):
                         title=title,
                         url=url,
                         mime_type=content.get("mime-type", None)
-                    ),
-
+                    )
                 )
         except (DGResourceException, HttpTikaResource.DoesNotExist, CommonCartridge.DoesNotExist):
             pass

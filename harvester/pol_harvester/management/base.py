@@ -18,24 +18,26 @@ class DumpCommand(BaseCommand):
         parser.add_argument('-i', '--input', type=str, required=True)
         parser.add_argument('-o', '--output', type=str, required=True)
 
-    def _create_document(self, text, meta, title=None, url=None, mime_type=None, language=None):
+    def _create_document(self, text, meta, title=None, url=None, mime_type=None):
 
         url = url or meta.get("url", meta.get("source"))  # edurep and sharekit scrapes name url slightly different
         hasher = hashlib.sha1()
         hasher.update(url.encode("utf-8"))
         identifier = hasher.hexdigest()
+
+        text_language = get_language_from_snippet(text)
         title = title or meta.get("title", None)
-        if text and not language:
-            language = get_language_from_snippet(text)
-        if title and not language:
-            language = get_language_from_snippet(title)
-        if not language:
-            language = meta.get("language", "unknown")
+        title_language = get_language_from_snippet(title)
+        meta_language = meta.get("language", None)
 
         return {
             "id": identifier,
             "title": title,
-            "language": language,
+            "language": {
+                "metadata": meta_language,
+                "from_text": text_language,
+                "from_title": title_language
+            },
             "url": url,
             "text": text,
             "mime_type": mime_type or meta.get("mime_type", None)
