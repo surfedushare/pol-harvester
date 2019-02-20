@@ -182,6 +182,7 @@ class CollectionBase(DataStorage):
         """
         if self.identifier:
             document.identity = reach("$." + self.identifier, document.properties)
+        if self.referee:
             document.reference = reach("$." + self.referee, document.properties)
         return document
 

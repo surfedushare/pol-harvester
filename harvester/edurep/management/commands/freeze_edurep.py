@@ -79,6 +79,8 @@ class Command(FreezeCommand, DumpCommand):
         else:
             print("Adding to freeze " + freeze_name)
         collection, created = Collection.objects.get_or_create(name=collection_name)
+        collection.referee = "id"
+        collection.save()
         if created:
             print("Created collection " + collection_name)
         else:
