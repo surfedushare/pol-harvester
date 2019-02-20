@@ -13,9 +13,21 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
+
+from pol_harvester import views
+
+
+api_urlpatterns = [
+    url(r'^document/(?P<pk>\d+)/content/$', views.DocumentContentView.as_view(), name="document-content"),
+    url(r'^document/(?P<pk>\d+)/$', views.DocumentView.as_view(), name="document"),
+    url(r'^collection/(?P<pk>\d+)/content/$', views.CollectionContentView.as_view(), name="collection-content"),
+    url(r'^collection/(?P<pk>\d+)/$', views.CollectionView.as_view(), name="collection"),
+]
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^api/v1/', include(api_urlpatterns, namespace="api-v1")),
 ]
