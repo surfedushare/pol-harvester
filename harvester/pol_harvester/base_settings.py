@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Get git commit info to keep track of versions of data
 repo = Repo('..')
-GIT_COMMIT = repo.head.commit.binsha[:7]
+GIT_COMMIT = str(repo.head.commit)[:7]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/

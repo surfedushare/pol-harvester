@@ -22,4 +22,7 @@ dependencies:
     - pandas
     - pillow
     - gitpython==2.1.11
+    - requests
+    - tqdm
     - git+https://github.com/fako/django-json-field.git
+    - git+https://github.com/saffsd/langid.py.git
