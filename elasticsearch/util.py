@@ -81,9 +81,13 @@ def read_raw_documents(directory):
 def to_document(arrangement):
     keys = arrangement.keys()
     for document in arrangement['documents']:
-        # we add all the remaining keys
+        # we add all the keys with a prefix, except for the 'pipeline'
         for key in keys:
-            if key not in document and key not in 'documents':
+            if key == 'documents':
+                continue
+            if key == 'pipeline':
+                document[key] = arrangement[key]
+            else:
                 document[f'arrangement_{key}'] = arrangement[key]
         yield document
 

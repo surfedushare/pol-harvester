@@ -11,6 +11,8 @@ import click
 import util
 
 LANGUAGES = ['en', 'nl']
+LANG_ORDER = ['from_text', 'from_title', 'metadata']
+ACCECPTED_MIME_TYPES = ['video', 'word', 'powerp.', 'pdf']
 HUMANIZED_MIME_TYPES = {
     'unknown': 'unknown',
     'application/pdf': 'pdf',
@@ -71,11 +73,21 @@ def get_text(document):
     Cleans the text in a document or sets it to an empty string
     """
     if 'text' in document and document['text']:
-        text = re.sub(r'\s+', ' ', document['text'])
+        text = re.sub(r'\s*', ' ', document['text'])
     else:
         text = ''
     # we don't do anything else at this time
     return text
+
+def get_language(document):
+    # The priority is in that order
+    for field in LANG_ORDER:
+        if field not in document['language']:
+            continue
+        current_lang = document['language'][field]
+        if current_lang is not None:
+            if current_lang in LANGUAGES:
+                return current_lang
 
 
 def process_documents(documents):
@@ -84,12 +96,12 @@ def process_documents(documents):
         document['conformed_mime_type'] = get_mime_type(document)
 
         # Only keep certain types of documents
-        for mime_type in ['video', 'word', 'powerp.', 'pdf']:
+        for mime_type in ACCECPTED_MIME_TYPES:
             if mime_type not in document['conformed_mime_type']:
                 continue
 
         # we only keep 'nl' and 'en' languages
-        if document['language'] not in ['nl', 'en']:
+        if get_language(document) not in LANGUAGES:
             continue
 
         yield document
@@ -112,9 +124,9 @@ def main(input_directory, output_directory):
             LANGUAGES):
         logger.info(f'Writing files for {lang}')
         util.write_documents(
-            (doc for doc in documents_iterator if doc['language'] == lang),
+            (doc for doc in documents_iterator if get_language(doc) == lang),
             os.path.join(output_directory, lang),
-            'clean')
+            'elasticsearch')
 
 
 if __name__ == '__main__':
