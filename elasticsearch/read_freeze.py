@@ -73,7 +73,7 @@ def get_text(document):
     Cleans the text in a document or sets it to an empty string
     """
     if 'text' in document and document['text']:
-        text = re.sub(r'\s*', ' ', document['text'])
+        text = re.sub(r'\s+', ' ', document['text'])
     else:
         text = ''
     # we don't do anything else at this time
