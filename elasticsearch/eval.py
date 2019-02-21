@@ -33,37 +33,38 @@ def load_json(path):
 
 
 def format_multi_match(query_text, fields):
-    return [
-        {
-            "multi_match": {
-                "fields": fields,
-                "fuzziness": 0,
-                "operator": "or",
-                "query": query_text,
-                "type": "best_fields"
-            }
-        },
-        {
-            "multi_match": {
-                "fields": fields,
-                "operator": "or",
-                "query": query_text,
-                "type": "phrase_prefix"
-            }
-        }
-    ]
+    return
 
 
 def format_requests(query, index, fields):
     requests = []
-    for item in query['queries']:
+    for query_text in query['queries']:
         request = {
-            'id': re.sub(r'\s+', '-', item),
+            'id': re.sub(r'\s+', '-', query_text),
             'request': {
                 'query': {
                     'bool': {
-                        'minimum_should_match': 1,
-                        'should': format_multi_match(item, fields)
+                        'must': [
+                            {
+                                "multi_match": {
+                                    "fields": fields,
+                                    "fuzziness": 0,
+                                    "operator": "or",
+                                    "query": query_text,
+                                    "type": "best_fields",
+                                    "tie_breaker": 0.3
+                                }
+                            }
+                        ],
+                        'should': [
+                            {
+                                "multi_match": {
+                                    "fields": fields,
+                                    "query": query_text,
+                                    "type": "phrase"
+                                }
+                            }
+                        ]
                     }
                 }
             },
@@ -72,7 +73,7 @@ def format_requests(query, index, fields):
                     '_index': index,
                     '_id': doc['hash'],
                     'rating': doc['rating']
-                 }
+                }
                 for doc in query['items']
             ]
         }
@@ -90,7 +91,8 @@ def get_metric(name, k):
 @click.argument('credentials_file')
 @click.argument('output_folder')
 @click.option('--metrics', multiple=True, default=METRICS.keys())
-@click.option('--fields', multiple=True, default=['title^2', 'text'])
+@click.option('--fields', multiple=True, default=['title^2', 'text',
+    'text_plain', 'title_plain'])
 @click.option('-k', type=int, default=20, help='max. #documents per query')
 def main(queries, index, metrics, credentials_file, output_folder, k, fields):
     os.makedirs(output_folder, exist_ok=True)
