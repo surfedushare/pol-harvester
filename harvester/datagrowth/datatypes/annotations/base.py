@@ -1,10 +1,11 @@
+from django.conf import settings
 from django.db import models
-from django.contrib.auth.models import User
+
 
 
 class AnnotationBase(models.Model):
 
-    user = models.ForeignKey(User, blank=True, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
     reference = models.CharField(max_length=255, db_index=True)
     name = models.CharField(max_length=255, db_index=True)
     value = models.FloatField(blank=True, null=True)
