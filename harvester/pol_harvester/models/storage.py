@@ -1,10 +1,10 @@
 from django.db import models
 from django.contrib.postgres import fields as postgres_fields
 
-from datagrowth.datatypes import DocumentBase, DocumentPostgres, CollectionBase
+from datagrowth.datatypes import DocumentBase, DocumentPostgres, CollectionBase, DocumentCollectionMixin
 
 
-class Freeze(CollectionBase):
+class Freeze(DocumentCollectionMixin, CollectionBase):
 
     def init_document(self, data, collection=None):
         doc = super().init_document(data, collection=collection)
@@ -12,7 +12,7 @@ class Freeze(CollectionBase):
         return doc
 
 
-class Collection(CollectionBase):
+class Collection(DocumentCollectionMixin, CollectionBase):
     freeze = models.ForeignKey("Freeze", blank=True, null=True)
 
     def init_document(self, data, collection=None):
@@ -21,7 +21,7 @@ class Collection(CollectionBase):
         return doc
 
 
-class Arrangement(CollectionBase):
+class Arrangement(DocumentCollectionMixin, CollectionBase):
     freeze = models.ForeignKey("Freeze", blank=True, null=True)
     collection = models.ForeignKey("Collection", blank=True, null=True)
     meta = postgres_fields.JSONField(default=dict)

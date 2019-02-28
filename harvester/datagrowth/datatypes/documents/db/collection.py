@@ -199,3 +199,10 @@ class CollectionBase(DataStorage):
         abstract = True
         get_latest_by = "created_at"
         ordering = ["created_at"]
+
+
+class DocumentCollectionMixin(object):
+
+    @property
+    def documents(self):
+        return self.document_set
