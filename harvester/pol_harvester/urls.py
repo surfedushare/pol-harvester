@@ -22,6 +22,8 @@ from pol_harvester import views
 api_urlpatterns = [
     url(r'^document/(?P<pk>\d+)/content/$', views.DocumentContentView.as_view(), name="document-content"),
     url(r'^document/(?P<pk>\d+)/$', views.DocumentView.as_view(), name="document"),
+    url(r'^arrangement/(?P<pk>\d+)/content/$', views.ArrangementContentView.as_view(), name="arrangement-content"),
+    url(r'^arrangement/(?P<pk>\d+)/$', views.ArrangementView.as_view(), name="arrangement"),
     url(r'^collection/(?P<pk>\d+)/content/$', views.CollectionContentView.as_view(), name="collection-content"),
     url(r'^collection/(?P<pk>\d+)/$', views.CollectionView.as_view(), name="collection"),
     url(r'^freeze/(?P<pk>\d+)/content/$', views.FreezeContentView.as_view(), name="freeze-content"),
