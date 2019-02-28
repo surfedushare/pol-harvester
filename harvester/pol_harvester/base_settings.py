@@ -168,6 +168,16 @@ LOGGING = {
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
 
+
+# Rest framework
+# https://www.django-rest-framework.org/
+
+REST_FRAMEWORK = {}
+
+
+# Datagrowth
+# https://github.com/fako/datascope/blob/master/datagrowth/settings.py
+
 DATAGROWTH_DATA_DIR = os.path.join(BASE_DIR, '..', 'data')
 DATAGROWTH_REQUESTS_PROXIES = None
 DATAGROWTH_REQUESTS_VERIFY = True
