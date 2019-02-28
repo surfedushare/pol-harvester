@@ -24,6 +24,13 @@ api_urlpatterns = [
     url(r'^document/(?P<pk>\d+)/$', views.DocumentView.as_view(), name="document"),
     url(r'^collection/(?P<pk>\d+)/content/$', views.CollectionContentView.as_view(), name="collection-content"),
     url(r'^collection/(?P<pk>\d+)/$', views.CollectionView.as_view(), name="collection"),
+    url(r'^freeze/(?P<pk>\d+)/content/$', views.FreezeContentView.as_view(), name="freeze-content"),
+    url(
+        r'^freeze/(?P<pk>\d+)/annotate/(?P<annotation_name>[A-Za-z0-9\-_]+)/$',
+        views.AnnotationView.as_view(),
+        name="freeze-annotation"
+    ),
+    url(r'^freeze/(?P<pk>\d+)/$', views.FreezeView.as_view(), name="freeze"),
 ]
 
 

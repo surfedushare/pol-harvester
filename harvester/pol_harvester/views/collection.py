@@ -3,13 +3,11 @@ from rest_framework import generics
 from datagrowth.datatypes.views import CollectionBaseSerializer, CollectionBaseContentView
 from pol_harvester.models import Collection, Document
 from pol_harvester.views.document import DocumentSerializer
-from pol_harvester.views.annotation import AnnotationSerializer
 
 
 class CollectionSerializer(CollectionBaseSerializer):
 
     content = DocumentSerializer(many=True, source="documents")
-    annotations = AnnotationSerializer(many=True)
 
     class Meta:
         model = Collection
