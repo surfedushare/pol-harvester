@@ -13,7 +13,7 @@ class FreezeSerializer(CollectionBaseSerializer):
 
     class Meta:
         model = Freeze
-        fields = CollectionBaseSerializer.default_fields
+        fields = CollectionBaseSerializer.default_fields + ("annotations",)
 
 
 class FreezeView(generics.RetrieveAPIView):
