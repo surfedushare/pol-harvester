@@ -12,6 +12,9 @@ This project uses ``Docker`` and ``docker-compose``. Make sure they are installe
 Installation
 ------------
 
+Copy the ``.env.development`` file to ``.env`` and update the variable values to fit your system.
+When you're running the project locally it is ok to keep the values as is.
+
 Inside of the root directory of this repo run the following command:
 
 ```bash
