@@ -37,6 +37,13 @@ http://localhost:8000/admin/
 http://localhost:8000/api/v1/
 ```
 
+When developing it can be useful to see the uWSGI output.
+To run the project locally with visible output you can simply run:
+
+```bash
+docker-compose up
+```
+
 
 Documentation
 -------------
