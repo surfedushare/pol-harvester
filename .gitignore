@@ -11,6 +11,8 @@ data/
 media/
 logs/
 *.sqlite3
+harvester/statics
 
-# Django
-harvester/pol_harvester/settings.py
+# Environment files
+.env
+harvester/.commit

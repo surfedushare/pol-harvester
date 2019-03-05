@@ -11,27 +11,32 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-from git import Repo
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Get git commit info to keep track of versions of data
-repo = Repo('..')
-GIT_COMMIT = str(repo.head.commit)[:7]
+GIT_COMMIT = os.environ.get('DJANGO_GIT_COMMIT', None)
+if GIT_COMMIT is None:
+    raise ImproperlyConfigured('DJANGO_GIT_COMMIT variable has not been set to a git commit hash')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'm+2zzqoclh8b6um4%#k&(gw!!(=mmw&$y&u^14jkyt$t==p-$e'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'm+2zzqoclh8b6um4%#k&(gw!!(=mmw&$y&u^14jkyt$t==p-$e')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.environ.get('DJANGO_DEBUG', False)))
 
 ALLOWED_HOSTS = [
     'localhost',
     '.surfpol.nl'
+]
+CORS_ORIGIN_WHITELIST = [
+    'localhost:8080',
+    '127.0.0.1:8080',
 ]
 
 
@@ -45,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
 
     'datagrowth',
     'pol_harvester',
@@ -55,6 +61,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -92,8 +100,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'pol',
         'USER': 'django',
-        'PASSWORD': 'GfiiKT3Q98UFfjHJd4jirrgp8n8ZDSdY',  # TODO: setup securely
-        'HOST': '127.0.0.1'
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'GfiiKT3Q98UFfjHJd4jirrgp8n8ZDSdY'),
+        'HOST': os.environ.get('POSTGRES_HOST', '127.0.0.1')
     }
 }
 
@@ -166,6 +174,10 @@ LOGGING = {
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'statics')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+WHITENOISE_INDEX_FILE = 'index.html'
+
 MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
 
 
