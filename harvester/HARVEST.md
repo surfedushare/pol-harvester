@@ -43,7 +43,7 @@ These commands internally use TIKA to extract texts from files.
 
 ```bash
 ./manage.py download_edurep --input <data-file>
-./manage.py extract_text_edurep_files --formats application/msword,application/octet-stream,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,vnd.openxmlformats-officedocument.presentationml.presentation  --input <data-file>
+./manage.py extract_text_edurep_files --formats text/html,application/msword,application/octet-stream,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,vnd.openxmlformats-officedocument.presentationml.presentation  --input <data-file>
 ```
 
 This will put the content in files on your harddisk under the ```media``` directory. 
