@@ -33,18 +33,18 @@ class Command(BaseCommand):
         failures = queryset.exclude(status=200).count()
         out.info("Amount of failed Edurep API queries: {}".format(failures))
         successes = queryset.filter(status=200).count()
-        out.info("Amount of succesful Edurep API queries: {}".format(successes))
+        out.info("Amount of successful Edurep API queries: {}".format(successes))
 
         # Configure and create a data extractor
         config = {
             "objective": {
                 "@": "soup.find_all('srw:record')",
+                "url": "el.find('czp:location').text",
                 "title": "el.find('czp:title').find('czp:langstring').text",
                 "language": "el.find('czp:language').text",
                 "keywords": "[keyword.find('czp:langstring').text for keyword in el.find_all('czp:keyword')]",
                 "description": "el.find('czp:description').find('czp:langstring').text if el.find('czp:description') else None",
                 "mime_type": "el.find('czp:format').text",
-                "source": "el.find('czp:location').text",
             }
         }
         prc = ExtractProcessor(config=config)
