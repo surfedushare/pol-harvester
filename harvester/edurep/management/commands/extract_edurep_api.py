@@ -57,8 +57,9 @@ class Command(BaseCommand):
                 query = search.request["args"][0]
                 if query not in results_by_query:
                     results_by_query[query] = 0
-                rsl += prc.extract_from_resource(search)
-                results_by_query[query] += len(rsl)
+                qrsl = list(prc.extract_from_resource(search))
+                results_by_query[query] += len(qrsl)
+                rsl += qrsl
             except ValueError as exc:
                 err.warning("Invalid XML:", exc, search.uri)
 
