@@ -20,7 +20,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        log_header(out, "EDUREP API SEARCH EXTRACTION")
+        log_header(out, "EDUREP API SEARCH EXTRACTION", options)
 
         # Determine which set of Edurep API responses to consider
         query = options["query"]
@@ -48,9 +48,9 @@ class Command(BaseCommand):
             }
         }
         prc = ExtractProcessor(config=config)
-        rsl = []
 
         # Extract and count per query
+        rsl = []
         results_by_query = {}
         for search in queryset.filter(status=200):
             try:
