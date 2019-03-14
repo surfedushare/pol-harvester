@@ -145,10 +145,15 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'file': {
+        'debug_file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': BASE_DIR + '/pol_harvester/logs/debug.log',
+        },
+        'freeze_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR + '/pol_harvester/logs/freeze.log',
         },
         'console': {
             'level': 'DEBUG',
@@ -157,8 +162,13 @@ LOGGING = {
     },
     'loggers': {
         'pol_harvester': {
-            'handlers': ['file'],
+            'handlers': ['debug_file'],
             'level': 'DEBUG',
+            'propagate': True,
+        },
+        'freeze': {
+            'handlers': ['freeze_file'],
+            'level': 'INFO',
             'propagate': True,
         },
         'datagrowth.command': {
