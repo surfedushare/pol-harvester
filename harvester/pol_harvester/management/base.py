@@ -72,3 +72,11 @@ class DumpCommand(BaseCommand):
                 log.warning("Could not find transcription for: {}".format(file_path))
             transcripts.append(self._create_document(transcript, record))
         return transcripts
+
+
+class FreezeCommand(BaseCommand):
+
+    def add_arguments(self, parser):
+        parser.add_argument('-i', '--input', type=str, required=True)
+        parser.add_argument('-f', '--freeze', type=str, required=True)
+        parser.add_argument('-c', '--collection', type=str, required=True)

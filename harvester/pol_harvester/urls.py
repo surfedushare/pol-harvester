@@ -13,9 +13,30 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
+
+from pol_harvester import views
+
+
+api_urlpatterns = [
+    url(r'^document/(?P<pk>\d+)/content/$', views.DocumentContentView.as_view(), name="document-content"),
+    url(r'^document/(?P<pk>\d+)/$', views.DocumentView.as_view(), name="document"),
+    url(r'^arrangement/(?P<pk>\d+)/content/$', views.ArrangementContentView.as_view(), name="arrangement-content"),
+    url(r'^arrangement/(?P<pk>\d+)/$', views.ArrangementView.as_view(), name="arrangement"),
+    url(r'^collection/(?P<pk>\d+)/content/$', views.CollectionContentView.as_view(), name="collection-content"),
+    url(r'^collection/(?P<pk>\d+)/$', views.CollectionView.as_view(), name="collection"),
+    url(r'^freeze/(?P<pk>\d+)/content/$', views.FreezeContentView.as_view(), name="freeze-content"),
+    url(
+        r'^freeze/(?P<pk>\d+)/annotate/(?P<annotation_name>[A-Za-z0-9\-_]+)/$',
+        views.AnnotationView.as_view(),
+        name="freeze-annotation"
+    ),
+    url(r'^freeze/(?P<pk>\d+)/$', views.FreezeView.as_view(), name="freeze"),
+]
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^api/v1/', include(api_urlpatterns, namespace="api-v1")),
 ]

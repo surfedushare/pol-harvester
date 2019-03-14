@@ -12,7 +12,7 @@ from django.core.exceptions import ValidationError
 
 class CommonCartridge(models.Model):
 
-    file = models.FileField()
+    file = models.FileField(max_length=255)
     manifest = models.TextField(blank=True)
     upload_at = models.DateTimeField(auto_now_add=True)
 

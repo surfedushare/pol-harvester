@@ -1,48 +1,5 @@
-Project Open Leermaterialen Harvester
-=====================================
-
-A repo meant to scrape and extract education materials.
-
-Installation
-------------
-
-Install and activate requirements with:
-
-```bash
-conda create --copy -f environment.yml
-source activate surf-harvest
-```
-
-The harvester depends on Django, mostly to be able to work with a database. 
-With a database its easier to track which steps of the harvest failed 
-and to store all kinds of meta data from the harvesting process.
-It's easier to search a database for error information and that already proved useful during debugging.
-One thing that Django provides is an administration interface that lets you inspect harvested objects in a breeze.
-
-To setup Django:
-
-```bash
-./manage.py migrate
-./manage.py createsuperuser
-./manage.py runserver
-```    
-
-Now you should be able to login with your credentials at:
-
-```bash
-http://localhost:8000/admin/
-```
-
-Datagrowth
-----------
-
-Datagrowth is a set of open source tools that helps to gather and organise data through Django.
-I've included the sources to this repo directly, but I mostly copy pasted it from another repo.
-When Datagrowth gets released as a package we should consider installing it as a dependency 
-rather than using the copied sources.
-
-Harvesting the harvester
-------------------------
+Harvesting commands
+===================
 
 Our first objective was to harvest Edurep another harvester. 
 I've made some management commands that harvest Edurep step by step.
