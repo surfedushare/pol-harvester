@@ -3,9 +3,14 @@
 # Exit immediately on error
 set -e
 
+# Sets permissions of directories we want to have write access to
+chown www-data:www-data /usr/src/app/pol_harvester/logs
+
 # The git commit gets stored during the execution of start.bash
 # Here we load the stored commit to be able to output it when running commands
-export DJANGO_GIT_COMMIT=$(cat ./.commit)
+if [ -e "./.commit" ]; then
+    export DJANGO_GIT_COMMIT=$(cat ./.commit)
+fi
 
 # We're serving static files through Whitenoise
 # See: http://whitenoise.evans.io/en/stable/index.html#

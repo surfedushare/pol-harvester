@@ -16,6 +16,6 @@ export DJANGO_GIT_COMMIT=$(git rev-parse HEAD)
 echo $DJANGO_GIT_COMMIT > harvester/.commit
 
 # (Re-)building the containers and (re)starting them
-docker-compose build --build-arg DJANGO_GIT_COMMIT
+docker-compose build
 docker-compose down
 docker-compose up -d

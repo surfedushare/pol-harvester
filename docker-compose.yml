@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 
 services:
   harvester:
@@ -15,6 +15,7 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - POSTGRES_HOST=postgres
+      - DJANGO_POSTGRES_PASSWORD=${DJANGO_POSTGRES_PASSWORD}
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - DJANGO_DEBUG=${DJANGO_DEBUG}
   postgres:
@@ -25,6 +26,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: pol
       PGDATA: /var/lib/postgresql/data/pgdata
+      DJANGO_POSTGRES_PASSWORD: ${DJANGO_POSTGRES_PASSWORD}
     volumes:
       - ./postgres/conf/postgresql.conf:/etc/postgresql/postgresql.conf
       - postgres-data:/var/lib/postgresql/data/pgdata
