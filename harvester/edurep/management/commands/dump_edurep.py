@@ -20,20 +20,6 @@ log = logging.getLogger(__name__)
 
 class Command(OutputCommand):
 
-    def get_documents_from_tika(self, record):
-        text = None
-        try:
-            file = EdurepFile().get(record["source"])
-            tika_hash = HttpTikaResource.hash_from_data({"file": file.body})
-            tika_resource = HttpTikaResource.objects.get(data_hash=tika_hash)
-            content_type, content = tika_resource.content
-            text = content.get("text", None)
-        except (DGResourceException, HttpTikaResource.DoesNotExist):
-            pass
-        return [
-            self._create_document(text, record)
-        ]
-
     def get_documents_from_imscp(self, record):
         del record["mime_type"]  # because this *never* makes sense for the package documents inside
         documents = []

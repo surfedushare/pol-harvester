@@ -6,8 +6,9 @@ from django.core.management.base import BaseCommand
 from django.apps import apps
 
 from datagrowth.exceptions import DGResourceException
-from pol_harvester.models import YouTubeDLResource, Freeze, Collection
+from pol_harvester.models import YouTubeDLResource, Freeze, Collection, HttpTikaResource
 from pol_harvester.utils.language import get_language_from_snippet, get_kaldi_model_from_snippet
+from edurep.models import EdurepFile
 
 
 log = logging.getLogger(__name__)
@@ -19,7 +20,14 @@ class OutputCommand(BaseCommand):
         parser.add_argument('-i', '--input', type=str, required=True)
         parser.add_argument('-o', '--output', type=str, required=True)
 
-    def _create_document(self, text, meta, title=None, url=None, mime_type=None):
+    @staticmethod
+    def _serialize_resource(resource):
+        return {
+            "success": resource.success,
+            "resource": ["{}.{}".format(resource._meta.app_label, resource._meta.model_name), resource.id]
+        }
+
+    def _create_document(self, text, meta, title=None, url=None, mime_type=None, pipeline=None):
 
         url = url or meta.get("url", meta.get("source"))  # edurep and sharekit scrapes name url slightly different
         hasher = hashlib.sha1()
@@ -30,6 +38,10 @@ class OutputCommand(BaseCommand):
         title = title or meta.get("title", None)
         title_language = get_language_from_snippet(title)
         meta_language = meta.get("language", None)
+
+        pipeline = pipeline or {}
+        assert isinstance(pipeline, dict), "Pipeline should be a dictionary got {} instead".format(type(pipeline))
+        pipeline["harvest"] = settings.GIT_COMMIT
 
         return {
             "id": identifier,
@@ -42,9 +54,7 @@ class OutputCommand(BaseCommand):
             "url": url,
             "text": text,
             "mime_type": mime_type or meta.get("mime_type", None),
-            "pipeline": {
-                "harvest": settings.GIT_COMMIT
-            }
+            "pipeline": pipeline
         }
 
     def get_documents_from_kaldi(self, record):
@@ -72,6 +82,25 @@ class OutputCommand(BaseCommand):
                 log.warning("Could not find transcription for: {}".format(file_path))
             transcripts.append(self._create_document(transcript, record))
         return transcripts
+
+    def get_documents_from_tika(self, record):
+        text = None
+        file_resource = None
+        tika_resource = None
+        try:
+            file_resource = EdurepFile().get(record["source"])
+            tika_hash = HttpTikaResource.hash_from_data({"file": file_resource.body})
+            tika_resource = HttpTikaResource.objects.get(data_hash=tika_hash)
+            content_type, content = tika_resource.content
+            text = content.get("text", None)
+        except (DGResourceException, HttpTikaResource.DoesNotExist):
+            pass
+        return [
+            self._create_document(text, record, pipeline={
+                "download": self._serialize_resource(file_resource),
+                "tika": self._serialize_resource(tika_resource)
+            })
+        ]
 
 
 class FreezeCommand(BaseCommand):
