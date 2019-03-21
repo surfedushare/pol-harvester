@@ -11,7 +11,7 @@ class ArrangementSerializer(CollectionBaseSerializer):
 
     class Meta:
         model = Arrangement
-        fields = CollectionBaseSerializer.default_fields
+        fields = CollectionBaseSerializer.default_fields + ("content",)
 
 
 class ArrangementView(generics.RetrieveAPIView):

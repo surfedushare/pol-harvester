@@ -11,7 +11,7 @@ class CollectionSerializer(CollectionBaseSerializer):
 
     class Meta:
         model = Collection
-        fields = CollectionBaseSerializer.default_fields
+        fields = CollectionBaseSerializer.default_fields + ("content",)
 
 
 class CollectionView(generics.RetrieveAPIView):
