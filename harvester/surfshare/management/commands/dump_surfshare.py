@@ -3,11 +3,11 @@ import json
 from urlobject import URLObject
 from tqdm import tqdm
 
-from pol_harvester.management.base import DumpCommand
+from pol_harvester.management.base import OutputCommand
 from surfshare.constants import VIDEO_DOMAINS
 
 
-class Command(DumpCommand):
+class Command(OutputCommand):
 
     def handle(self, *args, **options):
 

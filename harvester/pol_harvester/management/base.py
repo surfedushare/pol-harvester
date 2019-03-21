@@ -13,7 +13,7 @@ from pol_harvester.utils.language import get_language_from_snippet, get_kaldi_mo
 log = logging.getLogger(__name__)
 
 
-class DumpCommand(BaseCommand):
+class OutputCommand(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('-i', '--input', type=str, required=True)

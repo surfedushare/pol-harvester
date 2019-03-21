@@ -9,7 +9,7 @@ from django.core.files.storage import default_storage
 
 from datagrowth.exceptions import DGResourceException
 from pol_harvester.models import HttpTikaResource
-from pol_harvester.management.base import DumpCommand
+from pol_harvester.management.base import OutputCommand
 from edurep.models import EdurepFile
 from edurep.constants import TIKA_MIME_TYPES, VIDEO_DOMAINS
 from ims.models import CommonCartridge
@@ -18,7 +18,7 @@ from ims.models import CommonCartridge
 log = logging.getLogger(__name__)
 
 
-class Command(DumpCommand):
+class Command(OutputCommand):
 
     def get_documents_from_tika(self, record):
         text = None

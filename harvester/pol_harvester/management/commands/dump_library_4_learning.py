@@ -3,13 +3,13 @@ import os
 import json
 from tqdm import tqdm
 
-from pol_harvester.management.base import DumpCommand
+from pol_harvester.management.base import OutputCommand
 
 
 log = logging.getLogger(__name__)
 
 
-class Command(DumpCommand):
+class Command(OutputCommand):
 
     def handle(self, *args, **options):
 

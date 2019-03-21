@@ -3,12 +3,12 @@ import json
 from urlobject import URLObject
 from tqdm import tqdm
 
-from pol_harvester.management.base import DumpCommand, FreezeCommand
+from pol_harvester.management.base import OutputCommand, FreezeCommand
 from pol_harvester.models import Arrangement
 from surfshare.constants import VIDEO_DOMAINS
 
 
-class Command(FreezeCommand, DumpCommand):
+class Command(FreezeCommand, OutputCommand):
 
     def handle(self, *args, **options):
 
