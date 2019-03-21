@@ -6,19 +6,31 @@ from pol_harvester.views.document import DocumentSerializer
 from pol_harvester.views.annotation import AnnotationSerializer
 
 
-class FreezeSerializer(CollectionBaseSerializer):
+class FreezeDetailSerializer(CollectionBaseSerializer):
 
     content = DocumentSerializer(many=True, source="documents")
     annotations = AnnotationSerializer(many=True)
 
     class Meta:
         model = Freeze
-        fields = CollectionBaseSerializer.default_fields + ("annotations",)
+        fields = CollectionBaseSerializer.default_fields + ("content", "annotations",)
 
 
-class FreezeView(generics.RetrieveAPIView):
+class FreezeListSerializer(CollectionBaseSerializer):
+
+    class Meta:
+        model = Freeze
+        fields = CollectionBaseSerializer.default_fields
+
+
+class FreezeListView(generics.ListAPIView):
     queryset = Freeze.objects.all()
-    serializer_class = FreezeSerializer
+    serializer_class = FreezeListSerializer
+
+
+class FreezeDetailView(generics.RetrieveAPIView):
+    queryset = Freeze.objects.all()
+    serializer_class = FreezeDetailSerializer
 
 
 class FreezeContentView(CollectionBaseContentView):

@@ -32,7 +32,8 @@ api_urlpatterns = [
         views.AnnotationView.as_view(),
         name="freeze-annotation"
     ),
-    url(r'^freeze/(?P<pk>\d+)/$', views.FreezeView.as_view(), name="freeze"),
+    url(r'^freeze/(?P<pk>\d+)/$', views.FreezeDetailView.as_view(), name="freeze"),
+    url(r'^freeze/$', views.FreezeListView.as_view(), name="freeze"),
 ]
 
 
