@@ -74,6 +74,8 @@ class Command(FreezeCommand, DumpCommand):
 
     def _get_or_create_context(self, freeze_name, collection_name):
         freeze, created = Freeze.objects.get_or_create(name=freeze_name)
+        freeze.referee = "id"
+        freeze.save()
         if created:
             print("Created freeze " + freeze_name)
         else:
