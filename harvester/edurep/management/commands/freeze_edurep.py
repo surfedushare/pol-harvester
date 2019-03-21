@@ -8,7 +8,7 @@ from urlobject import URLObject
 from django.core.files.storage import default_storage
 
 from datagrowth.exceptions import DGResourceException
-from pol_harvester.models import HttpTikaResource, Freeze, Collection, Arrangement
+from pol_harvester.models import HttpTikaResource, Arrangement
 from pol_harvester.management.base import DumpCommand, FreezeCommand
 from edurep.models import EdurepFile
 from edurep.constants import TIKA_MIME_TYPES, VIDEO_DOMAINS
@@ -71,23 +71,6 @@ class Command(FreezeCommand, DumpCommand):
         except (DGResourceException, HttpTikaResource.DoesNotExist, CommonCartridge.DoesNotExist):
             pass
         return documents
-
-    def _get_or_create_context(self, freeze_name, collection_name):
-        freeze, created = Freeze.objects.get_or_create(name=freeze_name)
-        freeze.referee = "id"
-        freeze.save()
-        if created:
-            print("Created freeze " + freeze_name)
-        else:
-            print("Adding to freeze " + freeze_name)
-        collection, created = Collection.objects.get_or_create(name=collection_name)
-        collection.referee = "id"
-        collection.save()
-        if created:
-            print("Created collection " + collection_name)
-        else:
-            print("Adding to collection " + collection_name)
-        return freeze, collection
 
     def handle(self, *args, **options):
 

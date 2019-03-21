@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand
 from django.apps import apps
 
 from datagrowth.exceptions import DGResourceException
-from pol_harvester.models import YouTubeDLResource
+from pol_harvester.models import YouTubeDLResource, Freeze, Collection
 from pol_harvester.utils.language import get_language_from_snippet, get_kaldi_model_from_snippet
 
 
@@ -80,3 +80,20 @@ class FreezeCommand(BaseCommand):
         parser.add_argument('-i', '--input', type=str, required=True)
         parser.add_argument('-f', '--freeze', type=str, required=True)
         parser.add_argument('-c', '--collection', type=str, required=True)
+
+    def _get_or_create_context(self, freeze_name, collection_name):
+        freeze, created = Freeze.objects.get_or_create(name=freeze_name)
+        freeze.referee = "id"
+        freeze.save()
+        if created:
+            log.info("Created freeze " + freeze_name)
+        else:
+            log.info("Adding to freeze " + freeze_name)
+        collection, created = Collection.objects.get_or_create(name=collection_name, freeze=freeze)
+        collection.referee = "id"
+        collection.save()
+        if created:
+            log.info("Created collection " + collection_name)
+        else:
+            log.info("Adding to collection " + collection_name)
+        return freeze, collection
