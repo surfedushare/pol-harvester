@@ -76,9 +76,9 @@ class Command(BaseCommand):
                 err.warning("Path does not exist:", file_path)
                 skipped_missing += 1
                 continue
-            scc, err = run(file_path, config=config)
-            successes += scc
-            errors += err
+            sccs, errs = run(file_path, config=config)
+            successes += sccs
+            errors += errs
 
         out.info("Skipped video content due to domain restrictions: {}".format(skipped_domain))
         out.info("Skipped video content due to download failure: {}".format(skipped_download))
