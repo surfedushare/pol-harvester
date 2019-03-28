@@ -21,10 +21,14 @@ class Command(BaseCommand):
         log_header(out, "LIBRARY 4 LEARNING XML EXTRACTION", options)
 
         wur = WurLibrary4Learning(options["input"])
+        errors = wur.load()
+        out.info("Amount of WUR Library load errors:", errors)
+        wur_urls = list(wur)
+        out.info("Amount of extracted WUR URLs:", len(wur_urls))
 
         # Write to disk when output file is given
         output_file = options.get("output", None)
         if not output_file:
             return
         with open(output_file, "w") as json_file:
-            json.dump(list(wur), json_file, indent=4)
+            json.dump(wur_urls, json_file, indent=4)

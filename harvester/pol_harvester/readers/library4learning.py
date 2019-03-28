@@ -14,6 +14,7 @@ class WurLibrary4Learning(object):
         return iter(self.data.values())
 
     def load(self):
+        error_count = 0
         meta_file_path = os.path.join(self.source, "library4learning-metadata.xml")
         texts_file_path = os.path.join(self.source, "library4learning-fulltext.xml")
         with open(meta_file_path) as meta_file, open(texts_file_path, "rb") as texts_file:
@@ -42,9 +43,13 @@ class WurLibrary4Learning(object):
             source = self.data.get(document_id, None)
             if source is None:
                 warnings.warn("Failed to load text of {} because meta data is missing".format(document_id))
+                error_count += 1
                 continue
             transcript = document.find("transcript")
             if transcript is None:
                 warnings.warn("Failed to load text of {} because text is missing".format(document_id))
+                error_count += 1
                 continue
             source["documents"][0]["text"] = transcript.text.replace("\xa0", " ").strip('"')
+
+        return error_count
