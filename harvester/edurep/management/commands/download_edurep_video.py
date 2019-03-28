@@ -34,14 +34,14 @@ class Command(BaseCommand):
         # TODO: handle video lists differently
         video_urls = []
         for record in records:
-            url = URLObject(record["source"])
+            url = URLObject(record["url"])
             if not url.hostname in VIDEO_DOMAINS:
                 continue
             if "youtube.com" in url.hostname:
                 url = url.del_query_param('list')
                 url = url.del_query_param('index')
-                record["source"] = str(url)
-            video_urls.append(record["source"])
+                record["url"] = str(url)
+            video_urls.append(record["url"])
 
         errors, successes = run_serie(
             tqdm([

@@ -29,7 +29,7 @@ class Command(BaseCommand):
         }
 
         successes, errors = send_serie(
-            [[record["source"]] for record in records],
+            [[record["url"]] for record in records],
             [{} for _ in records],
             config=config,
             method="get"
