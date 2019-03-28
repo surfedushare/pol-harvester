@@ -22,9 +22,9 @@ class Command(BaseCommand):
 
         wur = WurLibrary4Learning(options["input"])
         errors = wur.load()
-        out.info("Amount of WUR Library load errors:", errors)
+        out.info("Amount of WUR Library load errors: {}".format(errors))
         wur_urls = list(wur)
-        out.info("Amount of extracted WUR URLs:", len(wur_urls))
+        out.info("Amount of extracted WUR URLs: {}".format(len(wur_urls)))
 
         # Write to disk when output file is given
         output_file = options.get("output", None)
