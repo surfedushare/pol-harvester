@@ -73,7 +73,7 @@ class Command(BaseCommand):
             })
             file_path = file_paths[0]
             if not os.path.exists(file_path):
-                err.warning("Path does not exist:", file_path)
+                err.warning("Path does not exist: {}".format(file_path))
                 skipped_missing += 1
                 continue
             sccs, errs = run(file_path, config=config)
