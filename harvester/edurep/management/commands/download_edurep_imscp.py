@@ -2,14 +2,14 @@ import logging
 import json
 
 from django.core.management.base import BaseCommand
-from django.core.files.storage import default_storage
 
 from datagrowth.resources.http.tasks import send_serie
+from pol_harvester.utils.logging import log_header
 from ims.models import CommonCartridge
 from edurep.models import EdurepFile
 
 
-log = logging.getLogger(__name__)
+out = logging.getLogger("freeze")
 
 
 class Command(BaseCommand):
@@ -18,6 +18,8 @@ class Command(BaseCommand):
         parser.add_argument('-i', '--input', type=str, required=True)
 
     def handle(self, *args, **options):
+
+        log_header(out, "EDUREP DOWNLOAD IMSCC/IMSCP", options)
 
         with open(options["input"], "r") as json_file:
             records = json.load(json_file)
@@ -36,8 +38,7 @@ class Command(BaseCommand):
             method="get"
         )
 
-        if len(errors):
-            log.warning("{} errors while downloading IMSCP's".format(len(errors)))
+        out.info("Errors while downloading IMSCP's: {}".format(len(errors)))
 
         for success_id in successes:
             edurep_file = EdurepFile.objects.get(id=success_id)
@@ -45,3 +46,5 @@ class Command(BaseCommand):
             common_cartridge.file.name = edurep_file.body
             common_cartridge.clean()
             common_cartridge.save()
+
+        out.info("IMSCP's downloaded and converted to IMSCC: {}".format(len(successes)))
