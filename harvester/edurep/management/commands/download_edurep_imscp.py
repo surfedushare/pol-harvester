@@ -44,7 +44,7 @@ class Command(BaseCommand):
         get_count = 0
         for success_id in successes:
             edurep_file = EdurepFile.objects.get(id=success_id)
-            common_cartridge, created = CommonCartridge.objects.get_or_create(file__name=edurep_file.body)
+            common_cartridge, created = CommonCartridge.objects.get_or_create(file=edurep_file.body)
             if created:
                 common_cartridge.clean()
                 common_cartridge.save()
