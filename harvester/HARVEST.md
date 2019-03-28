@@ -81,20 +81,14 @@ Errors in this process are to be ofund in the database.
 #### 4.) Export data and profit!
 
 There is no use in having data if you can't use it somewhere else like in Elastic Search.
-To be able to do that simply run the following command:
+To be able to do that simply run one of the following commands depending on what you want to output:
 
 ```bash
 ./manage.py dump_edurep --input <data-file> --output <your-output-directory>
+./manage.py dump_library_4_learning --input <data-file> --output <your-output-directory>
+./manage.py dump_surfshare --input <data-file> --output <your-output-directory>
 ```
 
 This dump does two things:
 1. It places all objects in files and assigns a unique id to these objects, which is then used as the filename.
 2. It places all objects with texts together in a file called with_text.json.
-
-For export of WUR data it works slightly different.
-This data is already formatted in a format close to the required format.
-To make the format completely compatible we just need to rewrite it slightly by running:
-
-```bash
-./manage.py reformat_dump --input <wur-json-file> --output <your-output-directory>
-```
