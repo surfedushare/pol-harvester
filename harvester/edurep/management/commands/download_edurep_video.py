@@ -33,9 +33,12 @@ class Command(BaseCommand):
 
         # TODO: handle video lists differently
         video_urls = []
+        skipped = 0
         for record in records:
             url = URLObject(record["url"])
             if not url.hostname in VIDEO_DOMAINS:
+                if record["mime_type"] and record["mime_type"].startswith("video"):
+                    skipped += 1
                 continue
             if "youtube.com" in url.hostname:
                 url = url.del_query_param('list')
@@ -53,5 +56,6 @@ class Command(BaseCommand):
             config=config
         )
 
+        out.info("Skipped video content due to domain restrictions: {}".format(skipped))
         out.info("Errors while downloading audio from videos: {}".format(len(errors)))
         out.info("Audio downloaded successfully: {}".format(len(successes)))
