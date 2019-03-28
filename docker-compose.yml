@@ -8,6 +8,7 @@ services:
       - ./harvester:/usr/src/app
       - ./${HARVESTER_DATA_DIR}/:/usr/src/data
       - ${HARVESTER_MEDIA_ROOT}/:/usr/src/media
+      - ${HARVESTER_MEDIA_ROOT}/:/data/media
     ports:
       - "8000:8000"
     depends_on:
