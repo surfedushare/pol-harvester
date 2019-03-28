@@ -53,5 +53,5 @@ class Command(BaseCommand):
                 get_count += 1
 
         out.info("IMSCP's downloaded: {}".format(len(successes)))
-        out.info("IMSCP's converted to IMSCC: {}".format(len(create_count)))
-        out.info("IMSCP's previously converted to IMSCC: {}".format(len(get_count)))
+        out.info("IMSCP's converted to IMSCC: {}".format(create_count))
+        out.info("IMSCP's previously converted to IMSCC: {}".format(get_count))
