@@ -40,11 +40,18 @@ class Command(BaseCommand):
 
         out.info("Errors while downloading IMSCP's: {}".format(len(errors)))
 
+        create_count = 0
+        get_count = 0
         for success_id in successes:
             edurep_file = EdurepFile.objects.get(id=success_id)
-            common_cartridge = CommonCartridge()
-            common_cartridge.file.name = edurep_file.body
-            common_cartridge.clean()
-            common_cartridge.save()
+            common_cartridge, created = CommonCartridge.objects.get_or_create(file__name=edurep_file.body)
+            if created:
+                common_cartridge.clean()
+                common_cartridge.save()
+                create_count += 1
+            else:
+                get_count += 1
 
-        out.info("IMSCP's downloaded and converted to IMSCC: {}".format(len(successes)))
+        out.info("IMSCP's downloaded: {}".format(len(successes)))
+        out.info("IMSCP's converted to IMSCC: {}".format(len(create_count)))
+        out.info("IMSCP's previously converted to IMSCC: {}".format(len(get_count)))
