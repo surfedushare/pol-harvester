@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Get git commit info to keep track of versions of data
 GIT_COMMIT = os.environ.get('DJANGO_GIT_COMMIT', None)
-if GIT_COMMIT is None:
+if not GIT_COMMIT:
     raise ImproperlyConfigured('DJANGO_GIT_COMMIT variable has not been set to a git commit hash')
 
 # Quick-start development settings - unsuitable for production
