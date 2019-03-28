@@ -205,8 +205,8 @@ DATAGROWTH_REQUESTS_PROXIES = None
 DATAGROWTH_REQUESTS_VERIFY = True
 DATAGROWTH_DATETIME_FORMAT = "%Y%m%d%H%M%S%f"
 
-KALDI_BASE_PATH = '/home/surf/kaldi'
-KALDI_ASPIRE_BASE_PATH = '/home/surf/kaldi/egs/aspire/s5'
-KALDI_NL_BASE_PATH = '/home/surf/Kaldi_NL'
+DATAGROWTH_KALDI_BASE_PATH = '/home/surf/kaldi'
+DATAGROWTH_KALDI_ASPIRE_BASE_PATH = '/home/surf/kaldi/egs/aspire/s5'
+DATAGROWTH_KALDI_NL_BASE_PATH = '/home/surf/Kaldi_NL'
 
 MAX_BATCH_SIZE = 500
