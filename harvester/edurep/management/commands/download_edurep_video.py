@@ -46,7 +46,7 @@ class Command(BaseCommand):
                 record["url"] = str(url)
             video_urls.append(record["url"])
 
-        errors, successes = run_serie(
+        successes, errors  = run_serie(
             tqdm([
                 [url] for url in video_urls
             ]),
