@@ -1,4 +1,5 @@
 TIKA_MIME_TYPES = [
+    "text/html",
     "application/msword",
     "application/octet-stream",
     "application/pdf",
