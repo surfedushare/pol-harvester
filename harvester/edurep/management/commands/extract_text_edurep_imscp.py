@@ -52,7 +52,7 @@ class Command(BaseCommand):
                     skipped += 1
 
         config = {
-            "resource": "pol_harvester.HttpTikaResource",
+            "resource": "pol_harvester.ShellTikaResource",
             "_namespace": "http_resource",
             "_private": ["_private", "_namespace", "_defaults"]
         }

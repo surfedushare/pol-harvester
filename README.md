@@ -6,7 +6,10 @@ A repo meant to scrape, extract and publish education materials.
 Prerequisites
 -------------
 
-This project uses ``Docker`` and ``docker-compose``. Make sure they are installed on your system before installing the project.
+This project uses ``Docker`` and ``docker-compose``.
+Make sure they are installed on your system before installing the project.
+The project also uses the Tika CLI. It currently works with the ``tika-app-1.19.1.jar`` JAR file.
+Place this file after cloning in the ``harvester/datagrowth/resources/shell/bin`` directory.
 
 
 Installation

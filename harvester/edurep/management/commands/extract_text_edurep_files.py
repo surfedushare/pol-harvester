@@ -38,7 +38,7 @@ class Command(BaseCommand):
         file_resources = list(EdurepFile.objects.filter(status=200))
 
         config = {
-            "resource": "pol_harvester.HttpTikaResource",
+            "resource": "pol_harvester.ShellTikaResource",
             "_namespace": "http_resource",
             "_private": ["_private", "_namespace", "_defaults"]
         }

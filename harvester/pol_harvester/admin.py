@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 from datagrowth.admin import ShellResourceAdmin, HttpResourceAdmin
-from pol_harvester.models import KaldiAspireResource, KaldiNLResource, YouTubeDLResource, HttpTikaResource
+from pol_harvester.models import (KaldiAspireResource, KaldiNLResource, YouTubeDLResource, HttpTikaResource,
+                                  ShellTikaResource)
 
 
 class KaldiAspireResourceAdmin(ShellResourceAdmin):
@@ -20,7 +21,12 @@ class HttpTikaResourceAdmin(HttpResourceAdmin):
     pass
 
 
+class ShellTikaResourceAdmin(ShellResourceAdmin):
+    pass
+
+
 admin.site.register(KaldiAspireResource, KaldiAspireResourceAdmin)
 admin.site.register(KaldiNLResource, KaldiNLResourceAdmin)
 admin.site.register(YouTubeDLResource, YouTubeDLResourceAdmin)
 admin.site.register(HttpTikaResource, HttpTikaResourceAdmin)
+admin.site.register(ShellTikaResource, ShellTikaResourceAdmin)
