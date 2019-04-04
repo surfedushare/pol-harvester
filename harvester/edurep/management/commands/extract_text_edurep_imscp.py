@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 from django.core.files.storage import default_storage
 
 from datagrowth.settings import DATAGROWTH_MEDIA_ROOT
-from datagrowth.resources.http.tasks import send_serie
+from datagrowth.resources.shell.tasks import run_serie
 from pol_harvester.utils.logging import log_header
 from ims.models import CommonCartridge
 from edurep.models import EdurepFile
@@ -58,7 +58,7 @@ class Command(BaseCommand):
             "_private": ["_private", "_namespace", "_defaults"]
         }
 
-        successes, errors = send_serie(
+        successes, errors = run_serie(
             [[os.path.join(DATAGROWTH_MEDIA_ROOT, file)] for file in files],
             [{} for _ in files],
             config=config,

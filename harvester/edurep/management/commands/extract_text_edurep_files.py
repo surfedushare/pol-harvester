@@ -6,7 +6,7 @@ import pandas as pd
 from django.core.management.base import BaseCommand
 
 from datagrowth.settings import DATAGROWTH_MEDIA_ROOT
-from datagrowth.resources.http.tasks import send_serie
+from datagrowth.resources.shell.tasks import run_serie
 from pol_harvester.utils.logging import log_header
 from edurep.models import EdurepFile
 from edurep.constants import TIKA_MIME_TYPES
@@ -45,7 +45,7 @@ class Command(BaseCommand):
             "_private": ["_private", "_namespace", "_defaults"]
         }
 
-        successes, errors = send_serie(
+        successes, errors = run_serie(
             [[os.path.join(DATAGROWTH_MEDIA_ROOT, resource.body)] for resource in file_resources],
             [{} for _ in file_resources],
             config=config,
