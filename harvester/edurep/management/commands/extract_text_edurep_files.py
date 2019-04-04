@@ -1,9 +1,11 @@
+import os
 import logging
 import json
 import pandas as pd
 
 from django.core.management.base import BaseCommand
 
+from datagrowth.settings import DATAGROWTH_MEDIA_ROOT
 from datagrowth.resources.http.tasks import send_serie
 from pol_harvester.utils.logging import log_header
 from edurep.models import EdurepFile
@@ -44,8 +46,8 @@ class Command(BaseCommand):
         }
 
         successes, errors = send_serie(
-            [[] for _ in file_resources],
-            [{"file": resource.body} for resource in file_resources],
+            [[os.path.join(DATAGROWTH_MEDIA_ROOT, file)] for file in file_resources],
+            [{} for _ in file_resources],
             config=config,
             method="post"
         )

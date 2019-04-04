@@ -7,6 +7,7 @@ from tqdm import tqdm
 from django.core.management.base import BaseCommand
 from django.core.files.storage import default_storage
 
+from datagrowth.settings import DATAGROWTH_MEDIA_ROOT
 from datagrowth.resources.http.tasks import send_serie
 from pol_harvester.utils.logging import log_header
 from ims.models import CommonCartridge
@@ -58,8 +59,8 @@ class Command(BaseCommand):
         }
 
         successes, errors = send_serie(
-            [[] for _ in files],
-            [{"file": file} for file in files],
+            [[os.path.join(DATAGROWTH_MEDIA_ROOT, file)] for file in files],
+            [{} for _ in files],
             config=config,
             method="post"
         )
