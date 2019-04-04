@@ -33,7 +33,9 @@ class Command(BaseCommand):
         keeps = df.loc[df['mime_type'].isin(formats)]
         skips = df.loc[~df['mime_type'].isin(formats)]
         uris = [EdurepFile.uri_from_url(url) for url in list(keeps["url"])]
-        file_resources = list(EdurepFile.objects.filter(uri__in=uris))
+        relevant_mime_resources = EdurepFile.objects.filter(uri__in=uris)
+        download_fail_count = relevant_mime_resources.exclude(status=200).count()
+        file_resources = list(EdurepFile.objects.filter(status=200))
 
         config = {
             "resource": "pol_harvester.HttpTikaResource",
@@ -49,5 +51,6 @@ class Command(BaseCommand):
         )
 
         out.info("Skipped URL's due to mime_type: {}".format(skips.shape[0]))
+        out.info("Skipped URL's due to download failure: {}".format(download_fail_count))
         out.info("Errors while extracting texts: {}".format(len(errors)))
         out.info("Texts extracted successfully: {}".format(len(successes)))
