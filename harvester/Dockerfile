@@ -1,5 +1,7 @@
 FROM python:3.6-onbuild
 
+RUN apt-get install default-jre
+
 # Entrypoint sets our environment correctly
 ENTRYPOINT [ "/usr/src/app/entrypoint.sh" ]
 
