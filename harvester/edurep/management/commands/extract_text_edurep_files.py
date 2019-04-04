@@ -48,8 +48,7 @@ class Command(BaseCommand):
         successes, errors = run_serie(
             [[os.path.join(DATAGROWTH_MEDIA_ROOT, resource.body)] for resource in file_resources],
             [{} for _ in file_resources],
-            config=config,
-            method="post"
+            config=config
         )
 
         out.info("Skipped URL's due to mime_type: {}".format(skips.shape[0]))

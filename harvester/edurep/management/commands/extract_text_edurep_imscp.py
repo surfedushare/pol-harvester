@@ -61,8 +61,7 @@ class Command(BaseCommand):
         successes, errors = run_serie(
             [[os.path.join(DATAGROWTH_MEDIA_ROOT, file)] for file in files],
             [{} for _ in files],
-            config=config,
-            method="post"
+            config=config
         )
 
         out.info("Skipped text extraction due to content_type restrictions: {}".format(skipped))
