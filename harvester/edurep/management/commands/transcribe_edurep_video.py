@@ -57,6 +57,9 @@ class Command(BaseCommand):
             except DGShellError:
                 skipped_download += 1
                 continue
+            if not download.success:
+                skipped_download += 1
+                continue
             _, file_paths = download.content
             if not len(file_paths):
                 skipped_download += 1
