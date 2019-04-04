@@ -46,7 +46,7 @@ class Command(BaseCommand):
         }
 
         successes, errors = send_serie(
-            [[os.path.join(DATAGROWTH_MEDIA_ROOT, file)] for file in file_resources],
+            [[os.path.join(DATAGROWTH_MEDIA_ROOT, resource.body)] for resource in file_resources],
             [{} for _ in file_resources],
             config=config,
             method="post"
