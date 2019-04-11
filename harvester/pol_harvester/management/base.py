@@ -37,7 +37,7 @@ class OutputCommand(BaseCommand):
 
     def _create_document(self, text, meta, title=None, url=None, mime_type=None, pipeline=None):
 
-        url = url or meta.get("url", meta.get("source"))  # edurep and sharekit scrapes name url slightly different
+        url = url or meta.get("url")
         hasher = hashlib.sha1()
         hasher.update(url.encode("utf-8"))
         identifier = hasher.hexdigest()
@@ -66,7 +66,7 @@ class OutputCommand(BaseCommand):
         }
 
     def get_documents_from_kaldi(self, record):
-        url = record.get("url", record.get("source"))  # edurep and sharekit scrapes name url slightly different
+        url = record.get("url")
         pipeline = {
             "download": self._serialize_resource(None),
             "kaldi": self._serialize_resource(None)
@@ -102,7 +102,7 @@ class OutputCommand(BaseCommand):
         file_resource = None
         tika_resource = None
         try:
-            file_resource = EdurepFile().get(record["source"])
+            file_resource = EdurepFile().get(record["url"])
             tika_hash = HttpTikaResource.hash_from_data({"file": file_resource.body})
             tika_resource = HttpTikaResource.objects.get(data_hash=tika_hash)
             content_type, content = tika_resource.content
@@ -120,7 +120,7 @@ class OutputCommand(BaseCommand):
         del record["mime_type"]  # because this *never* makes sense for the package documents inside
         documents = []
         try:
-            archive_resource = EdurepFile().get(record["source"] + "?p=imscp")
+            archive_resource = EdurepFile().get(record["url"] + "?p=imscp")
             archive = CommonCartridge.objects.get(file=archive_resource.body)
             files = []
             resources = archive.get_resources().values()
