@@ -29,7 +29,7 @@ class Command(FreezeCommand, OutputCommand):
 
         for record in tqdm(records):
             identifier = str(uuid4())
-            url = URLObject(record["source"])
+            url = URLObject(record["url"])
             if url.hostname in VIDEO_DOMAINS:
                 if "youtube.com" in url.hostname:
                     url = url.del_query_param('list')
@@ -53,7 +53,7 @@ class Command(FreezeCommand, OutputCommand):
                 referee="id",
                 meta={
                     "id": identifier,
-                    "url": record["source"],
+                    "url": record["url"],
                     "keywords": record["keywords"]
                 }
             )
