@@ -6,19 +6,23 @@ from urlobject import URLObject
 
 from pol_harvester.models import Arrangement
 from pol_harvester.management.base import OutputCommand, FreezeCommand
+from pol_harvester.utils.logging import log_header
 from edurep.constants import TIKA_MIME_TYPES, VIDEO_DOMAINS
 
 
-
-log = logging.getLogger(__name__)
+out = logging.getLogger("freeze")
 
 
 class Command(FreezeCommand, OutputCommand):
 
     def handle(self, *args, **options):
 
+        log_header(out, "FREEZE EDUREP", options)
+
         freeze, collection = self._get_or_create_context(options["freeze"], options["collection"])
         skipped = 0
+        dumped = 0
+        docs = 0
 
         with open(options["input"], "r") as json_file:
             records = json.load(json_file)
@@ -39,6 +43,8 @@ class Command(FreezeCommand, OutputCommand):
             else:
                 skipped += 1
                 continue
+            dumped += 1
+            docs += len(documents)
 
             arrangement = Arrangement.objects.create(
                 freeze=freeze,
@@ -54,4 +60,6 @@ class Command(FreezeCommand, OutputCommand):
             if len(documents):
                 arrangement.add(documents, collection=collection)
 
-        print("Completed with {} skipped".format(skipped))
+        out.info("Skipped URL's during dump: {}".format(skipped))
+        out.info("Dumped Arrangements: {}".format(dumped))
+        out.info("Dumped Documents: {}".format(docs))
