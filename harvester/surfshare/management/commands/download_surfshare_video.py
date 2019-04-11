@@ -61,7 +61,7 @@ class Command(BaseCommand):
             config=config
         )
 
-        out.info("Skipped video content due to missing mime type: {}".format(skipped_mime_type))
+        out.info("Skipped content due to missing mime type: {}".format(skipped_mime_type))
         out.info("Skipped video content due to domain restrictions: {}".format(skipped_domain))
         out.info("Errors while downloading audio from videos: {}".format(len(errors)))
         out.info("Audio downloaded successfully: {}".format(len(successes)))
