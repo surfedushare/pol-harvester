@@ -25,6 +25,11 @@ class OutputCommand(BaseCommand):
 
     @staticmethod
     def _serialize_resource(resource):
+        if resource is None:
+            return {
+                "success": False,
+                "resource": None
+            }
         return {
             "success": resource.success,
             "resource": ["{}.{}".format(resource._meta.app_label, resource._meta.model_name), resource.id]
@@ -62,28 +67,34 @@ class OutputCommand(BaseCommand):
 
     def get_documents_from_kaldi(self, record):
         url = record.get("url", record.get("source"))  # edurep and sharekit scrapes name url slightly different
+        pipeline = {
+            "download": self._serialize_resource(None),
+            "kaldi": self._serialize_resource(None)
+        }
         kaldi_model = get_kaldi_model_from_snippet(
             record.get("title", None),
             default_language=record.get("language", None)
         )
         if kaldi_model is None:
-            return [self._create_document(None, record)]
+            return [self._create_document(None, record, pipeline=pipeline)]
         try:
             download = YouTubeDLResource(config={"fetch_only": True}).run(url)
+            pipeline["download"] = self._serialize_resource(download)
         except DGResourceException:
-            return [self._create_document(None, record)]
+            return [self._create_document(None, record, pipeline=pipeline)]
         _, file_paths = download.content
         if not len(file_paths):
             log.warning("Could not find download for: {}".format(url))
-            return [self._create_document(None, record)]
+            return [self._create_document(None, record, pipeline=pipeline)]
         Kaldi = apps.get_model(kaldi_model)
         transcripts = []
-        for file_path in file_paths:
-            resource = Kaldi(config={"fetch_only": True}).run(file_path)
-            _, transcript = resource.content
-            if transcript is None:
-                log.warning("Could not find transcription for: {}".format(file_path))
-            transcripts.append(self._create_document(transcript, record))
+        file_path = file_paths[0]
+        resource = Kaldi(config={"fetch_only": True}).run(file_path)
+        pipeline["kaldi"] = self._serialize_resource(resource)
+        _, transcript = resource.content
+        if transcript is None:
+            log.warning("Could not find transcription for: {}".format(file_path))
+        transcripts.append(self._create_document(transcript, record, pipeline=pipeline))
         return transcripts
 
     def get_documents_from_tika(self, record):
