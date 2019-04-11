@@ -34,6 +34,7 @@ class Command(BaseCommand):
                         mime_type = document.get("content-type", None)  # NB: content-type is wrong legacy naming
                         if mime_type is None:
                             skipped_mime_type += 1
+                            continue
                         url = URLObject(document["url"])
                         if url.hostname not in VIDEO_DOMAINS:
                             if mime_type.startswith("video"):
