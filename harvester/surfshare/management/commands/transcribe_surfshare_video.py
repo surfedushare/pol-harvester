@@ -11,6 +11,7 @@ from datagrowth.resources.shell.tasks import run
 from datagrowth.exceptions import DGShellError
 from pol_harvester.models import YouTubeDLResource
 from pol_harvester.utils.language import get_kaldi_model_from_snippet
+from pol_harvester.utils.logging import log_header
 from surfshare.constants import VIDEO_DOMAINS
 
 
@@ -24,6 +25,8 @@ class Command(BaseCommand):
         parser.add_argument('-i', '--input', type=str, required=True)
 
     def handle(self, *args, **options):
+
+        log_header(out, "SURFSHARE TRANSCRIBE VIDEOS", options)
 
         video_sources = []
         skipped_mime_type = 0

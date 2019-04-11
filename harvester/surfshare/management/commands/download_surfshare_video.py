@@ -7,6 +7,7 @@ from urlobject import URLObject
 from django.core.management.base import BaseCommand
 
 from datagrowth.resources.shell.tasks import run_serie
+from pol_harvester.utils.logging import log_header
 from surfshare.constants import VIDEO_DOMAINS
 
 
@@ -19,6 +20,8 @@ class Command(BaseCommand):
         parser.add_argument('-i', '--input', type=str, required=True)
 
     def handle(self, *args, **options):
+
+        log_header(out, "SURFSHARE DOWNLOAD AUDIO FROM VIDEOS", options)
 
         video_urls = []
         skipped_mime_type = 0
