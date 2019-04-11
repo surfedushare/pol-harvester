@@ -89,7 +89,7 @@ class Command(BaseCommand):
             successes += sccs
             errors += errs
 
-        out.info("Skipped video content due to missing mime type: {}".format(skipped_mime_type))
+        out.info("Skipped content due to missing mime type: {}".format(skipped_mime_type))
         out.info("Skipped video content due to domain restrictions: {}".format(skipped_domain))
         out.info("Skipped video content due to download failure: {}".format(skipped_download))
         out.info("Skipped video content due to unknown language: {}".format(skipped_language))
