@@ -68,6 +68,10 @@ class CommonCartridge(models.Model):
         except KeyError:
             raise ValidationError('The common cartridge should contain a manifest file')
 
+    @property
+    def success(self):
+        return bool(self.manifest)
+
     def __str__(self):
         tail, head = os.path.split(self.file.name)
         return head
