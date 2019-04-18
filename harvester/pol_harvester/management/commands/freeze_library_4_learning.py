@@ -1,13 +1,11 @@
 import logging
+import os
 import json
-from uuid import uuid4
 from tqdm import tqdm
-from urlobject import URLObject
 
 from pol_harvester.models import Arrangement
 from pol_harvester.management.base import OutputCommand, FreezeCommand
 from pol_harvester.utils.logging import log_header
-from edurep.constants import TIKA_MIME_TYPES, VIDEO_DOMAINS
 
 
 out = logging.getLogger("freeze")
@@ -17,10 +15,9 @@ class Command(FreezeCommand, OutputCommand):
 
     def handle(self, *args, **options):
 
-        log_header(out, "FREEZE EDUREP", options)
+        log_header(out, "FREEZE LIBRARY 4 LEARNING", options)
 
         freeze, collection = self._get_or_create_context(options["freeze"], options["collection"])
-        skipped = 0
         dumped = 0
         docs = 0
 
@@ -28,18 +25,9 @@ class Command(FreezeCommand, OutputCommand):
             records = json.load(json_file)
 
         for record in tqdm(records):
-            identifier = str(uuid4())
-            url = URLObject(record["url"])
-            if url.hostname in VIDEO_DOMAINS:
-                record["source"] = str(url)
-                documents = self.get_documents_from_kaldi(record)
-            elif record["mime_type"] == "application/x-Wikiwijs-Arrangement":
-                documents = self.get_documents_from_imscp(record)
-            elif record["mime_type"] in TIKA_MIME_TYPES:
-                documents = self.get_documents_from_tika(record)
-            else:
-                skipped += 1
-                continue
+            documents = []
+            for document in record.get("documents", []):
+                documents.append(self._create_document(document["text"], document, pipeline={"raw": True}))
             dumped += 1
             docs += len(documents)
 
@@ -49,7 +37,7 @@ class Command(FreezeCommand, OutputCommand):
                 schema={},
                 referee="id",
                 meta={
-                    "id": identifier,
+                    "id": record["id"],
                     "url": record["url"],
                     "keywords": record["keywords"]
                 }
@@ -57,6 +45,5 @@ class Command(FreezeCommand, OutputCommand):
             if len(documents):
                 arrangement.add(documents, collection=collection)
 
-        out.info("Skipped URL's during dump: {}".format(skipped))
         out.info("Dumped Arrangements: {}".format(dumped))
         out.info("Dumped Documents: {}".format(docs))

@@ -3,11 +3,11 @@ import json
 from urlobject import URLObject
 from tqdm import tqdm
 
-from pol_harvester.management.base import DumpCommand
+from pol_harvester.management.base import OutputCommand
 from surfshare.constants import VIDEO_DOMAINS
 
 
-class Command(DumpCommand):
+class Command(OutputCommand):
 
     def handle(self, *args, **options):
 
@@ -33,10 +33,6 @@ class Command(DumpCommand):
                         document["title"] = data.get("title", None)
                     url = URLObject(document["url"])
                     if url.hostname in VIDEO_DOMAINS:
-                        if "youtube.com" in url.hostname:
-                            url = url.del_query_param('list')
-                            url = url.del_query_param('index')
-                            document["url"] = str(url)
                         documents += self.get_documents_from_kaldi(document)
                     else:
                         documents.append(self._create_document(document["text"], document))

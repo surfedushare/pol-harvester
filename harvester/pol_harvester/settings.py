@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Get git commit info to keep track of versions of data
 GIT_COMMIT = os.environ.get('DJANGO_GIT_COMMIT', None)
-if GIT_COMMIT is None:
+if not GIT_COMMIT:
     raise ImproperlyConfigured('DJANGO_GIT_COMMIT variable has not been set to a git commit hash')
 
 # Quick-start development settings - unsuitable for production
@@ -145,10 +145,15 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'file': {
+        'debug_file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': BASE_DIR + '/pol_harvester/logs/debug.log',
+        },
+        'freeze_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR + '/pol_harvester/logs/freeze.log',
         },
         'console': {
             'level': 'DEBUG',
@@ -157,8 +162,13 @@ LOGGING = {
     },
     'loggers': {
         'pol_harvester': {
-            'handlers': ['file'],
+            'handlers': ['debug_file'],
             'level': 'DEBUG',
+            'propagate': True,
+        },
+        'freeze': {
+            'handlers': ['freeze_file'],
+            'level': 'INFO',
             'propagate': True,
         },
         'datagrowth.command': {
@@ -178,7 +188,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'statics')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 WHITENOISE_INDEX_FILE = 'index.html'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
+MEDIA_ROOT = os.path.join('..', 'media')
 
 
 # Rest framework
@@ -190,13 +200,13 @@ REST_FRAMEWORK = {}
 # Datagrowth
 # https://github.com/fako/datascope/blob/master/datagrowth/settings.py
 
-DATAGROWTH_DATA_DIR = os.path.join(BASE_DIR, '..', 'data')
+DATAGROWTH_DATA_DIR = os.path.join('..', 'data')
 DATAGROWTH_REQUESTS_PROXIES = None
 DATAGROWTH_REQUESTS_VERIFY = True
 DATAGROWTH_DATETIME_FORMAT = "%Y%m%d%H%M%S%f"
 
-KALDI_BASE_PATH = '/home/surf/kaldi'
-KALDI_ASPIRE_BASE_PATH = '/home/surf/kaldi/egs/aspire/s5'
-KALDI_NL_BASE_PATH = '/home/surf/Kaldi_NL'
+DATAGROWTH_KALDI_BASE_PATH = '/home/surf/kaldi'
+DATAGROWTH_KALDI_ASPIRE_BASE_PATH = '/home/surf/kaldi/egs/aspire/s5'
+DATAGROWTH_KALDI_NL_BASE_PATH = '/home/surf/Kaldi_NL'
 
 MAX_BATCH_SIZE = 500

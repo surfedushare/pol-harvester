@@ -1,9 +1,8 @@
 import hashlib
 import re
 
-from django.conf import settings
-
-from datagrowth.resources import ShellResource
+from datagrowth import settings as datagrowth_settings
+from datagrowth.resources.shell import ShellResource
 
 
 class KaldiNLResource(ShellResource):
@@ -21,11 +20,11 @@ class KaldiNLResource(ShellResource):
     ]
     FLAGS = {}
     VARIABLES = {
-        "KALDI_ROOT": settings.KALDI_BASE_PATH,
+        "KALDI_ROOT": datagrowth_settings.DATAGROWTH_KALDI_BASE_PATH,
         "OUTPUT_PATH": None  # gets set at runtime
     }
     CONTENT_TYPE = "text/plain"
-    DIRECTORY_SETTING = "KALDI_NL_BASE_PATH"
+    DIRECTORY_SETTING = "DATAGROWTH_KALDI_NL_BASE_PATH"
 
     def environment(self, *args, **kwargs):
         env = super().environment()
@@ -58,3 +57,6 @@ class KaldiNLResource(ShellResource):
             elif is_transcript:
                 out.append(line)
         return re.sub(" \(.+\)$", "", "\n".join(out), flags=re.MULTILINE)
+
+    class Meta:
+        abstract = True
