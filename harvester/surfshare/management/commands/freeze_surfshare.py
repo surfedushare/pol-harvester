@@ -43,10 +43,6 @@ class Command(FreezeCommand, OutputCommand):
                         document["title"] = data.get("title", None)
                     url = URLObject(document["url"])
                     if url.hostname in VIDEO_DOMAINS:
-                        if "youtube.com" in url.hostname:
-                            url = url.del_query_param('list')
-                            url = url.del_query_param('index')
-                            document["url"] = str(url)
                         vids = self.get_documents_from_kaldi(document)
                         videos += len(vids)
                         documents += vids

@@ -45,9 +45,6 @@ class Command(BaseCommand):
                             if mime_type.startswith("video"):
                                 skipped_domain += 1
                             continue
-                        if "youtube.com" in url.hostname:
-                            url = url.del_query_param('list')
-                            url = url.del_query_param('index')
                         document["url"] = str(url)
                         video_sources.append(document)
 

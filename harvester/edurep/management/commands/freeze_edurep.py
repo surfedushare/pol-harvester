@@ -31,9 +31,6 @@ class Command(FreezeCommand, OutputCommand):
             identifier = str(uuid4())
             url = URLObject(record["url"])
             if url.hostname in VIDEO_DOMAINS:
-                if "youtube.com" in url.hostname:
-                    url = url.del_query_param('list')
-                    url = url.del_query_param('index')
                 record["source"] = str(url)
                 documents = self.get_documents_from_kaldi(record)
             elif record["mime_type"] == "application/x-Wikiwijs-Arrangement":

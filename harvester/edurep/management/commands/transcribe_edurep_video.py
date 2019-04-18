@@ -40,9 +40,6 @@ class Command(BaseCommand):
                 if record["mime_type"] and record["mime_type"].startswith("video"):
                     skipped_domain += 1
                 continue
-            if "youtube.com" in url.hostname:
-                url = url.del_query_param('list')
-                url = url.del_query_param('index')
             record["url"] = str(url)
             video_records.append(record)
 
