@@ -1,6 +1,6 @@
 FROM python:3.6-stretch
 
-RUN apt-get install ffmpeg
+RUN apt-get update && apt-get install -y ffmpeg
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
