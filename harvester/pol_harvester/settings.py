@@ -188,7 +188,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'statics')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 WHITENOISE_INDEX_FILE = 'index.html'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
+MEDIA_ROOT = os.path.join('..', 'media')
 
 
 # Rest framework
@@ -200,7 +200,7 @@ REST_FRAMEWORK = {}
 # Datagrowth
 # https://github.com/fako/datascope/blob/master/datagrowth/settings.py
 
-DATAGROWTH_DATA_DIR = os.path.join(BASE_DIR, '..', 'data')
+DATAGROWTH_DATA_DIR = os.path.join('..', 'data')
 DATAGROWTH_REQUESTS_PROXIES = None
 DATAGROWTH_REQUESTS_VERIFY = True
 DATAGROWTH_DATETIME_FORMAT = "%Y%m%d%H%M%S%f"
