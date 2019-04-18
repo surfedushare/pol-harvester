@@ -27,9 +27,9 @@ class Command(OutputCommand):
 
         for record in tqdm(records):
             identifier = str(uuid4())
-            url = URLObject(record["source"])
+            url = URLObject(record["url"])
             if url.hostname in VIDEO_DOMAINS:
-                record["source"] = str(url)
+                record["url"] = str(url)
                 documents = self.get_documents_from_kaldi(record)
             elif record["mime_type"] == "application/x-Wikiwijs-Arrangement":
                 documents = self.get_documents_from_imscp(record)
