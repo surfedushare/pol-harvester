@@ -1,5 +1,6 @@
 import logging
 import json
+from tqdm import tqdm
 
 from django.core.management.base import BaseCommand
 
@@ -29,7 +30,7 @@ class Command(BaseCommand):
         }
 
         successes, errors = send_serie(
-            [[record["url"]] for record in records],
+            tqdm([[record["url"]] for record in records]),
             [{} for _ in records],
             config=config,
             method="get"
