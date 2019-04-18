@@ -17,6 +17,15 @@ If you got the data as a dump proceed to step 2. If you only have a Edurep query
 ./manage.py harvest_edurep_api --query <your-query>
 ```
 
+Currently we're using the following commands to get the data from Edurep:
+
+```bash
+./manage.py harvest_edurep_api --query hbovpk
+./manage.py harvest_edurep_api --query meta.repository.id=Leraar24_Publicaties
+./manage.py harvest_edurep_api --query meta.repository.id=wikiwijsmaken+AND+lom.educational.context=HBO
+./manage.py harvest_edurep_api --query meta.repository.id=wikiwijsmaken+AND+lom.educational.context=WO
+```
+
 #### 2.) Extracting relevant data
 
 We "extract" data from raw data to bring all data into the same format and to discard data we do not need.
@@ -24,9 +33,6 @@ How this extraction is done depends slightly on your initial raw data.
 Use one of the commands below:
 
 ```bash
-# When reading Edurep JSON dumps
-./manage.py extract_edurep_json --input <the-JSON-dump-file> --output <your-data-file>
-
 # When using Edurep search queries
 ./manage.py extract_edurep_api --query <your-query> --output <your-data-file>
 
@@ -44,7 +50,7 @@ These commands internally use TIKA to extract texts from files.
 
 ```bash
 ./manage.py download_edurep --input <data-file>
-./manage.py extract_text_edurep_files --formats text/html,application/msword,application/octet-stream,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,vnd.openxmlformats-officedocument.presentationml.presentation  --input <data-file>
+./manage.py extract_text_edurep_files --input <data-file>
 ```
 
 This will put the content in files on your harddisk under the ```media``` directory. 
