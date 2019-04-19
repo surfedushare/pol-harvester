@@ -11,6 +11,9 @@ class Freeze(DocumentCollectionMixin, CollectionBase):
         doc.freeze = self
         return doc
 
+    def __str__(self):
+        return "{} (id={})".format(self.name, self.id)
+
 
 class Collection(DocumentCollectionMixin, CollectionBase):
     freeze = models.ForeignKey("Freeze", blank=True, null=True)
@@ -19,6 +22,9 @@ class Collection(DocumentCollectionMixin, CollectionBase):
         doc = super().init_document(data, collection=collection)
         doc.freeze = self.freeze
         return doc
+
+    def __str__(self):
+        return "{} (id={})".format(self.name, self.id)
 
 
 class Arrangement(DocumentCollectionMixin, CollectionBase):
