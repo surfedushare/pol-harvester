@@ -98,3 +98,9 @@ To be able to do that simply run one of the following commands depending on what
 This dump does two things:
 1. It places all objects in files and assigns a unique id to these objects, which is then used as the filename.
 2. It places all objects with texts together in a file called with_text.json.
+
+Alternatively you can make a data freeze inside of the database. To do that run the following command:
+
+```bash
+./manage.py freeze_edurep --freeze <freeze-name> --collection <collection-name> --input <data-file>
+```
