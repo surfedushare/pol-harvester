@@ -89,7 +89,7 @@ def to_es_document(doc):
         'url': doc['url'],
         'title_plain': doc['title'],
         'text_plain': doc['text'],
-        'keywords': doc['arrangement_keywords'],
+        # 'keywords': doc['arrangement_keywords'], #todo do we need this?
         'humanized_mime_type': HUMANIZED_MIME_TYPES.get(doc['mime_type'],
                                                         'unknown'),
         'mime_type': doc['mime_type'],
