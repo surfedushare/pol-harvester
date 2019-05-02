@@ -3,10 +3,12 @@ Creates an index in elastic search.
 We use the embedded elastic search config in the code.
 See --help for options and arguments.
 """
+import json
 import os
 from collections import defaultdict
 
 from elasticsearch.helpers import streaming_bulk
+from elasticsearch import Elasticsearch
 
 from django.core.management.base import BaseCommand
 from pol_harvester.models import Document
@@ -147,6 +149,35 @@ def create_index(es, name, language, documents, recreate):
                           documents)
 
 
+def get_es_config(file_path):
+    """
+    Reads a json file containing the elastic search credentials and url.
+    The file is expected to have 'url', 'username' and 'password' keys
+    """
+
+    with open(file_path) as stream:
+        credentials = json.load(stream)
+    return (credentials['url'],
+            (credentials['username'], credentials['password']),
+            credentials['host'])
+
+
+def get_es_client(credentials_file):
+    """
+    Returns the elasticsearch client which uses the configuration file
+    """
+
+    _, auth, host = get_es_config(credentials_file)
+    es_client = Elasticsearch([host],
+                              http_auth=auth,
+                              scheme='https',
+                              port=443,
+                              http_compress=True)
+    # test if it works
+    if not es_client.cat.health():
+        raise ValueError('Credentials do not work for Elastic search')
+    return es_client
+
 class Command(BaseCommand):
     def handle(self, *args, **options):
         name = "freeze6-test"
@@ -163,6 +194,9 @@ class Command(BaseCommand):
             lang_doc_dict[lang].append(doc)
         for lang in lang_doc_dict.keys():
             log.info(f'{lang}:{len(lang_doc_dict[lang])}')
-        es = util.get_es_client(credentials_file)
+        es = get_es_client(credentials_file)
         [create_index(es, name, lang, lang_doc_dict[lang], recreate)
          for lang in lang_doc_dict.keys() if lang in ANALYSERS]
+
+
+
