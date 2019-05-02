@@ -4,16 +4,37 @@ We use the embedded elastic search config in the code.
 See --help for options and arguments.
 """
 import os
+from collections import defaultdict
 
 import click
 from elasticsearch.helpers import streaming_bulk
 
 import util
 
+LANG_ORDER = ['from_text', 'from_title', 'metadata']
 ANALYSERS = {
     'en': 'english',
     'nl': 'dutch'
 }
+HUMANIZED_MIME_TYPES = {
+    'unknown': 'unknown',
+    'application/pdf': 'pdf',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'powerp.',
+    'application/vnd.ms-powerpoint': 'powerp.',
+    'application/msword': 'word',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'word',
+    'application/rtf': 'word',
+    'text/plain': 'word',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'excel',
+    'text/html': 'html',
+    'video': 'video',
+    'image': 'image',
+    'application/zip': 'zip',
+    'audio/mpeg': 'audio',
+    'application/octet-stream': 'other'
+}
+
+log = util.get_logger(__name__)
 
 
 def get_index_config(lang):
@@ -44,7 +65,7 @@ def get_index_config(lang):
                     'text_plain': {'type': 'text'},
                     'keywords': {'type': 'text'},
                     'mime_type': {'type': 'text'},
-                    'conformed_mime_type': {'type': 'text'},
+                    'humanized_mime_type': {'type': 'text'},
                     'id': {'type': 'text'},
                     'arrangement_collection_name': {'type': 'text'}
                 }
@@ -66,20 +87,12 @@ def to_es_document(doc):
         'title_plain': doc['title'],
         'text_plain': doc['text'],
         'keywords': doc['arrangement_keywords'],
+        'humanized_mime_type': HUMANIZED_MIME_TYPES.get(doc['mime_type'],
+                                                        'unknown'),
         'mime_type': doc['mime_type'],
-        'conformed_mime_type': doc['conformed_mime_type'],
         '_id': doc['id'],
         'arrangement_collection_name': doc['arrangement_collection_name']
     }
-
-
-def create_index(client, name, config):
-    """
-    Creates an index with the supplied name, using the config.
-    """
-    return client.indices.create(
-        index=name,
-        body=config)
 
 
 def bulk_insert_documents(client, index_name, documents):
@@ -94,7 +107,20 @@ def bulk_insert_documents(client, index_name, documents):
                                         chunk_size=100,
                                         ):
         if not is_ok:
-            print(result)
+            print(f'Error in sending bulk:{result}')
+
+
+def get_language(document):
+    """
+    Returns the language of the document, given a preference of fields
+    """
+    # The priority is in that order
+    for field in LANG_ORDER:
+        if field in document['language']:
+            current_lang = document['language'][field]
+            if current_lang is not None:
+                return current_lang
+    return "unknown"
 
 
 def read_languages(folder):
@@ -104,31 +130,40 @@ def read_languages(folder):
     return [entity for entity in os.listdir(folder)]
 
 
+def create_index(es, name, language, documents, recreate):
+    index_name = f'{name}-{language}'
+    log.info(f'Creating index: {index_name}')
+
+    config = get_index_config(language)
+    if es.indices.exists(index_name) and recreate:
+        es.indices.delete(index_name)
+
+    es.indices.create(
+        index=index_name,
+        body=config)
+    bulk_insert_documents(es,
+                          index_name,
+                          documents)
+
+
 @click.command()
 @click.argument('name')
 @click.argument('credentials_file')
-@click.argument('folder')
+@click.argument('input_directory')
 @click.option('--recreate', type=bool, default=True)
-def main(name, credentials_file, folder, recreate):
-    logger = util.get_logger(__name__)
-
-    languages = read_languages(folder)
-    for language in languages:
-        index_name = f'{name}-{language}'
-        logger.info(f'Creating index: {index_name}')
-
-        es = util.get_es_client(credentials_file)
-
-        config = get_index_config(language)
-        if es.indices.exists(index_name):
-            if recreate:
-                es.indices.delete(index_name)
-            else:
-                raise Exception(f"Index {index_name} already exists.")
-
-        create_index(es, index_name, config)
-        bulk_insert_documents(es, index_name, util.read_documents(
-            os.path.join(folder, language)))
+def main(name, credentials_file, input_directory, recreate):
+    log.info(f'Reading collections')
+    documents = util.read_raw_documents(input_directory)
+    lang_doc = ((get_language(doc), doc) for doc in documents)
+    lang_doc_dict = defaultdict(list)
+    # create a list so we can report counts
+    for lang, doc in lang_doc:
+        lang_doc_dict[lang].append(doc)
+    for lang in lang_doc_dict.keys():
+        log.info(f'{lang}:{len(lang_doc_dict[lang])}')
+    es = util.get_es_client(credentials_file)
+    [create_index(es, name, lang, lang_doc_dict[lang], recreate)
+     for lang in lang_doc_dict.keys() if lang in ANALYSERS]
 
 
 if __name__ == '__main__':
