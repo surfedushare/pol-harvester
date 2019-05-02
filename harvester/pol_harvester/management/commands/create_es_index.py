@@ -181,7 +181,7 @@ def get_es_client(credentials_file):
 class Command(BaseCommand):
     def handle(self, *args, **options):
         name = "freeze6-test"
-        credentials_file = "../es_crredentials.json"
+        credentials_file = "../es_credentials.json"
         recreate = True
 
         documents = Document.objects.filter(freeze_id=10)  # 10 == freeze 6
