@@ -6,13 +6,11 @@ See --help for options and arguments.
 import os
 from collections import defaultdict
 
-import click
 from elasticsearch.helpers import streaming_bulk
-
-import util
 
 from django.core.management.base import BaseCommand
 from pol_harvester.models import Document
+import logging
 
 LANG_ORDER = ['from_text', 'from_title', 'metadata']
 ANALYSERS = {
@@ -37,7 +35,7 @@ HUMANIZED_MIME_TYPES = {
     'application/octet-stream': 'other'
 }
 
-log = util.get_logger(__name__)
+log = logging.getLogger("freeze")
 
 
 def get_index_config(lang):
@@ -149,11 +147,6 @@ def create_index(es, name, language, documents, recreate):
                           documents)
 
 
-@click.command()
-@click.argument('name')
-@click.argument('credentials_file')
-@click.argument('input_directory')
-@click.option('--recreate', type=bool, default=True)
 class Command(BaseCommand):
     def handle(self, *args, **options):
         name = "freeze6-test"
