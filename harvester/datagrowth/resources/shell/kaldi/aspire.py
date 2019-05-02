@@ -1,6 +1,5 @@
-from django.conf import settings
-
-from datagrowth.resources import ShellResource
+from datagrowth import settings as datagrowth_settings
+from datagrowth.resources.shell import ShellResource
 
 
 class KaldiAspireResource(ShellResource):
@@ -18,10 +17,10 @@ class KaldiAspireResource(ShellResource):
     ]
     FLAGS = {}
     VARIABLES = {
-        "KALDI_ROOT": settings.KALDI_BASE_PATH
+        "KALDI_ROOT": datagrowth_settings.DATAGROWTH_KALDI_BASE_PATH
     }
     CONTENT_TYPE = "text/plain"
-    DIRECTORY_SETTING = "KALDI_ASPIRE_BASE_PATH"
+    DIRECTORY_SETTING = "DATAGROWTH_KALDI_ASPIRE_BASE_PATH"
 
     def _update_from_results(self, results):
         super()._update_from_results(results)
@@ -49,3 +48,6 @@ class KaldiAspireResource(ShellResource):
             .replace("mm", "") \
             .replace("[noise]", "")
         return transcript
+
+    class Meta:
+        abstract = True

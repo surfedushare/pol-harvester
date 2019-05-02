@@ -12,7 +12,7 @@ from django.core.exceptions import ValidationError
 
 class CommonCartridge(models.Model):
 
-    file = models.FileField()
+    file = models.FileField(max_length=255)
     manifest = models.TextField(blank=True)
     upload_at = models.DateTimeField(auto_now_add=True)
 
@@ -67,6 +67,10 @@ class CommonCartridge(models.Model):
             self.manifest = cartridge.read('imsmanifest.xml')
         except KeyError:
             raise ValidationError('The common cartridge should contain a manifest file')
+
+    @property
+    def success(self):
+        return bool(self.manifest)
 
     def __str__(self):
         tail, head = os.path.split(self.file.name)

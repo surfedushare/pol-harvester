@@ -1,3 +1,4 @@
+import logging
 from tqdm import tqdm
 import json
 from urlobject import URLObject
@@ -5,7 +6,11 @@ from urlobject import URLObject
 from django.core.management.base import BaseCommand
 
 from datagrowth.resources.shell.tasks import run_serie
+from pol_harvester.utils.logging import log_header
 from edurep.constants import VIDEO_DOMAINS
+
+
+out = logging.getLogger("freeze")
 
 
 class Command(BaseCommand):
@@ -14,6 +19,8 @@ class Command(BaseCommand):
         parser.add_argument('-i', '--input', type=str, required=True)
 
     def handle(self, *args, **options):
+
+        log_header(out, "EDUREP DOWNLOAD AUDIO FROM VIDEOS", options)
 
         with open(options["input"], "r") as json_file:
             records = json.load(json_file)
@@ -24,18 +31,18 @@ class Command(BaseCommand):
             "_private": ["_private", "_namespace", "_defaults"]
         }
 
+        # TODO: handle video lists differently
         video_urls = []
+        skipped = 0
         for record in records:
-            url = URLObject(record["source"])
+            url = URLObject(record["url"])
             if not url.hostname in VIDEO_DOMAINS:
+                if record["mime_type"] and record["mime_type"].startswith("video"):
+                    skipped += 1
                 continue
-            if "youtube.com" in url.hostname:
-                url = url.del_query_param('list')
-                url = url.del_query_param('index')
-                record["source"] = str(url)
-            video_urls.append(record["source"])
+            video_urls.append(record["url"])
 
-        run_serie(
+        successes, errors = run_serie(
             tqdm([
                 [url] for url in video_urls
             ]),
@@ -44,3 +51,7 @@ class Command(BaseCommand):
             ],
             config=config
         )
+
+        out.info("Skipped video content due to domain restrictions: {}".format(skipped))
+        out.info("Errors while downloading audio from videos: {}".format(len(errors)))
+        out.info("Audio downloaded successfully: {}".format(len(successes)))

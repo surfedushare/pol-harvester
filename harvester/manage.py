@@ -1,9 +1,19 @@
 #!/usr/bin/env python
 import os
 import sys
+from git import Repo
+from git.exc import InvalidGitRepositoryError
+
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pol_harvester.settings")
+    try:
+        repo = Repo('..')
+        commit = str(repo.head.commit)
+    except InvalidGitRepositoryError as exc:
+        commit = None
+    os.environ.setdefault("DJANGO_GIT_COMMIT", commit)
+
     try:
         from django.core.management import execute_from_command_line
     except ImportError:

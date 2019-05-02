@@ -11,23 +11,32 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Get git commit info to keep track of versions of data
+GIT_COMMIT = os.environ.get('DJANGO_GIT_COMMIT', None)
+if not GIT_COMMIT:
+    raise ImproperlyConfigured('DJANGO_GIT_COMMIT variable has not been set to a git commit hash')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'm+2zzqoclh8b6um4%#k&(gw!!(=mmw&$y&u^14jkyt$t==p-$e'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'm+2zzqoclh8b6um4%#k&(gw!!(=mmw&$y&u^14jkyt$t==p-$e')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.environ.get('DJANGO_DEBUG', False)))
 
 ALLOWED_HOSTS = [
     'localhost',
     '.surfpol.nl'
+]
+CORS_ORIGIN_WHITELIST = [
+    'localhost:8080',
+    '127.0.0.1:8080',
 ]
 
 
@@ -40,6 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders',
 
     'datagrowth',
     'pol_harvester',
@@ -50,6 +61,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -84,11 +97,13 @@ WSGI_APPLICATION = 'pol_harvester.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'pol',
+        'USER': 'django',
+        'PASSWORD': os.environ.get('DJANGO_POSTGRES_PASSWORD', 'Yd36ewNjYBKY4MRUjmXMpaoHvxvR2Yqe'),
+        'HOST': os.environ.get('POSTGRES_HOST', '127.0.0.1')
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -130,10 +145,15 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'file': {
+        'debug_file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': BASE_DIR + '/pol_harvester/logs/debug.log',
+        },
+        'freeze_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR + '/pol_harvester/logs/freeze.log',
         },
         'console': {
             'level': 'DEBUG',
@@ -142,8 +162,13 @@ LOGGING = {
     },
     'loggers': {
         'pol_harvester': {
-            'handlers': ['file'],
+            'handlers': ['debug_file'],
             'level': 'DEBUG',
+            'propagate': True,
+        },
+        'freeze': {
+            'handlers': ['freeze_file'],
+            'level': 'INFO',
             'propagate': True,
         },
         'datagrowth.command': {
@@ -159,14 +184,29 @@ LOGGING = {
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'statics')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+WHITENOISE_INDEX_FILE = 'index.html'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media', os.sep)
+MEDIA_ROOT = os.path.join('..', 'media')
 
-DATAGROWTH_DATA_DIR = os.path.join(BASE_DIR, '..', 'data')
+
+# Rest framework
+# https://www.django-rest-framework.org/
+
+REST_FRAMEWORK = {}
+
+
+# Datagrowth
+# https://github.com/fako/datascope/blob/master/datagrowth/settings.py
+
+DATAGROWTH_DATA_DIR = os.path.join('..', 'data')
 DATAGROWTH_REQUESTS_PROXIES = None
 DATAGROWTH_REQUESTS_VERIFY = True
 DATAGROWTH_DATETIME_FORMAT = "%Y%m%d%H%M%S%f"
 
-KALDI_BASE_PATH = '/home/surf/kaldi'
-KALDI_ASPIRE_BASE_PATH = '/home/surf/kaldi/egs/aspire/s5'
-KALDI_NL_BASE_PATH = '/home/surf/Kaldi_NL'
+DATAGROWTH_KALDI_BASE_PATH = '/home/surf/kaldi'
+DATAGROWTH_KALDI_ASPIRE_BASE_PATH = '/home/surf/kaldi/egs/aspire/s5'
+DATAGROWTH_KALDI_NL_BASE_PATH = '/home/surf/Kaldi_NL'
+
+MAX_BATCH_SIZE = 500

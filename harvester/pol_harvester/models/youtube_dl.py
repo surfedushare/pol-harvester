@@ -14,6 +14,7 @@ class YouTubeDLResource(ShellResource):
 
     CMD_TEMPLATE = [
         "youtube-dl",
+        "--no-playlist",
         "--extract-audio",
         "--audio-format=wav",
         "--postprocessor-args=-ac 1 -ar 8000",

@@ -1,16 +1,15 @@
-import spacy
-from spacy_cld import LanguageDetector
+from langid.langid import LanguageIdentifier, model
 
 
-nlp = spacy.load("nl_core_news_sm")
-nlp.add_pipe(LanguageDetector())
+detector = LanguageIdentifier.from_modelstring(model, norm_probs=False)
+detector.set_languages(["en", "nl"])
 
 
 def get_language_from_snippet(snippet, default=None):
     if not snippet:
         return default
-    doc = nlp(snippet[:1000])  # somewhat arbitrary, but 1000 should cover it I think
-    return doc._.languages[0] if doc._.languages else default
+    language = detector.classify(snippet[:1000])  # somewhat arbitrary, but 1000 should cover it I think
+    return language[0] if language else default
 
 
 def get_kaldi_model_from_snippet(snippet, default_language=None):
