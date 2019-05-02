@@ -187,7 +187,10 @@ class Command(BaseCommand):
         documents = Document.objects.filter(freeze_id=10)  # 10 == freeze 6
         print(f"freeze 6 document count: {len(documents)}")
 
-        lang_doc = ((get_language(doc), doc) for doc in documents)
+        for doc in documents:
+            doc.properties['arrangement_collection_name'] = doc.collection.name
+
+        lang_doc = ((get_language(doc), doc) for doc in documents.properties)
         lang_doc_dict = defaultdict(list)
         # create a list so we can report counts
         for lang, doc in lang_doc:
