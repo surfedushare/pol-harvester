@@ -190,7 +190,7 @@ class Command(BaseCommand):
         for doc in documents:
             doc.properties['arrangement_collection_name'] = doc.collection.name
 
-        lang_doc = ((get_language(doc), doc) for doc in documents.properties)
+        lang_doc = ((get_language(doc.properties), doc.properties) for doc in documents)
         lang_doc_dict = defaultdict(list)
         # create a list so we can report counts
         for lang, doc in lang_doc:
