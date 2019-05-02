@@ -6,7 +6,7 @@ From the unzipped file "output/<collection>/with_text.json" is read.
 
 That file is a collection of "arrangments".
 These are then further flattened to "documents".
-Then some cleaning is applied and the documents are split to "nl" and "en".
+Then the documents are split to "nl" and "en".
 Last, a separate index is created for each language.
 
 ## Setup
@@ -18,14 +18,8 @@ You need to have elasticsearch credentials in a json file with the following str
   "host": "surfpol.sda.surf-hosted.nl"
 }
 
-## Read and flatten
-Maps the unzipped output received from Fako to "documents".
-
-    python read_freeze.py data/freeze3/output data/freeze3/elasticsearch
-
 ## Create index
 Create an index given a directory.
-We read the directory and expect to find a directory per language.
 We attempt to create an index from each language found.
 
     python create_index.py freeze3 es-credentials.json data/freeze3/elasticsearch
