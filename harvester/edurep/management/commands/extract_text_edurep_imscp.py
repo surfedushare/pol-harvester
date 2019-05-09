@@ -59,7 +59,7 @@ class Command(BaseCommand):
 
         successes, errors = send_serie(
             [[] for _ in files],
-            [{"file": file} for file in files],
+            tqdm([{"file": file} for file in files]),
             config=config,
             method="post"
         )
