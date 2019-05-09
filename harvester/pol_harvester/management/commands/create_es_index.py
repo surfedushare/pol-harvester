@@ -180,12 +180,13 @@ def get_es_client(credentials_file):
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        name = "freeze6-test"
+        index_name = "freeze-alpha-test"
         credentials_file = "../es_credentials.json"
         recreate = True
 
-        documents = Document.objects.filter(freeze_id=10)  # 10 == freeze 6
-        print(f"freeze 6 document count: {len(documents)}")
+        freeze_name = "alpha"
+        documents = Document.objects.filter(freeze__name=freeze_name)
+        print(f"freeze { freeze_name } document count: {len(documents)}")
 
         for doc in documents:
             doc.properties['arrangement_collection_name'] = doc.collection.name
@@ -198,7 +199,7 @@ class Command(BaseCommand):
         for lang in lang_doc_dict.keys():
             log.info(f'{lang}:{len(lang_doc_dict[lang])}')
         es = get_es_client(credentials_file)
-        [create_index(es, name, lang, lang_doc_dict[lang], recreate)
+        [create_index(es, index_name, lang, lang_doc_dict[lang], recreate)
          for lang in lang_doc_dict.keys() if lang in ANALYSERS]
 
 
