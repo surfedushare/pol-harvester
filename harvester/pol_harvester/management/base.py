@@ -140,14 +140,11 @@ class OutputCommand(BaseCommand):
                 })
                 tika_resource = HttpTikaResource.objects.get(data_hash=tika_hash)
                 content_type, content = tika_resource.content
-                if content is not None:
-                    text = content.get("text", None)
-                    title = content.get("title", [None])[0]
-                else:
-                    text = None
-                    title = None
+                if content is None:
+                    content = {}
+                text = content.get("text", None)
+                title = content.get("title", [None])[0]
                 url = record["url"] + file.replace(destination, "")
-
                 documents.append(
                     self._create_document(
                         text if text else None,
@@ -160,8 +157,7 @@ class OutputCommand(BaseCommand):
                             "package": self._serialize_resource(archive),
                             "tika": self._serialize_resource(tika_resource)
                         }
-                    ),
-
+                    )
                 )
         except (DGResourceException, HttpTikaResource.DoesNotExist, CommonCartridge.DoesNotExist):
             pass
