@@ -140,7 +140,10 @@ class OutputCommand(BaseCommand):
                 })
                 tika_resource = HttpTikaResource.objects.get(data_hash=tika_hash)
                 content_type, content = tika_resource.content
-                text = content.get("text", None)
+                if content is not None:
+                    text = content.get("text", None)
+                else:
+                    text = None
                 url = record["url"] + file.replace(destination, "")
                 title = content.get("title", [None])[0]
                 documents.append(
