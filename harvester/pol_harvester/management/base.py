@@ -142,10 +142,12 @@ class OutputCommand(BaseCommand):
                 content_type, content = tika_resource.content
                 if content is not None:
                     text = content.get("text", None)
+                    title = content.get("title", [None])[0]
                 else:
                     text = None
+                    title = None
                 url = record["url"] + file.replace(destination, "")
-                title = content.get("title", [None])[0]
+
                 documents.append(
                     self._create_document(
                         text if text else None,
