@@ -31,7 +31,7 @@ class Command(FreezeCommand, OutputCommand):
             identifier = str(uuid4())
             url = URLObject(record["url"])
             if url.hostname in VIDEO_DOMAINS:
-                record["source"] = str(url)
+                record["url"] = str(url)
                 documents = self.get_documents_from_kaldi(record)
             elif record["mime_type"] == "application/x-Wikiwijs-Arrangement":
                 documents = self.get_documents_from_imscp(record)

@@ -8,6 +8,7 @@ from django.apps import apps
 from django.core.files.storage import default_storage
 
 from datagrowth.exceptions import DGResourceException
+from datagrowth import settings as datagrowth_settings
 from pol_harvester.models import YouTubeDLResource, Freeze, Collection, HttpTikaResource
 from pol_harvester.utils.language import get_language_from_snippet, get_kaldi_model_from_snippet
 from edurep.models import EdurepFile
@@ -134,7 +135,9 @@ class OutputCommand(BaseCommand):
                     ]
                     files += paths
             for file in files:
-                tika_hash = HttpTikaResource.hash_from_data({"file": file})
+                tika_hash = HttpTikaResource.hash_from_data({
+                    "file": os.path.join(datagrowth_settings.DATAGROWTH_MEDIA_ROOT, file)
+                })
                 tika_resource = HttpTikaResource.objects.get(data_hash=tika_hash)
                 content_type, content = tika_resource.content
                 text = content.get("text", None)
