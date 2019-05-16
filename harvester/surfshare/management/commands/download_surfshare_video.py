@@ -31,7 +31,7 @@ class Command(BaseCommand):
                 with open(os.path.join(path, file)) as json_file:
                     data = json.load(json_file)
                     for document in data.get("documents", []):
-                        mime_type = document.get("mime_type", None)
+                        mime_type = document.get("content-type", None)  # NB: content-type is wrong legacy naming
                         if mime_type is None:
                             skipped_mime_type += 1
                             continue
