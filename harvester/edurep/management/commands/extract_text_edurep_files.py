@@ -36,7 +36,7 @@ class Command(BaseCommand):
         uris = [EdurepFile.uri_from_url(url) for url in list(keeps["url"])]
         relevant_mime_resources = EdurepFile.objects.filter(uri__in=uris)
         download_fail_count = relevant_mime_resources.exclude(status=200).count()
-        file_resources = list(EdurepFile.objects.filter(status=200))
+        file_resources = list(relevant_mime_resources.filter(status=200))
 
         config = {
             "resource": "pol_harvester.HttpTikaResource",

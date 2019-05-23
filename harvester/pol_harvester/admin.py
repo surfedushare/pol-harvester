@@ -24,6 +24,7 @@ class HttpTikaResourceAdmin(HttpResourceAdmin):
 class DocumentAdmin(DataStorageAdmin):
     list_display = ['__str__', 'freeze', 'collection', 'arrangement', 'created_at', 'modified_at']
     list_filter = ('freeze', 'collection',)
+    search_fields = ("properties",)
 
 
 admin.site.register(KaldiAspireResource, KaldiAspireResourceAdmin)

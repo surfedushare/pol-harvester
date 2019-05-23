@@ -15,6 +15,8 @@ Installation
 Copy the ``.env.development`` file to ``.env`` and update the variable values to fit your system.
 When you're running the project locally it is ok to keep the values as is.
 
+Then copy the ``es_credentials.json.development`` to ``es_credentials.json`` and update your credentials.
+
 Inside of the root directory of this repo run the following command:
 
 ```bash
@@ -50,7 +52,9 @@ Documentation
 
 How to harvest learning materials is described in detail in the [harvester documentation](harvester/HARVEST.md). 
 
-If you want to know more about the available API please read the [API documentation](harvester/API.md)
+If you want to know more about the available API please read the [API documentation](harvester/API.md).
+
+You can read more about Elastic Search in the [Elastic Search documentation](elasticsearch/readme.md).
 
 
 Datagrowth

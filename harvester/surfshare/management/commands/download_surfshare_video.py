@@ -24,7 +24,6 @@ class Command(BaseCommand):
         log_header(out, "SURFSHARE DOWNLOAD AUDIO FROM VIDEOS", options)
 
         video_urls = []
-        skipped_mime_type = 0
         skipped_domain = 0
         for path, dirs, files in os.walk(options["input"]):
             for file in files:
@@ -32,12 +31,9 @@ class Command(BaseCommand):
                     data = json.load(json_file)
                     for document in data.get("documents", []):
                         mime_type = document.get("content-type", None)  # NB: content-type is wrong legacy naming
-                        if mime_type is None:
-                            skipped_mime_type += 1
-                            continue
                         url = URLObject(document["url"])
                         if url.hostname not in VIDEO_DOMAINS:
-                            if mime_type.startswith("video"):
+                            if mime_type and mime_type.startswith("video"):
                                 skipped_domain += 1
                             continue
                         video_urls.append(str(url))
@@ -58,7 +54,6 @@ class Command(BaseCommand):
             config=config
         )
 
-        out.info("Skipped content due to missing mime type: {}".format(skipped_mime_type))
         out.info("Skipped video content due to domain restrictions: {}".format(skipped_domain))
         out.info("Errors while downloading audio from videos: {}".format(len(errors)))
         out.info("Audio downloaded successfully: {}".format(len(successes)))
