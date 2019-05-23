@@ -16,3 +16,4 @@ harvester/pol_harvester/logs/*.log
 # Environment files
 .env
 harvester/.commit
+es_credentials.json
