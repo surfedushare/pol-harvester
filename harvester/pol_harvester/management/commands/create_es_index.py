@@ -85,6 +85,7 @@ def to_dict(arrangement):
                 dictionary[key] = arrangement.meta[key]
             else:
                 dictionary[f'arrangement_{key}'] = arrangement.meta[key]
+        dictionary["arrangement_collection_name"] = arrangement.collection.name
         yield dictionary
 
 
