@@ -1,8 +1,3 @@
-"""
-Creates an index in elastic search.
-We use the embedded elastic search config in the code.
-See --help for options and arguments.
-"""
 import json
 import os
 from collections import defaultdict
@@ -11,8 +6,9 @@ from elasticsearch.helpers import streaming_bulk
 from elasticsearch import Elasticsearch
 
 from django.core.management.base import BaseCommand
-from pol_harvester.models import Document
+from pol_harvester.models import Arrangement
 import logging
+
 
 LANG_ORDER = ['from_text', 'from_title', 'metadata']
 ANALYSERS = {
@@ -36,6 +32,7 @@ HUMANIZED_MIME_TYPES = {
     'audio/mpeg': 'audio',
     'application/octet-stream': 'other'
 }
+
 
 log = logging.getLogger("freeze")
 
@@ -77,24 +74,38 @@ def get_index_config(lang):
     }
 
 
-def to_es_document(doc):
+def to_dict(arrangement):
+    keys = arrangement.meta.keys()
+    for dictionary in arrangement.content:
+        # we add all the keys with a prefix, except for the 'pipeline'
+        for key in keys:
+            if key == 'documents':
+                continue
+            if key == 'pipeline':
+                dictionary[key] = arrangement.meta[key]
+            else:
+                dictionary[f'arrangement_{key}'] = arrangement.meta[key]
+        yield dictionary
+
+
+def to_es_document(dictionary):
     """
     Returns a correctly formatted elasticsearch document from a given document.
     This needs to correspond correctly with the properties defined in the
     index.
     """
     return {
-        'title': doc['title'],
-        'text': doc['text'],
-        'url': doc['url'],
-        'title_plain': doc['title'],
-        'text_plain': doc['text'],
-        # 'keywords': doc['arrangement_keywords'], #todo do we need this?
-        'humanized_mime_type': HUMANIZED_MIME_TYPES.get(doc['mime_type'],
+        'title': dictionary['title'],
+        'text': dictionary['text'],
+        'url': dictionary['url'],
+        'title_plain': dictionary['title'],
+        'text_plain': dictionary['text'],
+        'keywords': dictionary['arrangement_keywords'],
+        'humanized_mime_type': HUMANIZED_MIME_TYPES.get(dictionary['mime_type'],
                                                         'unknown'),
-        'mime_type': doc['mime_type'],
-        '_id': doc['id'],
-        'arrangement_collection_name': doc['arrangement_collection_name']
+        'mime_type': dictionary['mime_type'],
+        '_id': dictionary['id'],
+        'arrangement_collection_name': dictionary['arrangement_collection_name']
     }
 
 
@@ -178,26 +189,32 @@ def get_es_client(credentials_file):
         raise ValueError('Credentials do not work for Elastic search')
     return es_client
 
+
 class Command(BaseCommand):
+
     def handle(self, *args, **options):
-        index_name = "freeze-alpha-test"
+
+        index_name = "freeze-alpha-test-02"
         credentials_file = "../es_credentials.json"
         recreate = True
 
         freeze_name = "alpha"
-        documents = Document.objects.filter(freeze__name=freeze_name)
-        print(f"freeze { freeze_name } document count: {len(documents)}")
+        arrangements = Arrangement.objects.filter(freeze__name=freeze_name)
+        print(f"freeze { freeze_name } arrangement count: {len(arrangements)}")
 
-        for doc in documents:
-            doc.properties['arrangement_collection_name'] = doc.collection.name
+        lang_doc = []
+        for arrangement in arrangements:
+            for dictionary in to_dict(arrangement):
+                lang = get_language(dictionary)
+                lang_doc.append((lang, dictionary,))
 
-        lang_doc = ((get_language(doc.properties), doc.properties) for doc in documents)
         lang_doc_dict = defaultdict(list)
         # create a list so we can report counts
         for lang, doc in lang_doc:
             lang_doc_dict[lang].append(doc)
         for lang in lang_doc_dict.keys():
             log.info(f'{lang}:{len(lang_doc_dict[lang])}')
+
         es = get_es_client(credentials_file)
         [create_index(es, index_name, lang, lang_doc_dict[lang], recreate)
          for lang in lang_doc_dict.keys() if lang in ANALYSERS]
