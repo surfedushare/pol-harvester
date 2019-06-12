@@ -6,7 +6,7 @@ services:
     command: uwsgi --ini /usr/src/app/uwsgi.ini --py-autoreload=3 --honour-stdin
     volumes:
       - ./harvester:/usr/src/app
-      - ./harvester/es_credentials.json:/usr/src/app/es_credentials.json
+      - ./es_credentials.json:/usr/src/app/es_credentials.json
       - ./${HARVESTER_DATA_DIR}/:/usr/src/data
       - ./${HARVESTER_MEDIA_ROOT}/:/usr/src/media
     ports:
