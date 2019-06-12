@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Parse input
-INPUT_AUDIO=$1
+INPUT_AUDIO="$BASE_DIR/$1"
 
 # Set Kaldi paths
 [ -f $KALDI_ROOT/tools/env.sh ] && . $KALDI_ROOT/tools/env.sh
@@ -10,6 +10,11 @@ export LC_ALL=C
 
 # Transcribe files
 ./decode.sh $INPUT_AUDIO $OUTPUT_PATH
+
+# Fail if there were no transcripts
+if [! -f "$OUTPUT_PATH/1Best.txt"]; then
+    exit 1
+fi
 
 # Pass results to stdout
 echo "=== TRANSCRIPTION ==="

@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from datagrowth import settings as datagrowth_settings
 from datagrowth.resources.shell import ShellResource
 
@@ -17,7 +19,8 @@ class KaldiAspireResource(ShellResource):
     ]
     FLAGS = {}
     VARIABLES = {
-        "KALDI_ROOT": datagrowth_settings.DATAGROWTH_KALDI_BASE_PATH
+        "KALDI_ROOT": datagrowth_settings.DATAGROWTH_KALDI_BASE_PATH,
+        "BASE_DIR": settings.BASE_DIR
     }
     CONTENT_TYPE = "text/plain"
     DIRECTORY_SETTING = "DATAGROWTH_KALDI_ASPIRE_BASE_PATH"

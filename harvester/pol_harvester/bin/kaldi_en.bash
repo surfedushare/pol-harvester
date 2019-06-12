@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Parse input
-INPUT_AUDIO=$1
+INPUT_AUDIO="$BASE_DIR/$1"
 
 # Set Kaldi command (cmd.sh)
 export train_cmd="queue.pl"

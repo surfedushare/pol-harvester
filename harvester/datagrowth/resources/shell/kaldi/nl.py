@@ -1,6 +1,8 @@
 import hashlib
 import re
 
+from django.conf import settings
+
 from datagrowth import settings as datagrowth_settings
 from datagrowth.resources.shell import ShellResource
 
@@ -21,6 +23,7 @@ class KaldiNLResource(ShellResource):
     FLAGS = {}
     VARIABLES = {
         "KALDI_ROOT": datagrowth_settings.DATAGROWTH_KALDI_BASE_PATH,
+        "BASE_DIR": settings.BASE_DIR,
         "OUTPUT_PATH": None  # gets set at runtime
     }
     CONTENT_TYPE = "text/plain"
