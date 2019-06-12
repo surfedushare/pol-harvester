@@ -12,7 +12,7 @@ export LC_ALL=C
 ./decode.sh $INPUT_AUDIO $OUTPUT_PATH
 
 # Fail if there were no transcripts
-if [! -f "$OUTPUT_PATH/1Best.txt"]; then
+if [ ! -f "$OUTPUT_PATH/1Best.txt" ]; then
     exit 1
 fi
 
