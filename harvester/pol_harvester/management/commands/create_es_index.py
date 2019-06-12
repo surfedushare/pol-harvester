@@ -196,7 +196,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         index_name = "freeze-alpha-test-02"
-        credentials_file = "../es_credentials.json"
+        credentials_file = "./es_credentials.json"
         recreate = True
 
         freeze_name = "alpha"

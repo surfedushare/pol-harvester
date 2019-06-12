@@ -8,7 +8,7 @@ env/
 
 # Data and other too large files
 data/
-media/
+media
 *.sqlite3
 harvester/statics
 harvester/pol_harvester/logs/*.log
