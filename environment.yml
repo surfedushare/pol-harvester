@@ -14,3 +14,4 @@ dependencies:
     - jupyter-contrib-core==0.3.3
     - jupyter-nbextensions-configurator==0.4.0
     - click==7.0
+    - toolz==0.9.0
