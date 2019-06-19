@@ -8,7 +8,7 @@ import click
 import requests
 from toolz.dicttoolz import assoc
 
-import util
+from harvester.pol_harvester.utils.elastic_search import get_es_client, get_es_config
 
 METRICS = {
     'precision': {
@@ -88,22 +88,20 @@ def get_metric(name, k):
 @click.command()
 @click.argument('queries', type=load_json)
 @click.argument('index')
-@click.argument('credentials_file')
 @click.argument('output_folder')
 @click.option('--metrics', multiple=True, default=METRICS.keys())
 @click.option('--fields', multiple=True, default=['title^2', 'text',
     'text_plain', 'title_plain'])
 @click.option('-k', type=int, default=20, help='max. #documents per query')
-def main(queries, index, metrics, credentials_file, output_folder, k, fields):
+def main(queries, index, metrics, output_folder, k, fields):
     os.makedirs(output_folder, exist_ok=True)
-    es_client = util.get_es_client(credentials_file)
     for metric in metrics:
 
         body = {
             'requests': list(chain(*[format_requests(_, index, fields) for _ in queries])),
             'metric': get_metric(metric, k)
         }
-        endpoint, auth, _ = util.get_es_config(credentials_file)
+        endpoint, auth, _ = get_es_config()
         result = requests.get(
             '{}/{}/_rank_eval'.format(endpoint, index),
             auth=auth,

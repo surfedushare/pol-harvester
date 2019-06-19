@@ -1,13 +1,11 @@
-import json
-import os
+import logging
 from collections import defaultdict
-
 from elasticsearch.helpers import streaming_bulk
-from elasticsearch import Elasticsearch
 
 from django.core.management.base import BaseCommand
+
 from pol_harvester.models import Arrangement
-import logging
+from pol_harvester.utils.elastic_search import get_es_client
 
 
 LANG_ORDER = ['from_text', 'from_title', 'metadata']
@@ -161,42 +159,11 @@ def create_index(es, name, language, documents, recreate):
                           documents)
 
 
-def get_es_config(file_path):
-    """
-    Reads a json file containing the elastic search credentials and url.
-    The file is expected to have 'url', 'username' and 'password' keys
-    """
-
-    with open(file_path) as stream:
-        credentials = json.load(stream)
-    return (credentials['url'],
-            (credentials['username'], credentials['password']),
-            credentials['host'])
-
-
-def get_es_client(credentials_file):
-    """
-    Returns the elasticsearch client which uses the configuration file
-    """
-
-    _, auth, host = get_es_config(credentials_file)
-    es_client = Elasticsearch([host],
-                              http_auth=auth,
-                              scheme='https',
-                              port=443,
-                              http_compress=True)
-    # test if it works
-    if not es_client.cat.health():
-        raise ValueError('Credentials do not work for Elastic search')
-    return es_client
-
-
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
         index_name = "freeze-alpha-test-02"
-        credentials_file = "./es_credentials.json"
         recreate = True
 
         freeze_name = "alpha"
@@ -216,7 +183,7 @@ class Command(BaseCommand):
         for lang in lang_doc_dict.keys():
             log.info(f'{lang}:{len(lang_doc_dict[lang])}')
 
-        es = get_es_client(credentials_file)
+        es = get_es_client()
         [create_index(es, index_name, lang, lang_doc_dict[lang], recreate)
          for lang in lang_doc_dict.keys() if lang in ANALYSERS]
 

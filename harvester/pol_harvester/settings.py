@@ -211,3 +211,11 @@ DATAGROWTH_KALDI_ASPIRE_BASE_PATH = '/home/surf/kaldi/egs/aspire/s5'
 DATAGROWTH_KALDI_NL_BASE_PATH = '/home/surf/Kaldi_NL'
 
 MAX_BATCH_SIZE = 500
+
+
+# Elastic Search
+
+ELASTIC_SEARCH_USERNAME = os.environ.get("ELASTIC_SEARCH_USERNAME", None)
+ELASTIC_SEARCH_PASSWORD = os.environ.get("ELASTIC_SEARCH_PASSWORD", None)
+ELASTIC_SEARCH_URL = os.environ.get("ELASTIC_SEARCH_URL", "https://surfpol.sda.surf-hosted.nl")
+ELASTIC_SEARCH_HOST = os.environ.get("ELASTIC_SEARCH_HOST", "surfpol.sda.surf-hosted.nl")

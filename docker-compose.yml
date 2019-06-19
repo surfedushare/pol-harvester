@@ -6,7 +6,6 @@ services:
     command: uwsgi --ini /usr/src/app/uwsgi.ini --py-autoreload=3 --honour-stdin
     volumes:
       - ./harvester:/usr/src/app
-      - ./es_credentials.json:/usr/src/app/es_credentials.json
       - ./${HARVESTER_DATA_DIR}/:/usr/src/data
       - ./${HARVESTER_MEDIA_ROOT}/:/usr/src/media
     ports:
@@ -19,6 +18,10 @@ services:
       - DJANGO_POSTGRES_PASSWORD=${DJANGO_POSTGRES_PASSWORD}
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - DJANGO_DEBUG=${DJANGO_DEBUG}
+      - ELASTIC_SEARCH_USERNAME=${ELASTIC_SEARCH_USERNAME}
+      - ELASTIC_SEARCH_PASSWORD=${ELASTIC_SEARCH_PASSWORD}
+      - ELASTIC_SEARCH_URL=${ELASTIC_SEARCH_URL}
+      - ELASTIC_SEARCH_HOST=${ELASTIC_SEARCH_HOST}
   postgres:
     image: postgres:11.1
     command: postgres -c 'config_file=/etc/postgresql/postgresql.conf'
