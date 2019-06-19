@@ -136,13 +136,6 @@ def get_language(document):
     return "unknown"
 
 
-def read_languages(folder):
-    """
-    Returns the languages defined the folder structure.
-    """
-    return [entity for entity in os.listdir(folder)]
-
-
 def create_index(es, name, language, documents, recreate):
     index_name = f'{name}-{language}'
     log.info(f'Creating index: {index_name}')
