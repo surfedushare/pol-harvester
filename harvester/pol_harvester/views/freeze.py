@@ -4,6 +4,7 @@ from datagrowth.datatypes.views import CollectionBaseSerializer, CollectionBaseC
 from pol_harvester.models import Document, Freeze
 from pol_harvester.views.document import DocumentSerializer
 from pol_harvester.views.annotation import AnnotationSerializer
+from search.models import ElasticIndexSerializer
 
 
 class FreezeDetailSerializer(CollectionBaseSerializer):
@@ -18,9 +19,11 @@ class FreezeDetailSerializer(CollectionBaseSerializer):
 
 class FreezeListSerializer(CollectionBaseSerializer):
 
+    indices = ElasticIndexSerializer(many=True)
+
     class Meta:
         model = Freeze
-        fields = CollectionBaseSerializer.default_fields
+        fields = CollectionBaseSerializer.default_fields + ("indices",)
 
 
 class FreezeListView(generics.ListAPIView):

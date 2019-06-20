@@ -165,6 +165,7 @@ class OutputCommand(BaseCommand):
 
 
 class FreezeCommand(BaseCommand):
+
     def add_arguments(self, parser):
         parser.add_argument('-i', '--input', type=str, required=True)
         parser.add_argument('-f', '--freeze', type=str, required=True)

@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'edurep',
     'ims',
     'surfshare',
+    'search',
 ]
 
 MIDDLEWARE = [
@@ -219,3 +220,28 @@ ELASTIC_SEARCH_USERNAME = os.environ.get("ELASTIC_SEARCH_USERNAME", None)
 ELASTIC_SEARCH_PASSWORD = os.environ.get("ELASTIC_SEARCH_PASSWORD", None)
 ELASTIC_SEARCH_URL = os.environ.get("ELASTIC_SEARCH_URL", "https://surfpol.sda.surf-hosted.nl")
 ELASTIC_SEARCH_HOST = os.environ.get("ELASTIC_SEARCH_HOST", "surfpol.sda.surf-hosted.nl")
+ELASTIC_SEARCH_ANALYSERS = {
+    'en': 'english',
+    'nl': 'dutch'
+}
+
+
+# Project Open Leermaterialen
+
+HUMANIZED_MIME_TYPES = {
+    'unknown': 'unknown',
+    'application/pdf': 'pdf',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'powerp.',
+    'application/vnd.ms-powerpoint': 'powerp.',
+    'application/msword': 'word',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'word',
+    'application/rtf': 'word',
+    'text/plain': 'word',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'excel',
+    'text/html': 'html',
+    'video': 'video',
+    'image': 'image',
+    'application/zip': 'zip',
+    'audio/mpeg': 'audio',
+    'application/octet-stream': 'other'
+}

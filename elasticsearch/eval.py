@@ -8,7 +8,8 @@ import click
 import requests
 from toolz.dicttoolz import assoc
 
-from harvester.pol_harvester.utils.elastic_search import get_es_client, get_es_config
+from harvester.search.utils.elastic import get_es_config
+
 
 METRICS = {
     'precision': {
