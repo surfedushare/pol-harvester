@@ -35,7 +35,7 @@ class Command(BaseCommand):
 
         freeze = Freeze.objects.get(name=options["freeze"])
         recreate = options["recreate"]
-        arrangements = Arrangement.objects.filter(freeze__name=freeze.name)
+        arrangements = Arrangement.objects.filter(freeze=freeze)
         print(f"Creating freeze { freeze.name } index recreate:{recreate} and arrangement count:{len(arrangements)}")
 
         lang_doc = []
@@ -55,6 +55,7 @@ class Command(BaseCommand):
             if lang not in settings.ELASTIC_SEARCH_ANALYSERS:
                 continue
             config = get_index_config(lang)
-            index, created = ElasticIndex.objects.get_or_create(freeze=freeze, language=lang, configuration=config)
+            index, created = ElasticIndex.objects.get_or_create(freeze=freeze, name=freeze.name, language=lang,
+                                                                configuration=config)
             index.push(docs, recreate=recreate)
             log.info(f'{lang} errors:{index.error_count}')
