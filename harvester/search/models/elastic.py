@@ -38,7 +38,7 @@ class ElasticIndex(models.Model):
     def remote_exists(self):
         if not self.id:
             raise ValueError("Can't check for existence with an unsaved object")
-        return self.client.exists(self.remote_name)
+        return self.client.indices.exists(self.remote_name)
 
     def push(self, elastic_documents, recreate=True):
         if not self.id:
