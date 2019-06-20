@@ -6,6 +6,7 @@ from django.core.management.base import BaseCommand
 
 from pol_harvester.models import Freeze, Arrangement
 from search.models import ElasticIndex
+from search.utils.elastic import get_index_config
 
 
 log = logging.getLogger("freeze")
@@ -53,6 +54,7 @@ class Command(BaseCommand):
         for lang, docs in lang_doc_dict.items():
             if lang not in settings.ELASTIC_SEARCH_ANALYSERS:
                 continue
-            index, created = ElasticIndex.objects.get_or_create(freeze=freeze, language=lang)
+            config = get_index_config(lang)
+            index, created = ElasticIndex.objects.get_or_create(freeze=freeze, language=lang, configuration=config)
             index.push(docs, recreate=recreate)
             log.info(f'{lang} errors:{index.error_count}')
