@@ -52,15 +52,18 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
                     dictionary[key] = self.meta[key]
                 else:
                     dictionary[f'arrangement_{key}'] = self.meta[key]
-            if "pipeline" in dictionary:
-                del dictionary["pipeline"]
-            dictionary["title_plain"] = dictionary["title"]
-            dictionary["text_plain"] = dictionary["text"]
-            dictionary["keywords"] = dictionary["arrangement_keywords"]
-            dictionary["arrangement_collection_name"] = self.collection.name
-            dictionary["humanized_mime_type"] = settings.HUMANIZED_MIME_TYPES.get(dictionary['mime_type'], 'unknown')
-            dictionary["_id"] = dictionary['id']
-            yield dictionary
+            yield {
+                'title': dictionary['title'],
+                'text': dictionary['text'],
+                'url': dictionary['url'],
+                'title_plain': dictionary['title'],
+                'text_plain': dictionary['text'],
+                'keywords': dictionary['arrangement_keywords'],
+                'humanized_mime_type': settings.HUMANIZED_MIME_TYPES.get(dictionary['mime_type'], 'unknown'),
+                'mime_type': dictionary['mime_type'],
+                '_id': dictionary['id'],
+                'arrangement_collection_name': dictionary['arrangement_collection_name']
+            }
 
 
 class Document(DocumentBase, DocumentPostgres):
