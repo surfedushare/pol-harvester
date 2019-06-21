@@ -21,7 +21,7 @@ Inside of the root directory of this repo run the following command:
 bash start.sh
 ```
 
-This will build and run the software in the background. 
+This will build and run the backend software in the background.
 The exact same command gets used when deploying a new version of the harvester to production.
 
 After this basic installation you'll need to load the data.

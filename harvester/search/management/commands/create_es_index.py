@@ -38,7 +38,6 @@ class Command(BaseCommand):
             log.info(f'{lang}:{len(lang_doc_dict[lang])}')
 
         for lang, docs in lang_doc_dict.items():
-            log.info(f'processing: {lang}')
             if lang not in settings.ELASTIC_SEARCH_ANALYSERS:
                 continue
             config = get_index_config(lang)

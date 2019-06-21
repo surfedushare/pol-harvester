@@ -11,15 +11,45 @@ A ``Freeze`` is a moment in time where certain learning materials were processed
 You can list all available ``Freezes`` by calling:
 
 ```bash
-GET https://ltidev.surfpol.nl/api/v1/freeze/
+GET /api/v1/freeze/
 ```
 
 This returns a list of all ``Freezes``. For a single ``Freeze`` you can get all existing ``content``
 and ``annotations`` by calling:
 
 ```bash
-GET https://ltidev.surfpol.nl/api/v1/freeze/<freeze-id>/
+GET /api/v1/freeze/<freeze-id>/
 ```
+
+This is what a freeze object looks like:
+
+```bash
+{
+    "id": 13,
+    "name": "alpha",
+    "created_at": "2019-05-09T11:47:10.898999Z",
+    "modified_at": "2019-05-23T11:04:34.465521Z",
+    "schema": null,
+    "referee": "id",
+    "identifier": null,
+    "indices": [
+        {
+            "id": 1,
+            "name": "alpha",
+            "language": "nl",
+            "remote_name": "alpha-nl-1"
+        }
+    ]
+}
+```
+
+Most of this can safely be ignored, but what is important is the name.
+People can recognize and select ``Freezes`` by name.
+Another important aspect are the indices. These are Elastic Search indices.
+When people search in a particular ``Freeze``
+the Elastic Search query should be
+a [multi-index query](https://www.elastic.co/guide/en/elasticsearch/reference/6.3/multi-index.html)
+using all ``remote_name`` from the ``Freeze`` as index names.
 
 
 Annotate learning materials
@@ -27,13 +57,13 @@ Annotate learning materials
 
 To add ``Annotations`` to learning materials you first need to find a ``Freeze`` in the ``Freezes`` list.
 Read more under [Read learning materials](#read-learning-materials).
-``Annotations`` persist across ``Freezes``, but you still need to specify one ``Freeze``
-where random ``Documents`` gets drawn from.
+``Annotations`` persist across ``Freezes``, but you still need to specify one ``Freeze``.
+When you GET annotations then ``Documents`` get randomly drawn from the specified ``Freeze``.
 
 To get a list of random Documents that lack a ``language`` annotation you can call:
 
 ```bash
-GET https://ltidev.surfpol.nl/api/v1/freeze/<freeze-id>/annotate/language/
+GET /api/v1/freeze/<freeze-id>/annotate/language/
 ```
 
 You can replace the ``language`` path segment to get random ``Documents`` that lack the ``Annotation`` you specify.
@@ -42,7 +72,7 @@ That particular segment path will be the name of any created ``Annotations``
 To actually create an ``Annotation`` you can make the following call:
 
 ```bash
-POST https://ltidev.surfpol.nl/api/v1/freeze/<freeze-id>/annotate/language/
+POST /api/v1/freeze/<freeze-id>/annotate/language/
 
 {
     "reference": <document-reference>,
@@ -58,3 +88,26 @@ Both will be attached to the document reference.
 As long as this reference does not change between ``Freezes`` the ``Annotations`` persist.
 Only the ``language`` ``Annotation`` is required, because that ``Annotation`` is specified in the request path.
 Both string and numbers will be excepted as ``Annotation`` values.
+
+#### Annotating query results
+
+A special case of annotation is annotation to indicate the rank of a query result for a specific query. 
+``Documents`` can show up inside Elastic Search queries.
+Users should be able to annotate for each document in a query result what is the correct position for that document. 
+With these annotations we can then improve search algorithms.
+
+The format for this kind of annotation is:
+
+```bash
+POST /api/v1/freeze/<freeze-id>/annotate/query:leren leren/
+
+{
+    "reference": <document-reference>,
+    "annotations": {
+        "query:leren leren": 0,
+    }
+}
+```
+
+This indicates that the ``Document`` with the specified reference is the best result for the "leren leren" query.
+A value below 0 indicates that the result is completely irrelevant and should not show up at all.
