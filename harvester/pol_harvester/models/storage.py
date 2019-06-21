@@ -71,7 +71,7 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
                 'humanized_mime_type': settings.HUMANIZED_MIME_TYPES.get(dictionary['mime_type'], 'unknown'),
                 'mime_type': dictionary['mime_type'],
                 '_id': dictionary['id'],
-                'arrangement_collection_name': dictionary['arrangement_collection_name']
+                'arrangement_collection_name': self.collection.name
             }
 
 
