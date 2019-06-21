@@ -12,19 +12,6 @@ from search.utils.elastic import get_index_config
 log = logging.getLogger("freeze")
 
 
-def get_language(document):
-    """
-    Returns the language of the document, given a preference of fields
-    """
-    # The priority is in that order
-    for field in ['from_text', 'from_title', 'metadata']:
-        if field in document['language']:
-            current_lang = document['language'][field]
-            if current_lang is not None:
-                return current_lang
-    return "unknown"
-
-
 class Command(BaseCommand):
 
     def add_arguments(self, parser):
@@ -40,9 +27,8 @@ class Command(BaseCommand):
 
         lang_doc = []
         for arrangement in arrangements:
-            for dictionary in arrangement.to_dicts():
-                lang = get_language(dictionary)
-                lang_doc.append((lang, dictionary,))
+            for dictionary in arrangement.to_documents():
+                lang_doc.append((dictionary["language"], dictionary,))
 
         lang_doc_dict = defaultdict(list)
         # create a list so we can report counts

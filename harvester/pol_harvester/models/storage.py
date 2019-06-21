@@ -41,7 +41,7 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
         doc.arrangement = self
         return doc
 
-    def to_dicts(self):
+    def to_documents(self):
         keys = self.meta.keys()
         for dictionary in self.content:
             # we add all the keys with a prefix, except for the 'pipeline'
@@ -52,10 +52,19 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
                     dictionary[key] = self.meta[key]
                 else:
                     dictionary[f'arrangement_{key}'] = self.meta[key]
+            # we pick the language by looking at a few language sources
+            language = None
+            for field in ['from_text', 'from_title', 'metadata']:
+                if field in dictionary['language']:
+                    language = dictionary['language'][field]
+                    if language is not None:
+                        break
+            # these dicts are compatible with Elastic Search
             yield {
                 'title': dictionary['title'],
                 'text': dictionary['text'],
                 'url': dictionary['url'],
+                'language': language,
                 'title_plain': dictionary['title'],
                 'text_plain': dictionary['text'],
                 'keywords': dictionary['arrangement_keywords'],
