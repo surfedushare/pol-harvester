@@ -15,6 +15,9 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.views.decorators.csrf import csrf_exempt
+
+from rest_framework.authtoken import views as rest_views
 
 from pol_harvester import views
 
@@ -40,4 +43,5 @@ api_urlpatterns = [
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/v1/', include(api_urlpatterns, namespace="api-v1")),
+    url(r'^api/v1/auth/token/?$', csrf_exempt(rest_views.obtain_auth_token)),
 ]

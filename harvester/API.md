@@ -3,6 +3,33 @@ API
 
 The harvester comes with an API to get and annotate learning materials.
 
+
+Login
+-----
+
+It's possible to send the following header to the backend:
+
+```bash
+Authorization: Token <api-token>
+```
+
+If the API token is valid then your request will be done on behalf of the user that the token belongs to.
+In general all API endpoints are open, but when storing data the data gets stored under the user.
+This makes it possible to attribute input to a particular user.
+
+API tokens are valid indefinitely until they get deleted in the administration interface.
+You can create/retrieve tokens through the API by using the following request:
+
+```bash
+POST /api/v1/auth/token/
+
+{
+    "username": <username>,
+    "password": <password>
+}
+```
+
+
 Read learning materials
 -----------------------
 
