@@ -28,7 +28,7 @@ api_urlpatterns = [
     url(r'^collection/(?P<pk>\d+)/$', views.CollectionView.as_view(), name="collection"),
     url(r'^freeze/(?P<pk>\d+)/content/$', views.FreezeContentView.as_view(), name="freeze-content"),
     url(
-        r'^freeze/(?P<pk>\d+)/annotate/(?P<annotation_name>[A-Za-z0-9\-_]+)/$',
+        r'^freeze/(?P<pk>\d+)/annotate/(?P<annotation_name>[A-Za-z0-9\-_: +"]+)/$',
         views.AnnotationView.as_view(),
         name="freeze-annotation"
     ),
