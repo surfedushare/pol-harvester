@@ -5,10 +5,10 @@ clean:
 	find . -type d -name "__pycache__" -delete;
 
 backup-db:
-	pg_dumpall -h localhost -U postgres > data/pol.${now}.postgres.sql
+	sudo docker-compose exec postgres pg_dumpall -h localhost -U postgres -c > data/pol.${now}.postgres.sql
 
 import-db:
-	psql -h localhost -U postgres < $(backup)
+	cat $(backup) | docker exec -i $(shell docker-compose ps -q postgres) psql -h localhost -U postgres
 
 start-postgres:
 	psql -h localhost -U postgres -d postgres
