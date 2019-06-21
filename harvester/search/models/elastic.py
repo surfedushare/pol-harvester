@@ -50,7 +50,7 @@ class ElasticIndex(models.Model):
 
         self.client.indices.create(index=remote_name, body=self.configuration)
         for is_ok, result in streaming_bulk(self.client, elastic_documents, index=remote_name, doc_type="_doc",
-                                            chunk_size=100):
+                                            chunk_size=100, yield_ok=False):
             if not is_ok:
                 self.error_count += 1
                 print(f'Error in sending bulk:{result}')
@@ -74,4 +74,4 @@ class ElasticIndexSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ElasticIndex
-        fields = ("id", "name", "remote_name",)
+        fields = ("id", "name", "language", "remote_name",)

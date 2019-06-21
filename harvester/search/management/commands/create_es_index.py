@@ -52,10 +52,19 @@ class Command(BaseCommand):
             log.info(f'{lang}:{len(lang_doc_dict[lang])}')
 
         for lang, docs in lang_doc_dict.items():
+            log.info(f'processing: {lang}')
             if lang not in settings.ELASTIC_SEARCH_ANALYSERS:
                 continue
             config = get_index_config(lang)
-            index, created = ElasticIndex.objects.get_or_create(freeze=freeze, name=freeze.name, language=lang,
-                                                                configuration=config)
+            index, created = ElasticIndex.objects.get_or_create(
+                name=freeze.name,
+                language=lang,
+                defaults={
+                    "freeze": freeze,
+                    "configuration": config
+                }
+            )
+            index.clean()
             index.push(docs, recreate=recreate)
+            index.save()
             log.info(f'{lang} errors:{index.error_count}')
