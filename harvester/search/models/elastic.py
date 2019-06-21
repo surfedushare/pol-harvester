@@ -49,6 +49,8 @@ class ElasticIndex(models.Model):
             self.client.indices.delete(remote_name)
 
         self.client.indices.create(index=remote_name, body=self.configuration)
+        if recreate:
+            self.error_count = 0
         for is_ok, result in streaming_bulk(self.client, elastic_documents, index=remote_name, doc_type="_doc",
                                             chunk_size=100, yield_ok=False, raise_on_error=False):
             if not is_ok:
