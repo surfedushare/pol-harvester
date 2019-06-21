@@ -52,6 +52,8 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
                     dictionary[key] = self.meta[key]
                 else:
                     dictionary[f'arrangement_{key}'] = self.meta[key]
+            if "pipeline" in dictionary:
+                del dictionary["pipeline"]
             dictionary["title_plain"] = dictionary["title"]
             dictionary["text_plain"] = dictionary["text"]
             dictionary["keywords"] = dictionary["arrangement_keywords"]
