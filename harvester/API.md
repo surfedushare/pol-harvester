@@ -115,26 +115,3 @@ Both will be attached to the document reference.
 As long as this reference does not change between ``Freezes`` the ``Annotations`` persist.
 Only the ``language`` ``Annotation`` is required, because that ``Annotation`` is specified in the request path.
 Both string and numbers will be excepted as ``Annotation`` values.
-
-#### Annotating query results
-
-A special case of annotation is annotation to indicate the rank of a query result for a specific query. 
-``Documents`` can show up inside Elastic Search queries.
-Users should be able to annotate for each document in a query result what is the correct position for that document. 
-With these annotations we can then improve search algorithms.
-
-The format for this kind of annotation is:
-
-```bash
-POST /api/v1/freeze/<freeze-id>/annotate/query:leren leren/
-
-{
-    "reference": <document-reference>,
-    "annotations": {
-        "query:leren leren": 0,
-    }
-}
-```
-
-This indicates that the ``Document`` with the specified reference is the best result for the "leren leren" query.
-A value below 0 indicates that the result is completely irrelevant and should not show up at all.
