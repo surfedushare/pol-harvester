@@ -41,42 +41,44 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
         doc.arrangement = self
         return doc
 
-    def to_documents(self):
-        keys = self.meta.keys()
-        for dictionary in self.content:
-            # we add all the keys with a prefix, except for the 'pipeline'
-            for key in keys:
-                if key == 'documents':
-                    continue
-                if key == 'pipeline':
-                    dictionary[key] = self.meta[key]
-                else:
-                    dictionary[f'arrangement_{key}'] = self.meta[key]
-            # we pick the language by looking at a few language sources
-            language = None
-            for field in ['from_text', 'from_title', 'metadata']:
-                if field in dictionary['language']:
-                    language = dictionary['language'][field]
-                    if language is not None:
-                        break
-            # these dicts are compatible with Elastic Search
-            yield {
-                'title': dictionary['title'],
-                'text': dictionary['text'],
-                'url': dictionary['url'],
-                'language': language,
-                'title_plain': dictionary['title'],
-                'text_plain': dictionary['text'],
-                'keywords': dictionary['arrangement_keywords'],
-                'humanized_mime_type': settings.HUMANIZED_MIME_TYPES.get(dictionary['mime_type'], 'unknown'),
-                'mime_type': dictionary['mime_type'],
-                '_id': dictionary['id'],
-                'arrangement_collection_name': self.collection.name
-            }
-
 
 class Document(DocumentBase, DocumentPostgres):
 
     freeze = models.ForeignKey("Freeze", blank=True, null=True)
     # NB: Collection foreign key is added by the base class
     arrangement = models.ForeignKey("Arrangement", blank=True, null=True)
+
+    def to_search(self):
+        meta = self.arrangement.meta
+        keys = meta.keys()
+
+        # we add all the keys with a prefix, except for the 'pipeline'
+        for key in keys:
+            if key == 'documents':
+                continue
+            if key == 'pipeline':
+                self.properties[key] = meta[key]
+            else:
+                self.properties[f'arrangement_{key}'] = meta[key]
+        # we pick the language by looking at a few language sources
+        language = None
+        for field in ['from_text', 'from_title', 'metadata']:
+            if field in self.properties['language']:
+                language = self.properties['language'][field]
+                if language is not None:
+                    break
+
+        # these dicts are compatible with Elastic Search
+        return {
+            'title': self.properties['title'],
+            'text': self.properties['text'],
+            'url': self.properties['url'],
+            'language': language,
+            'title_plain': self.properties['title'],
+            'text_plain': self.properties['text'],
+            'keywords': self.properties['arrangement_keywords'],
+            'humanized_mime_type': settings.HUMANIZED_MIME_TYPES.get(self.properties['mime_type'], 'unknown'),
+            'mime_type': self.properties['mime_type'],
+            '_id': self.properties['id'],
+            'arrangement_collection_name': self.collection.name
+        }

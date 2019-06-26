@@ -22,12 +22,12 @@ class Command(BaseCommand):
 
         freeze = Freeze.objects.get(name=options["freeze"])
         recreate = options["recreate"]
-        arrangements = Arrangement.objects.filter(freeze=freeze)
+        arrangements = Arrangement.objects.filter(freeze=freeze).select_related("documents")
         print(f"Creating freeze { freeze.name } index recreate:{recreate} and arrangement count:{len(arrangements)}")
 
         lang_doc = []
         for arrangement in arrangements:
-            for dictionary in arrangement.to_documents():
+            for dictionary in (doc.to_search() for doc in arrangement.documents):
                 lang_doc.append((dictionary["language"], dictionary,))
 
         lang_doc_dict = defaultdict(list)
