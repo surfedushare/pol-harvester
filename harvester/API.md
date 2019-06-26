@@ -115,3 +115,45 @@ Both will be attached to the document reference.
 As long as this reference does not change between ``Freezes`` the ``Annotations`` persist.
 Only the ``language`` ``Annotation`` is required, because that ``Annotation`` is specified in the request path.
 Both string and numbers will be excepted as ``Annotation`` values.
+
+
+Recording queries
+-----------------
+
+Recording a ``Query`` is a bit more involved than creating a ``Annotation``,
+but it is a much better way to store search query annotations.
+
+The basic process is the same. You still need to know the ``Freeze`` to create or update a ``Query``.
+Once you know the ``Freeze`` and you are logged in you can make a request like this:
+
+
+```bash
+POST /api/v1/search/query/
+
+{
+    "query": <main-query>,
+    "rankings": [
+        {
+            "subquery": <sub-query>,
+            "ranking": {
+                <document-reference>: <rating>
+            },
+            "freeze": <freeze-id>
+        }
+    ]
+}
+```
+
+If you want to update a query you can make the same post with different ranking data.
+A user will only change his/her own rankings.
+So it's possible for a ``Query`` to exists without rankings for a particular user.
+However if you want to update a ``Query`` the user needs to provide at least one ranking for the main query.
+
+Getting all rankings that a user has ever made is easy:
+
+```bash
+GET /api/v1/search/query/
+```
+
+Notice that if you want to delete a ranking or an entire ``Query`` you'll need to login to the administration.
+The ``Queries`` can be found at: ``/admin/search/query/``

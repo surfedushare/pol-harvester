@@ -20,6 +20,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken import views as rest_views
 
 from pol_harvester import views
+from search.urls import router as search_router
 
 
 api_urlpatterns = [
@@ -37,6 +38,7 @@ api_urlpatterns = [
     ),
     url(r'^freeze/(?P<pk>\d+)/$', views.FreezeDetailView.as_view(), name="freeze"),
     url(r'^freeze/$', views.FreezeListView.as_view(), name="freeze"),
+    url(r'^search/', include(search_router.urls)),
 ]
 
 
