@@ -155,5 +155,9 @@ Getting all rankings that a user has ever made is easy:
 GET /api/v1/search/query/
 ```
 
+Once you have the document references you can use them to query the search documents from Elastic Search.
+There is for instance their [multi get](https://www.elastic.co/guide/en/elasticsearch/reference/6.3/docs-multi-get.html) API call.
+The references are equal to the ``_id`` properties in Elastic Search.
+
 Notice that if you want to delete a ranking or an entire ``Query`` you'll need to login to the administration.
 The ``Queries`` can be found at: ``/admin/search/query/``
