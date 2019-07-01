@@ -23,7 +23,7 @@ Here are the references for these transcripts:
 
 We merged all resulting vocabularies 
 and checked whether the words really did not occur already in the Kaldi NL vocabulairy.
-We identified 36 terms that Kaldi NL does not yet recognize.
+We identified 29 terms that Kaldi NL does not yet recognize.
 You can find these terms in the [HBOVPK vocabulairy file](vocabularies/hbovpk.txt).
 
 ##### Additional jargon
