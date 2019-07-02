@@ -1,43 +1,25 @@
 <template>
     <div class="home">
-        <search></search>
-        <input type="text" id="username" v-model="username">
-        <input type="password" id="password" v-model="password">
-
-        <button @click="login()" class="btn btn-blue">
-            Button
-        </button>
+        <div class="flex">
+            <search class="flex-1"></search>
+        </div>
+        <auth></auth>
     </div>
 </template>
 
 <script>
     import Search from "@/components/Search.vue";
+    import Auth from "@/components/Auth.vue";
 
     export default {
         name: "home",
         components: {
-            Search
+            Search,
+            Auth
         },
         data() {
-            return {
-                username: "",
-                password: ""
-            }
+            return {}
         },
-        methods: {
-            login() {
-                let username = this.username;
-                let password = this.password;
-                this.$store.dispatch("auth/login", {username, password})
-                    .then(() => this.$router.push("/"))
-                    .catch(err => console.log(err))
-            },
-            logout: function () {
-                this.$store.dispatch("logout")
-                    .then(() => {
-                        this.$router.push("/")
-                    })
-            }
-        }
+        methods: {}
     }
 </script>
