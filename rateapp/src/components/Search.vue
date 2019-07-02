@@ -8,9 +8,19 @@
             <span>{{result._source.title}}</span>
 
         </div>
-        <span v-if="searchStatus === 'success'">
+        <div v-if="searchStatus === 'success'">
             <b>total: {{totalResults}}</b>
-            </span>
+            <paginate
+                    v-model="page"
+                    :page-count="Math.ceil(totalResults / 10)"
+                    :page-range="3"
+                    :click-handler="search"
+                    :prev-text="'Prev'"
+                    :next-text="'Next'"
+                    :container-class="'pagination'"
+                    :page-class="'page-item'">
+            </paginate>
+            </div>
     </div>
 </template>
 
@@ -21,13 +31,15 @@
         name: "Search",
         data() {
             return {
-                query: ""
+                query: "",
+                page: 1
             }
         },
         methods: {
             search() {
                 let query = this.query;
-                this.$store.dispatch("search/search", query)
+                let from = (this.page - 1) * 10;
+                this.$store.dispatch("search/search", {search_string: query, from: from})
                     .then(() => {
                     })
                     .catch(err => console.log(err))

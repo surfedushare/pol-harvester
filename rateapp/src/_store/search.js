@@ -16,18 +16,19 @@ const getters = {
 };
 
 const actions = {
-    search({commit}, search_string) {
+    search({commit}, data) {
         let indices = store.getters['freeze/indices'].join();
         let query = {
             "query": {
                 "multi_match": {
-                    "query": search_string,
+                    "query": data.search_string,
                     "fields": [
                         "title",
                         "text"
                     ]
-                }
-            }
+                },
+            },
+            "from": data.from
         };
         return new Promise((resolve, reject) => {
             commit("search_request");
@@ -43,7 +44,7 @@ const actions = {
             }).then((res) => {
                 let results = res.data.hits.hits;
                 let total = res.data.hits.total;
-                commit('search_success', {query: search_string, results: results, total: total})
+                commit('search_success', {query: data.search_string, results: results, total: total})
             }).catch(err => {
                 commit("search_error");
                 reject(err)
