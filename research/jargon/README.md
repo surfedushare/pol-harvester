@@ -24,21 +24,21 @@ Here are the references for these transcripts:
 We merged all resulting vocabularies 
 and checked whether the words really did not occur already in the Kaldi NL vocabulairy.
 We identified 29 terms that Kaldi NL does not yet recognize.
-You can find these terms in the [HBOVPK vocabulairy file](vocabularies/hbovpk.txt).
+You can find these terms in the [HBOVPK vocabulairy file](vocabularies/hbovpk/vocabulairy.txt).
 
-##### Additional jargon
+#### Additional jargon
 
 We identified some jargon that is not present in any of the transcripts by listening to additional videos.
-That list is present in the [extra HBOVPK vocabulairy file](vocabularies/hbovpk-extra.txt).
+That list is present in the [extra HBOVPK vocabulairy file](vocabularies/hbovpk/vocabulairy-extra.txt).
 
 
-##### Errors
+#### Errors
 
 There are words that Kaldi NL has in its dictionary, but which were misunderstood.
 One possible reason for this is that the language model is not suitable for the domain we're listening to.
 For instance "wezens" seems to have president over "weefsels", which for a medical application is probably wrong.
 Re-training the language model may help, but is out of scope for this research.
-A complete list of errors can be found in the [HBOVPK error file](vocabularies/hbovpk-errors.txt).
+A complete list of errors can be found in the [HBOVPK error file](vocabularies/hbovpk/vocabulairy-errors.txt).
 
 
 Transforming jargon to phonemes
