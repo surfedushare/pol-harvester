@@ -62,7 +62,12 @@ def create_phonemes(ctx, vocabulary_name, g2pservice="https://webservices-lst.sc
 
 
 @task
-def prepare_vocabulary_merge(ctx, vocabulary_name):
+def prepare_vocabulary_merge(ctx, vocabulary_name, kaldi_path):
     with ctx.cd(os.path.join("vocabularies", vocabulary_name)):
         ctx.run("cat vocabulary.txt | tr '[:lower:]' '[:upper:]' > vocabulary.upper.txt")
-        ctx.run("ngram-count -text vocabulary.upper.txt -order 3 -unk -map-unk "" -wbdiscount -interpolate -lm lm.arpa")
+        with ctx.prefix("source {}/tools/env.sh".format(kaldi_path)):
+            ctx.run(
+                "ngram-count -text vocabulary.upper.txt "
+                "-order 3 -unk -map-unk "" "
+                "-wbdiscount -interpolate -lm lm.arpa"
+            )
