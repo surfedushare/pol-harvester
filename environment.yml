@@ -15,3 +15,4 @@ dependencies:
     - jupyter-nbextensions-configurator==0.4.0
     - click==7.0
     - toolz==0.9.0
+    - invoke==1.2.0
