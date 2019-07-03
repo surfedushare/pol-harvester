@@ -16,3 +16,4 @@ dependencies:
     - click==7.0
     - toolz==0.9.0
     - invoke==1.2.0
+    - clam==2.4.5
