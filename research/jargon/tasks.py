@@ -59,3 +59,10 @@ def create_phonemes(ctx, vocabulary_name, g2pservice="https://webservices-lst.sc
         output_file.copy(os.path.join(vocabulary_path, file_name))
 
     client.delete(session_id)
+
+
+@task
+def prepare_vocabulary_merge(ctx, vocabulary_name):
+    with ctx.cd(os.path.join("vocabularies", vocabulary_name)):
+        ctx.run("cat vocabulary.txt | tr '[:lower:]' '[:upper:]' > vocabulary.upper.txt")
+        ctx.run("ngram-count -text vocabulary.upper.txt -order 3 -unk -map-unk "" -wbdiscount -interpolate -lm lm.arpa")
