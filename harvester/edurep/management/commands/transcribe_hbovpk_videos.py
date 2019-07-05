@@ -26,7 +26,7 @@ class Command(FreezeCommand, OutputCommand):
 
     def handle(self, *args, **options):
 
-        freeze = Freeze.objects.get(options["freeze"])
+        freeze = Freeze.objects.get(name=options["freeze"])
 
         videos = [(doc.reference, doc.properties["url"],) for doc in freeze.documents.filter(reference__in=REFERENCES)]
         successes = []
