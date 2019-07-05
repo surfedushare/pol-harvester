@@ -83,7 +83,8 @@ def prepare_vocabulary_compilation(ctx, vocabulary_name, kaldi_path, model_direc
     model_vocabulary = os.path.join(
         model_directory,
         "LG_KrantenTT.3gpr.kn.int_UTwente_HMI_lexicon",
-        "words.dict"
+        "dicttemp",  # TODO: Cleanup in Kaldi NL repo? This looks wrong
+        "lexicon.txt"
     )
     model_arpa = os.path.join(
         model_directory,
