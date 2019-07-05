@@ -22,10 +22,7 @@ REFERENCES = [
 class Command(FreezeCommand, OutputCommand):
 
     def add_arguments(self, parser):
-        parser.add_argument('references', nargs='*', type=str)
         parser.add_argument('-f', '--freeze', type=str, required=True)
-        parser.add_argument('-f', '--freeze', type=str, required=True)
-        parser.add_argument('-c', '--collection', type=str)
 
     def handle(self, *args, **options):
 
