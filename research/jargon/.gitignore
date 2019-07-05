@@ -1,2 +1,3 @@
+vocabularies/**/vocabulary.dict
 vocabularies/**/lm.arpa
-vocabularies/**/le4xicon.txt
+vocabularies/**/lexicon.txt
