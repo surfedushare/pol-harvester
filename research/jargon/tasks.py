@@ -93,7 +93,7 @@ def prepare_vocabulary_compilation(ctx, vocabulary_name, kaldi_path, model_direc
 
     vocabulary_file_path = os.path.join(vocabulary_path, "g2p-vocabulary.dict")
     vocabulary_arpa = os.path.join(vocabulary_path, "vocabulary.arpa")
-    lexicon_file_path = os.path.join(vocabulary_path, "g2p-vocabulary.dict")
+    lexicon_file_path = os.path.join(vocabulary_path, "lexicon.txt")
     lm_arpa = os.path.join(vocabulary_path, "lm.arpa")
     ctx.run(
         f"python merge_dicts.py {model_vocabulary} {model_arpa} "
