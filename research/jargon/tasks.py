@@ -30,9 +30,9 @@ def assert_clam_response(client, session_id, response, message, wait=False):
 def create_phonemes(ctx, vocabulary_name, g2pservice="https://webservices-lst.science.ru.nl/g2pservice"):
 
     vocabulary_path = os.path.join("vocabularies", vocabulary_name)
-    vocabulary_file_path = os.path.join(vocabulary_path, "vocabulairy.txt")
+    vocabulary_file_path = os.path.join(vocabulary_path, "vocabulary.txt")
     assert os.path.exists(vocabulary_file_path), \
-        "Missing {} for vocabulairy '{}'".format(vocabulary_file_path, vocabulary_name)
+        "Missing {} for vocabulary '{}'".format(vocabulary_file_path, vocabulary_name)
 
     username = os.environ.get("G2PSERVICE_USERNAME")
     password = os.environ.get("G2PSERVICE_PASSWORD")
@@ -62,12 +62,40 @@ def create_phonemes(ctx, vocabulary_name, g2pservice="https://webservices-lst.sc
 
 
 @task
-def prepare_vocabulary_merge(ctx, vocabulary_name, kaldi_path):
+def prepare_vocabulary_compilation(ctx, vocabulary_name, kaldi_path, model_directory):
+
+    # First we do some transformations on the vocabulary directly
     with ctx.cd(os.path.join("vocabularies", vocabulary_name)):
+        # Transform vocabulary to uppercase. Bash is assumed to be faster than Python
         ctx.run("cat vocabulary.txt | tr '[:lower:]' '[:upper:]' > vocabulary.upper.txt")
+        # We're going to execute SRILM tools
+        # Preparing the paths by sourcing the tool environment
         with ctx.prefix("source {}/tools/env.sh".format(kaldi_path)):
             ctx.run(
                 "ngram-count -text vocabulary.upper.txt "
-                "-order 3 -unk -map-unk "" "
-                "-wbdiscount -interpolate -lm lm.arpa"
+                "-order 1 -unk -map-unk \"\" "
+                "-wbdiscount -interpolate -lm vocabulary.arpa"
             )
+
+    # Now we merge the original vocabulary and language model with the new vocabulary and model
+    # TODO: refactor merge_dicts to utils and call directly
+    vocabulary_path = os.path.join("vocabularies", vocabulary_name)
+    model_vocabulary = os.path.join(
+        model_directory,
+        "LG_KrantenTT.3gpr.kn.int_UTwente_HMI_lexicon",
+        "words.dict"
+    )
+    model_arpa = os.path.join(
+        model_directory,
+        "KrantenTT.3gpr.kn.int.arpa"
+    )
+
+    vocabulary_file_path = os.path.join(vocabulary_path, "g2p-vocabulary.dict")
+    vocabulary_arpa = os.path.join(vocabulary_path, "vocabulary.arpa")
+    lexicon_file_path = os.path.join(vocabulary_path, "g2p-vocabulary.dict")
+    lm_arpa = os.path.join(vocabulary_path, "lm.arpa")
+    ctx.run(
+        f"python merge_dicts.py {model_vocabulary} {model_arpa} "
+        f"{vocabulary_file_path} {vocabulary_arpa} "
+        f"{lexicon_file_path} {lm_arpa}"
+    )
