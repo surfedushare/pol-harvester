@@ -13,7 +13,7 @@ print("Merging dictionaries...")
 
 words = {}
 for dic in [basedic, extdic]:
-    with io.open(dic, 'r+') as Fdic:
+    with io.open(dic, 'r') as Fdic:
         for line in Fdic:
             arr = line.strip().replace("\t", " ").split(" ", 1) # Sometimes tabs are used
             [word, pronunciation] = arr
