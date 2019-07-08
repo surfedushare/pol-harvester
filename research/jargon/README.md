@@ -53,3 +53,27 @@ For Dutch we're using a G2P Service. You can invoke the creation of a G2P file t
 ```bash
 invoke create-phonemes <vocabulary-name>
 ```
+
+
+Preparing graph compilation
+---------------------------
+
+There are quite a few steps involved to prepare graph compilation.
+Some of these steps have been automated.
+You can invoke the preparation with:
+
+```bash
+invoke prepare-vocabulary-compilation <vocabulary-name> <kaldi-root> <kaldi-nl-language-model>
+```
+
+Some example values are ``hbovpk`` for ``vocabulary-name``
+and the Kaldi root on the server is probably ``/home/surf/kaldi``.
+The Kaldi NL language model is most likely located at ``/home/surf/Kaldi_NL/models/NL/UTwente/HMI/LM/KrantenTT/v1.0``
+
+
+Compile the graph
+-----------------
+
+To complete the graph compilation it's necessary to follow some manual steps.
+These steps can be found in the [Artificial Industry docs on Kaldi NL jargon](https://docs.google.com/document/d/1Zq6pZnFX2T5f17zRYALYcP0P1KJ3jBJHgD9AIEaM848/edit#heading=h.4f6nj7n26cf0).
+You should be able to build the correct directory structure from the ``vocabularies/hbovpk`` directory.
