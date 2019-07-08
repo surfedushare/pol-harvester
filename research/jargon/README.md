@@ -13,13 +13,17 @@ Selecting jargon
 We looked at 7 silver standard transcripts and manually selected words that we felt could be considered jargon.
 Here are the references for these transcripts:
 
-* 063b9b2562578274d47579025a9cf15483bf5732
-* 3d745e7adde31354c12f15c55f2e2a805bb6de3b
-* 3fb1ec3dfb37004ce6e5d0e3a4c66962ab7f1836
-* 47400bd9de5920a96b461433734ed5379a53da3d
-* 6f6ae1d8cd6a2cc541620ded919f9f317466cdd5
-* ea3cc3dbf6b9309b3f35f102bf0e3094ee85bba1
-* f3efd1a94f3212de77a450f3c5aaf4ab38fc97c8
+```python
+[
+    "063b9b2562578274d47579025a9cf15483bf5732",
+    "3d745e7adde31354c12f15c55f2e2a805bb6de3b",
+    "3fb1ec3dfb37004ce6e5d0e3a4c66962ab7f1836",
+    "47400bd9de5920a96b461433734ed5379a53da3d",
+    "6f6ae1d8cd6a2cc541620ded919f9f317466cdd5",
+    "ea3cc3dbf6b9309b3f35f102bf0e3094ee85bba1",
+    "f3efd1a94f3212de77a450f3c5aaf4ab38fc97c8"
+]
+```
 
 We merged all resulting vocabularies 
 and checked whether the words really did not occur already in the Kaldi NL vocabulary.
