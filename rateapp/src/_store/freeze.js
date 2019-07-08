@@ -7,7 +7,7 @@ const state = {
 };
 
 const getters = {
-    currentFreeze: state => !!state.freeze,
+    currentFreeze: state => state.freeze,
     indices: state => _.map(state.freeze.indices, "remote_name"),
 };
 

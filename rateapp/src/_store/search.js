@@ -1,5 +1,6 @@
 import axios from "axios";
 import {store} from '../store';
+import {elasticSearchService} from "../_services";
 
 const state = {
     status: "",
@@ -16,41 +17,56 @@ const getters = {
 };
 
 const actions = {
-    search({commit}, data) {
-        let indices = store.getters['freeze/indices'].join();
-        let query = {
-            "query": {
-                "multi_match": {
-                    "query": data.search_string,
-                    "fields": [
-                        "title",
-                        "text"
-                    ]
-                },
-            },
-            "from": data.from
-        };
-        return new Promise((resolve, reject) => {
-            commit("search_request");
-            axios.get(process.env.VUE_APP_ELASTIC_SEARCH_URL + indices + '/_search', {
-                auth: {
-                    username: process.env.VUE_APP_ELASTIC_SEARCH_USERNAME,
-                    password: process.env.VUE_APP_ELASTIC_SEARCH_PASSWORD
-                },
-                params: {
-                    source: JSON.stringify(query),
-                    source_content_type: 'application/json',
-                },
-            }).then((res) => {
-                let results = res.data.hits.hits;
-                let total = res.data.hits.total;
-                commit('search_success', {query: data.search_string, results: results, total: total})
-            }).catch(err => {
-                commit("search_error");
-                reject(err)
-            });
-        })
+    get({commit}, data) {
+        commit("search_request");
+        elasticSearchService.get(data.search_string, data.from).then(res => {
+            console.log('success');
+            let results = res.data.hits.hits;
+            let total = res.data.hits.total;
+            commit('search_success', {query: data.search_string, results: results, total: total});
+        }).catch(err => {
+            console.log('error hier?');
+            commit("search_error");
+        });
     },
+    multiGet({commit}, ids) {
+        let indices = store.getters['freeze/indices'];
+        let query = {
+            "ids": ids
+        };
+        let promises = [];
+
+        for (let i = 0; i < indices.length; i++) {
+            let promise = new Promise((resolve, reject) => {
+                axios.get(process.env.VUE_APP_ELASTIC_SEARCH_URL + indices[i] + '/_doc/_mget', {
+                    auth: {
+                        username: process.env.VUE_APP_ELASTIC_SEARCH_USERNAME,
+                        password: process.env.VUE_APP_ELASTIC_SEARCH_PASSWORD
+                    },
+                    params: {
+                        source: JSON.stringify(query),
+                        source_content_type: 'application/json',
+                    },
+                }).then((res) => {
+                    let documents = res.data.docs;
+                    let found_documents = [];
+                    for (let i = 0; i < documents.length; i++) {
+                        if (documents[i].found) {
+                            found_documents.push(documents[i]);
+                        }
+                    }
+                    resolve(found_documents);
+                })
+            });
+            promises.push(promise);
+        }
+
+        return Promise.all(promises).then(values => {
+            return values.flat();
+        }).catch(err => {
+            commit("search_error");
+        });
+    }
 };
 
 const mutations = {

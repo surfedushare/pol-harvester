@@ -4,10 +4,12 @@
                class="bg-white focus:outline-0 focus:shadow-outline border border-gray-300 rounded-lg py-2 px-4 block w-full appearance-none leading-normal"
                type="email" placeholder="Enter your search query">
         <button @click="search" class="btn btn-blue">Search</button>
-        <div :key="result._id" v-for="result in searchResults">
-            <span>{{result._source.title}}</span>
-
-        </div>
+        <drag v-for="result in searchResults"
+              class="drag"
+              :key="result._id"
+              :transfer-data="result">
+            {{result._source.title}}
+        </drag>
         <div v-if="searchStatus === 'success'">
             <b>total: {{totalResults}}</b>
             <paginate
@@ -20,15 +22,19 @@
                     :container-class="'pagination'"
                     :page-class="'page-item'">
             </paginate>
-            </div>
+        </div>
     </div>
 </template>
 
 <script>
+    import {Drag} from 'vue-drag-drop';
     import {mapGetters} from "vuex";
 
     export default {
         name: "Search",
+        components: {
+            Drag
+        },
         data() {
             return {
                 query: "",
@@ -37,13 +43,21 @@
         },
         methods: {
             search() {
+                // TODO: Differentiate between MAIN search and SUB search
+                // TODO: FORCE PAGE 1 IF NEW SEARCH
                 let query = this.query;
                 let from = (this.page - 1) * 10;
-                this.$store.dispatch("search/search", {search_string: query, from: from})
+                this.$store.dispatch("search/get", {search_string: query, from: from});
+                if (this.page === 1) {
+                    this.$store.dispatch('rating/setQuery', query);
+                }
+            },
+            post() {
+                this.$store.dispatch("rating/post")
                     .then(() => {
                     })
                     .catch(err => console.log(err))
-            },
+            }
         },
         computed: {
             ...mapGetters("search", ["searchStatus", "searchResults", "totalResults"])

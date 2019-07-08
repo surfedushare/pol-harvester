@@ -6,17 +6,21 @@
 
 <script>
     import URI from 'urijs';
+    import axios from 'axios';
 
     export default {
         name: 'App',
         created() {
-            let uri = new URI();
-            uri.search(true);
+            let token = localStorage.getItem("token");
+            if (token) {
+                axios.defaults.headers.common["Authorization"] = "Token " + token;
+                this.$store.dispatch("rating/getRatingData");
+            }
 
+            // Get freeze from URI
+            let uri = new URI();
             if (uri.search(true).freeze) {
-                this.$store.dispatch("freeze/setFreeze", uri.search(true).freeze)
-                    .then(() => {})
-                    .catch(err => console.log(err))
+                this.$store.dispatch("freeze/setFreeze", uri.search(true).freeze);
             }
         }
     }
