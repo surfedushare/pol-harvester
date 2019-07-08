@@ -5,10 +5,15 @@
         <button @click="login()" class="btn btn-blue">
             Button
         </button>
+        <div v-if="authStatus === 'success'">
+            <span>Logged in as: {{authUsername}}</span>
+        </div>
     </div>
 </template>
 
 <script>
+    import {mapGetters} from 'vuex';
+
     export default {
         name: "auth",
         data() {
@@ -21,9 +26,7 @@
             login() {
                 let username = this.username;
                 let password = this.password;
-                this.$store.dispatch("auth/login", {username, password})
-                    .then(() => this.$router.push("/"))
-                    .catch(err => console.log(err))
+                this.$store.dispatch("auth/login", {username: username, password: password});
             },
             logout: function () {
                 this.$store.dispatch("logout")
@@ -31,6 +34,13 @@
                         this.$router.push("/")
                     })
             }
+        },
+        computed: {
+            ...mapGetters('auth', [
+                'authToken',
+                'authStatus',
+                'authUsername'
+            ])
         }
     }
 </script>

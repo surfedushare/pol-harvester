@@ -1,4 +1,5 @@
 import axios from "axios";
+import {store} from '../store';
 
 const state = {
     status: "",
@@ -7,7 +8,8 @@ const state = {
 };
 
 const getters = {
-    isLoggedIn: state => !!state.token,
+    authUsername: state => state.username,
+    authToken: state => !!state.token,
     authStatus: state => state.status,
 };
 
@@ -20,15 +22,17 @@ const actions = {
                 password: credentials.password
             })
                 .then(resp => {
+                    console.log('hier?');
                     const token = resp.data.token;
                     const username = credentials.username;
-                    localStorage.setItem("token", token);
-                    axios.defaults.headers.common["Authorization"] = "Token " + token;
-                    commit("auth_success", {token, username});
+                    store.dispatch('auth/storeCredentials', {token: token, username: username});
                     resolve(resp)
                 })
                 .catch(err => {
+                    console.log('daar?');
+
                     commit("auth_error");
+                    localStorage.removeItem("username");
                     localStorage.removeItem("token");
                     reject(err)
                 })
@@ -37,10 +41,17 @@ const actions = {
     logout({commit}) {
         return new Promise((resolve) => {
             commit("logout");
+            localStorage.removeItem("username");
             localStorage.removeItem("token");
             delete axios.defaults.headers.common["Authorization"];
             resolve();
         })
+    },
+    storeCredentials({commit}, data) {
+        commit("auth_success", {token: data.token, username: data.username});
+        localStorage.setItem('username', data.username);
+        localStorage.setItem("token", data.token);
+        axios.defaults.headers.common["Authorization"] = "Token " + data.token;
     }
 };
 

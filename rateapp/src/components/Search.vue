@@ -53,10 +53,7 @@
                 }
             },
             post() {
-                this.$store.dispatch("rating/post")
-                    .then(() => {
-                    })
-                    .catch(err => console.log(err))
+                this.$store.dispatch("rating/post");
             }
         },
         computed: {
