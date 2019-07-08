@@ -1,0 +1,9 @@
+[CLAM Dispatcher] Adding to PYTHONPATH: /var/www/lamachine2/weblamachine/lib/python3.5/site-packages/g2pservice
+[CLAM Dispatcher] Started CLAM Dispatcher v2.4.5 with g2pservice.g2pservice (2019-07-03 13:37:44)
+[CLAM Dispatcher] Running /var/www/lamachine2/weblamachine/bin/python "/var/www/lamachine2/weblamachine/lib/python3.5/site-packages/g2pservice/g2pservice_wrapper.py" "/var/www/webservices-lst/live/writable/g2pservice/projects/surfpol/hbovpk_11771156306231975774/clam.xml" "/var/www/webservices-lst/live/writable/g2pservice/projects/surfpol/hbovpk_11771156306231975774/.status" "/var/www/webservices-lst/live/writable/g2pservice/projects/surfpol/hbovpk_11771156306231975774/output/"
+[CLAM Dispatcher] Running with pid 95834 (2019-07-03 13:37:44)
+[94mWARNING:phonetisaurus-apply:2019-07-03 13:37:45[0m:  No pronunciation for word: 'EBP'
+[94mWARNING:phonetisaurus-apply:2019-07-03 13:37:45[0m:  No pronunciation for word: 'CPD'
+[CLAM Dispatcher] Process ended (2019-07-03 13:37:45, 1.607052s) 
+[CLAM Dispatcher] Removing temporary files
+[CLAM Dispatcher] Finished (2019-07-03 13:37:45), exit code 0, dispatcher wait time 1.6s, duration 1.60754s
