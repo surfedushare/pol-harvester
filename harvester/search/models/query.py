@@ -12,12 +12,32 @@ class QueryRanking(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
 
     subquery = models.CharField(max_length=255, db_index=True)
+    slug = models.SlugField(max_length=255)
     ranking = JSONField(default={})
     freeze = models.ForeignKey(Freeze, on_delete=models.SET_NULL, null=True)
     is_approved = models.NullBooleanField(null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+
+    def get_elastic_ranking_request(self, query):
+        return {
+            "id": self.slug,
+            "request": {
+                "query": query
+            },
+            "ratings": self.get_elastic_ratings()
+        }
+
+    def get_elastic_ratings(self):
+        return [
+            {
+                "_index": key.split(":")[0],
+                "_id": key.split(":")[1],
+                "rating": value
+            }
+            for key, value in self.ranking.items()
+        ]
 
 
 class ListFromUserSerializer(serializers.ListSerializer):
