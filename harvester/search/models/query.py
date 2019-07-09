@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models, transaction
+from django.utils.text import slugify
 from django.contrib.postgres.fields import JSONField
 from rest_framework import serializers
 
@@ -49,6 +50,10 @@ class ListFromUserSerializer(serializers.ListSerializer):
 
 
 class UserQueryRankingSerializer(serializers.ModelSerializer):
+
+    def validate(self, data):
+        data["slug"] = slugify(data["subquery"])
+        return super().validate(data)
 
     class Meta:
         model = QueryRanking
