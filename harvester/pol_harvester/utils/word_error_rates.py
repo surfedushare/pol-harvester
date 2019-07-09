@@ -51,7 +51,7 @@ def wer(ref: str, hyp: str, debug=False) -> float:
         for j in range(1, len(h) + 1):
             # Here we check whether reference matches the hypothesis
             # We assume written numbers in the hypothesis are correct if the reference is numeric
-            if r[i - 1] == h[j - 1] or contains_substring(h[j - 1], numbers) and r[j - 1].isnumeric():
+            if r[i - 1] == h[j - 1] or contains_substring(h[j - 1], numbers) and r[i - 1].isnumeric():
                 costs[i][j] = costs[i - 1][j - 1]
                 backtrace[i][j] = OP_OK
             else:
