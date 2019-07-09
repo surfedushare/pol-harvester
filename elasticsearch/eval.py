@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
-import json
+# The get_es_config needs Django setup
+import sys
 import os
+sys.path.append("../harvester")
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pol_harvester.settings')
+os.environ.setdefault('DJANGO_GIT_COMMIT', 'ranking-evaluation-only')
+
+import django
+django.setup()
+
+import json
 import re
 from itertools import chain
 
@@ -8,7 +17,7 @@ import click
 import requests
 from toolz.dicttoolz import assoc
 
-from harvester.search.utils.elastic import get_es_config
+from search.utils.elastic import get_es_config
 
 
 METRICS = {

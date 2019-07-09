@@ -105,3 +105,18 @@ By running the commands below we store the data from the previous steps into the
 ./manage.py freeze_library_4_learning --freeze <pipeline-name> --collection <source-name> --input <data-file>
 ./manage.py freeze_surfshare --freeze <pipeline-name> --collection <source-name> --input <data-file>
 ```
+
+Putting data in Elastic Search
+------------------------------
+
+Once the data is harvested it is necessary to create an index on the Elastic Search instance.
+You can do this by running hte following command:
+
+```bash
+./manage.py create_es_index --freeze <pipeline-name>
+```
+
+After this command the Elastic Search index should show up in the administration interface under ``/admin/search/elasticindex/``.
+
+There is an optional flag ``--recreate`` that you can add to the command when an index already exists on the remote.
+This will delete any existing indices on the remote before creating a new one.
