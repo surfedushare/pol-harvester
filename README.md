@@ -68,6 +68,7 @@ If you want to know more about the available API please read the [API documentat
 
 You can read more about Elastic Search in the [Elastic Search documentation](elasticsearch/readme.md).
 
+More information about the commands we use to analyse the system is in the [analysis documentation](harvester/ANALYSE.md)
 
 Datagrowth
 ----------
