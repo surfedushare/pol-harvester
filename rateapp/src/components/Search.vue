@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-gray-100">
+    <div class="search">
         <h2 v-if="!this.subquery" class="text-2xl px-4 pt-4 font-bold">Zoeken</h2>
         <div v-if="!this.subquery && this.$store.getters['rating/ratingQuery'].length > 0 && this.$store.getters['auth/isLoggedIn']"
              class="px-4">
@@ -18,7 +18,8 @@
                     <option v-for="query in this.$store.getters['rating/ratedQueries']" :key="query">{{query}}</option>
                 </select>
             </div>
-            <div class="bg-white p-4">
+            <div class="bg-white p-4 results"
+            :class="this.subquery ? 'results-sub' : ''">
                 <span v-if="searchStatus === 'success'" class="inline-block font-semibold mb-3">{{totalResults}} zoekresultaten gevonden voor "{{this.$store.getters['search/currentQuery']}}"</span>
                 <drag v-for="result in searchResults"
                       class="drag card"

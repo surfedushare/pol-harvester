@@ -1,5 +1,5 @@
 <template>
-    <div class="home">
+    <div class="find">
         <div class="flex h-screen">
             <search class="flex-1"></search>
         </div>

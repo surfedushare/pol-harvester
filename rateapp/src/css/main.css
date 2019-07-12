@@ -1,6 +1,41 @@
 @tailwind base;
 @tailwind components;
 
+/* General Layout */
+
+#app {
+    height: 100vh;
+    overflow: hidden;
+}
+
+.navbar {
+    @apply flex content-center justify-between border-b border-black px-4 py-2
+}
+
+.rate, .find {
+    height: calc(100vh - 69px);
+}
+
+.search {
+    @apply bg-gray-100;
+}
+
+.results {
+    height: calc(100vh - 188px);
+    overflow: auto;
+}
+
+.results-sub.results-sub {
+    height: calc(100vh - 218px);
+}
+
+.drop {
+    height: calc(100vh - 161px);
+    overflow: auto;
+}
+
+/* Forms */
+
 .input {
     @apply appearance-none border border-gray-500 text-sm rounded-lg w-full py-2 px-3 leading-tight;
 }
@@ -11,17 +46,6 @@
 
 .btn {
     @apply py-1 px-4 rounded-lg bg-black text-white;
-}
-
-.pill {
-    @apply flex inline-block rounded-full bg-gray-100 border border-gray-500 uppercase px-2 text-xs font-bold mr-1 mb-1
-}
-
-em {
-    display: inline-block;
-    background-color: yellow;
-    text-decoration: none;
-    font-style: normal;
 }
 
 /* Cards */
@@ -79,6 +103,27 @@ em {
     @apply bg-blue-500;
 }
 
+.pill {
+    @apply flex inline-block rounded-full bg-gray-100 border border-gray-500 uppercase px-2 text-xs font-bold mr-1 mb-1
+}
+
+em {
+    display: inline-block;
+    background-color: yellow;
+    text-decoration: none;
+    font-style: normal;
+}
+
+.remove {
+    @apply cursor-pointer rounded-full border-2 border-gray-500 text-red-500 absolute right-0 top-0 text-sm m-1 h-5 w-5 flex content-center justify-center leading-none;
+}
+
+.remove:hover {
+    @apply bg-red-500 border-red-700 text-white;
+}
+
+/* Rating lists */
+
 .rating .list:first-child {
     @apply border-l border-black
 }
@@ -119,12 +164,24 @@ em {
     @apply text-blue-500;
 }
 
-.remove {
-    @apply cursor-pointer rounded-full border-2 border-gray-500 text-red-500 absolute right-0 top-0 text-sm m-1 h-5 w-5 flex content-center justify-center leading-none;
+/* Pagination */ 
+
+.pagination {
+    @apply text-center;
+}
+.pagination li {
+    @apply inline-block;
+}
+.pagination li a{
+    @apply inline-block px-2 py-1 border border-black mr-1
 }
 
-.remove:hover {
-    @apply bg-red-500 border-red-700 text-white;
+.pagination li.active a {
+    @apply border-blue-500 bg-blue-500 text-white cursor-default;
+}
+
+.pagination li.disabled a {
+    @apply border-gray-500 text-gray-500 cursor-default;
 }
 
 @tailwind utilities;

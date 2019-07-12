@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <div class="flex content-center justify-between border-b border-black px-4 py-2">
+        <div class="navbar">
             <auth></auth>
             <div class="flex items-center">
                 <div class="mr-5">Freeze: <b>{{this.$store.getters['freeze/currentFreeze'].name}}</b></div>

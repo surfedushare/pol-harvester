@@ -4,7 +4,7 @@
             <span class="heading">{{this.header_string}}</span><br/>
             <span>zoekresultaten</span>
         </h3>
-        <drop class="drop h-full p-3" @drop="handleDrop(filteredRating(ratingResults), ...arguments)">
+        <drop class="drop p-3" @drop="handleDrop(filteredRating(ratingResults), ...arguments)">
             <drag v-for="result in filteredRating(ratingResults)"
                   class="drag card card-small"
                   :key="result.id"
