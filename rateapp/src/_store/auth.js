@@ -9,8 +9,9 @@ const state = {
 
 const getters = {
     authUsername: state => state.username,
-    authToken: state => !!state.token,
+    authToken: state => state.token,
     authStatus: state => state.status,
+    isLoggedIn: state => !!state.token,
 };
 
 const actions = {
@@ -22,15 +23,12 @@ const actions = {
                 password: credentials.password
             })
                 .then(resp => {
-                    console.log('hier?');
                     const token = resp.data.token;
                     const username = credentials.username;
                     store.dispatch('auth/storeCredentials', {token: token, username: username});
                     resolve(resp)
                 })
                 .catch(err => {
-                    console.log('daar?');
-
                     commit("auth_error");
                     localStorage.removeItem("username");
                     localStorage.removeItem("token");
@@ -40,6 +38,8 @@ const actions = {
     },
     logout({commit}) {
         return new Promise((resolve) => {
+            store.dispatch("resetAllState");
+
             commit("logout");
             localStorage.removeItem("username");
             localStorage.removeItem("token");

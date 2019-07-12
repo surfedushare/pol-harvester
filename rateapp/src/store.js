@@ -8,11 +8,26 @@ import rating from "./_store/rating";
 
 Vue.use(Vuex);
 
+const modules = {
+    auth,
+    search,
+    freeze,
+    rating
+}
+
 export const store = new Vuex.Store({
-    modules: {
-        auth,
-        search,
-        freeze,
-        rating
+    modules: modules,
+    actions: {
+        resetAllState({dispatch}) {
+            for (const currentModule in modules) {
+                if (modules[currentModule].state.hasOwnProperty("initialState")) {
+                    dispatch("resetModuleState", currentModule);
+                }
+            }
+        },
+        resetModuleState: ({commit}, currentModule) => {
+            const initialState = modules[currentModule].state.initialState;
+            commit(`${currentModule}/reset_module`);
+        }
     }
-})
+});

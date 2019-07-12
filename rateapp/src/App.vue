@@ -1,14 +1,25 @@
 <template>
     <div id="app">
+        <div class="flex content-center justify-between border-b border-black px-4 py-2">
+            <auth></auth>
+            <div class="flex items-center">
+                <div class="mr-5">Freeze: <b>{{this.$store.getters['freeze/currentFreeze'].name}}</b></div>
+                <img src="./assets/logo.svg">
+            </div>
+        </div>
         <router-view/>
     </div>
 </template>
 
 <script>
     import URI from 'urijs';
+    import Auth from "@/components/Auth.vue";
 
     export default {
         name: 'App',
+        components: {
+            Auth
+        },
         created() {
             let username = localStorage.getItem("username");
             let token = localStorage.getItem("token");

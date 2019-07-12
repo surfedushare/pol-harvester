@@ -22,6 +22,11 @@ function get(search_string, from) {
                 ]
             },
         },
+        "highlight": {
+            "fields": {
+                "text": {}
+            }
+        },
         "from": from,
         "size": 10
     };
@@ -39,8 +44,13 @@ function get(search_string, from) {
 }
 
 function mget(index, ids) {
+    let references = [];
+    for (let i = 0; i < ids.length; i++) {
+        references.push(ids[i].split(":")[1])
+    }
+
     let query = {
-        "ids": ids
+        "ids": references
     };
 
     return axios.get(process.env.VUE_APP_ELASTIC_SEARCH_URL + index + '/_doc/_mget', {

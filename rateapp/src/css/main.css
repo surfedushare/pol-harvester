@@ -1,16 +1,130 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities;
 
+.input {
+    @apply appearance-none border border-gray-500 text-sm rounded-lg w-full py-2 px-3 leading-tight;
+}
+
+.input:focus {
+    @apply outline-none border-black;
+}
 
 .btn {
-    @apply font-bold py-2 px-4 rounded;
+    @apply py-1 px-4 rounded-lg bg-black text-white;
 }
 
-.btn-blue {
-    @apply bg-blue-500 text-white;
+.pill {
+    @apply flex inline-block rounded-full bg-gray-100 border border-gray-500 uppercase px-2 text-xs font-bold mr-1 mb-1
 }
 
-.btn-blue:hover {
-    @apply bg-blue-700;
+em {
+    display: inline-block;
+    background-color: yellow;
+    text-decoration: none;
+    font-style: normal;
 }
+
+/* Cards */
+
+.card {
+    @apply border border-2 border-gray-500 rounded-xl p-4 mb-3 bg-white text-sm relative;
+}
+
+.card h6 {
+    @apply text-xl font-normal leading-relaxed;
+}
+
+.card a {
+    @apply font-bold block mb-1;
+    overflow-wrap: break-word;
+}
+
+.card .snippit {
+    @apply mb-2;
+}
+
+.card .meta-info {
+    @apply flex justify-between mt-2 text-gray-500;
+}
+
+.card.card-small a {
+    @apply text-xs mb-0;
+}
+
+.card.card-small .meta-info {
+    @apply flex text-xs mt-1;
+}
+
+.card::before {
+    @apply bg-gray-500;
+    content: "";
+    display: block;
+    width: 9px;
+    position: absolute;
+    left: -5px;
+    height: 60px;
+    top: 15px;
+    border-radius: 5px;
+}
+
+.card.orange::before {
+    @apply bg-orange-500;
+}
+
+.card.green::before {
+    @apply bg-green-500;
+}
+
+.card.blue::before {
+    @apply bg-blue-500;
+}
+
+.rating .list:first-child {
+    @apply border-l border-black
+}
+
+.list {
+    @apply bg-gray-100 border-l-4 border-white;
+}
+
+.list.green .card::before {
+    @apply bg-green-500;
+}
+
+.list.orange .card::before {
+    @apply bg-orange-500;
+}
+
+.list.blue .card::before {
+    @apply bg-blue-500;
+}
+
+.list h3 {
+    @apply text-2xl leading-tight text-center py-4
+}
+
+.list .heading {
+    @apply font-semibold;
+}
+
+.list.green .heading {
+    @apply text-green-500;
+}
+
+.list.orange .heading {
+    @apply text-orange-500;
+}
+
+.list.blue .heading {
+    @apply text-blue-500;
+}
+
+.remove {
+    @apply cursor-pointer rounded-full border-2 border-gray-500 text-red-500 absolute right-0 top-0 text-sm m-1 h-5 w-5 flex content-center justify-center leading-none;
+}
+
+.remove:hover {
+    @apply bg-red-500 border-red-700 text-white;
+}
+
+@tailwind utilities;

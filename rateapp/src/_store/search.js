@@ -2,12 +2,14 @@ import axios from "axios";
 import {store} from '../store';
 import {elasticSearchService} from "../_services";
 
-const state = {
+const initialState = {
     status: "",
     query: "",
     results: [],
     total: 0
 };
+
+const state = Object.assign({}, initialState);
 
 const getters = {
     searchStatus: state => state.status,
@@ -20,12 +22,10 @@ const actions = {
     get({commit}, data) {
         commit("search_request");
         elasticSearchService.get(data.search_string, data.from).then(res => {
-            console.log('success');
             let results = res.data.hits.hits;
             let total = res.data.hits.total;
             commit('search_success', {query: data.search_string, results: results, total: total});
         }).catch(err => {
-            console.log('error hier?');
             commit("search_error");
         });
     },
@@ -86,6 +86,12 @@ const mutations = {
         state.results = [];
         state.total = 0
     },
+    reset_module(state) {
+        state.status = "error";
+        state.query = "";
+        state.results = [];
+        state.total = 0
+    }
 };
 
 export default {
