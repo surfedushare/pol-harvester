@@ -125,7 +125,6 @@
 
                 return styling_class;
             },
-
         },
         computed: {
             ...mapGetters("search", ["searchStatus", "searchResults", "totalResults"]),

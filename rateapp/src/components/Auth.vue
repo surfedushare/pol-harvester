@@ -47,6 +47,8 @@
                         }
                     });
                 });
+                this.username = "";
+                this.password = "";
             },
             logout() {
                 this.$store.dispatch("auth/logout")

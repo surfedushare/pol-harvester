@@ -26,7 +26,6 @@ export const store = new Vuex.Store({
             }
         },
         resetModuleState: ({commit}, currentModule) => {
-            const initialState = modules[currentModule].state.initialState;
             commit(`${currentModule}/reset_module`);
         }
     }
