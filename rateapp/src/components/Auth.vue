@@ -40,7 +40,7 @@
                 let username = this.username;
                 let password = this.password;
                 this.$store.dispatch("auth/login", {username: username, password: password}).then(() => {
-                    this.$store.dispatch('rating/getRatingData').then((res) => {
+                    this.$store.dispatch('rating/getRatingData').then(() => {
                         if (this.$store.getters['rating/ratingQuery'].length > 0) {
                             this.$store.dispatch('rating/setQuery', this.$store.getters['rating/ratingQuery']);
                             this.$router.push({name: 'rate'});

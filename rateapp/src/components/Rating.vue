@@ -9,7 +9,6 @@
 <script>
     import List from "@/components/List.vue";
     import {mapGetters} from 'vuex';
-    import _ from 'lodash';
 
     export default {
         name: 'rating',

@@ -62,7 +62,6 @@
 <script>
     import {Drag} from 'vue-drag-drop';
     import {mapGetters} from "vuex";
-    import axios from 'axios';
 
     export default {
         name: "Search",
