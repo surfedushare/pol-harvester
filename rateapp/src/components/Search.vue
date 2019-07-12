@@ -13,13 +13,14 @@
                        class="input mr-2"
                        type="email" :placeholder="placeholder">
                 <button @click="search" class="btn">Zoeken</button>
-                <select v-if="!this.subquery" class="ml-2 w-1/5 input" @change="selectQuery($event)">
+                <select v-if="!this.subquery && this.$store.getters['auth/isLoggedIn']" class="ml-2 w-1/5 input"
+                        @change="selectQuery($event)">
                     <option value="" disabled selected hidden>Vorige zoektermen</option>
                     <option v-for="query in this.$store.getters['rating/ratedQueries']" :key="query">{{query}}</option>
                 </select>
             </div>
             <div class="bg-white p-4 results"
-            :class="this.subquery ? 'results-sub' : ''">
+                 :class="this.subquery ? 'results-sub' : ''">
                 <span v-if="searchStatus === 'success'" class="inline-block font-semibold mb-3">{{totalResults}} zoekresultaten gevonden voor "{{this.$store.getters['search/currentQuery']}}"</span>
                 <drag v-for="result in searchResults"
                       class="drag card"
@@ -61,7 +62,7 @@
 <script>
     import {Drag} from 'vue-drag-drop';
     import {mapGetters} from "vuex";
-    import _ from 'lodash';
+    import axios from 'axios';
 
     export default {
         name: "Search",
@@ -135,20 +136,7 @@
                     placeholder = "Verfijn je zoekresultaten"
                 }
                 return placeholder;
-            },
-            // ratingList() {
-            //     let list = {};
-            //     _.forEach(this.$store.getters['rating/ratingResults'].rankings, function (ranking) {
-            //         _.forOwn(ranking.ranking, function (value, key) {
-            //             let split = key.split(":");
-            //             let reference = split[1];
-            //
-            //             list[reference] = value;
-            //         });
-            //     });
-            //
-            //     return list;
-            // }
+            }
         },
         watch: {
             query() {

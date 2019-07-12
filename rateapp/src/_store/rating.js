@@ -225,9 +225,11 @@ const mutations = {
     },
     reset_module(state) {
         state.rating_status = "success";
+        state.document_status = "loading";
         state.current_query = "";
         state.current_subquery = "";
         state.current_query_ratings = {};
+        state.current_query_ratings_list = {};
         state.current_query_rating_documents = [];
     }
 };

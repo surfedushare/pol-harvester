@@ -164,7 +164,7 @@ em {
     @apply text-blue-500;
 }
 
-/* Pagination */ 
+/* Pagination */
 
 .pagination {
     @apply text-center;
