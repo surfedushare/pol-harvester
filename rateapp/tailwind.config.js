@@ -201,6 +201,7 @@ module.exports = {
       wait: 'wait',
       text: 'text',
       move: 'move',
+      grab: 'grab',
       'not-allowed': 'not-allowed',
     },
     fill: {

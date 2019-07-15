@@ -51,7 +51,7 @@
 /* Cards */
 
 .card {
-    @apply border border-2 border-gray-500 rounded-xl p-4 mb-3 bg-white text-sm relative;
+    @apply border border-2 border-gray-500 rounded-xl p-4 mb-3 bg-white text-sm relative cursor-grab;
 }
 
 .card h6 {
