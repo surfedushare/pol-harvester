@@ -10,6 +10,7 @@
         <div v-else>
             <div class="flex flex-1 p-4">
                 <input v-model="query"
+                       v-on:keyup.enter="search"
                        class="input mr-2"
                        type="email" :placeholder="placeholder">
                 <button @click="search" class="btn">Zoeken</button>
