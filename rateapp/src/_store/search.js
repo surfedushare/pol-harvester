@@ -25,7 +25,7 @@ const actions = {
             let results = res.data.hits.hits;
             let total = res.data.hits.total;
             commit('search_success', {query: data.search_string, results: results, total: total});
-        }).catch(err => {
+        }).catch(() => {
             commit("search_error");
         });
     },
@@ -56,7 +56,9 @@ const actions = {
                         }
                     }
                     resolve(found_documents);
-                })
+                }).catch((err) => {
+                    reject(err);
+                });
             });
             promises.push(promise);
         }

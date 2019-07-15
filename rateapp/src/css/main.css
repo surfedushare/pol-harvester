@@ -44,6 +44,11 @@
     @apply outline-none border-black;
 }
 
+.input-error {
+    @apply text-red-500 absolute;
+    bottom: -7px;
+    font-size: 10px;
+}
 .btn {
     @apply py-1 px-4 rounded-lg bg-black text-white;
 }

@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center">
+    <div class="flex items-center relative">
         <template v-if="authStatus !== 'success'">
             <div class="inline-block mr-2 w-1/3">
                 <input v-model="username" id="username"
@@ -15,6 +15,7 @@
                 </button>
             </div>
         </template>
+        <small v-if="authStatus === 'error'" class="input-error">Inloggegevens onjuist</small>
         <template v-if="authStatus === 'success'">
             <div class="inline-block mr-5 text-gray-500">Welkom, <span class="text-black">{{authUsername}}</span></div>
             <button @click="logout()" class="btn">
