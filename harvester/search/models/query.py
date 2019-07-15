@@ -13,22 +13,12 @@ class QueryRanking(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
 
     subquery = models.CharField(max_length=255, db_index=True)
-    slug = models.SlugField(max_length=255)
     ranking = JSONField(default={})
     freeze = models.ForeignKey(Freeze, on_delete=models.SET_NULL, null=True)
     is_approved = models.NullBooleanField(null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
-
-    def get_elastic_ranking_request(self, query):
-        return {
-            "id": self.slug,
-            "request": {
-                "query": query
-            },
-            "ratings": self.get_elastic_ratings()
-        }
 
     def get_elastic_ratings(self):
         return [
@@ -51,10 +41,6 @@ class ListFromUserSerializer(serializers.ListSerializer):
 
 class UserQueryRankingSerializer(serializers.ModelSerializer):
 
-    def validate(self, data):
-        data["slug"] = slugify(data["subquery"])
-        return super().validate(data)
-
     class Meta:
         model = QueryRanking
         list_serializer_class = ListFromUserSerializer
@@ -68,6 +54,42 @@ class Query(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+
+    def get_elastic_ranking_request(self, freeze, user, fields):
+        ratings = []
+        for ranking in self.queryranking_set.filter(freeze=freeze, user=user):
+            ratings += ranking.get_elastic_ratings()
+        return {
+            "id": slugify(self.query),
+            "request": {
+                "query": {
+                    'bool': {
+                        'must': [
+                            {
+                                "multi_match": {
+                                    "fields": fields,
+                                    "fuzziness": 0,
+                                    "operator": "or",
+                                    "query": self.query,
+                                    "type": "best_fields",
+                                    "tie_breaker": 0.3
+                                }
+                            }
+                        ],
+                        'should': [
+                            {
+                                "multi_match": {
+                                    "fields": fields,
+                                    "query": self.query,
+                                    "type": "phrase"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "ratings": ratings
+        }
 
     class Meta:
         verbose_name_plural = "queries"

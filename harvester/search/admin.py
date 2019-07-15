@@ -10,7 +10,6 @@ class ElasticIndexAdmin(admin.ModelAdmin):
 class QueryRankingAdminInline(admin.TabularInline):
     model = Query.users.through
     list_display = ("subquery", "freeze", "is_approved", "created_at", "modified_at")
-    prepopulated_fields = {"slug": ("subquery",)}
     extra = 0
 
 

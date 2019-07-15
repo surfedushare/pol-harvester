@@ -2,16 +2,16 @@ import os
 import json
 import logging
 from copy import copy
-from itertools import chain
+from itertools import chain, combinations_with_replacement
 import requests
+from datetime import datetime
 
-from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 
 from datagrowth import settings as datagrowth_settings
 from pol_harvester.models import Freeze
-from search.models import QueryRanking
+from search.models import QueryRanking, Query
 from search.utils.elastic import get_es_config
 
 
@@ -35,34 +35,6 @@ METRICS = {
 }
 
 
-def get_query(query, fields):
-    return {
-        'bool': {
-            'must': [
-                {
-                    "multi_match": {
-                        "fields": fields,
-                        "fuzziness": 0,
-                        "operator": "or",
-                        "query": query,
-                        "type": "best_fields",
-                        "tie_breaker": 0.3
-                    }
-                }
-            ],
-            'should': [
-                {
-                    "multi_match": {
-                        "fields": fields,
-                        "query": query,
-                        "type": "phrase"
-                    }
-                }
-            ]
-        }
-    }
-
-
 class Command(BaseCommand):
 
     def add_arguments(self, parser):
@@ -70,46 +42,63 @@ class Command(BaseCommand):
         parser.add_argument('-f', '--freeze', type=str, required=True)
         parser.add_argument('-m', '--metrics', nargs="*", default=METRICS.keys())
         parser.add_argument('-k', '--result-count', type=int, default=20)
-        parser.add_argument('--fields', nargs="+", default=['title^2', 'text', 'text_plain', 'title_plain'])
+        parser.add_argument('--fields', nargs="+", default=['title^2', 'text', 'text_plain', 'title_plain', 'keywords'])
 
     def handle(self, *args, **options):
 
         metrics = options["metrics"]
         user = User.objects.get(username=options["username"])
         freeze = Freeze.objects.get(name=options["freeze"])
+        if not QueryRanking.objects.filter(user=user, freeze=freeze).exists():
+            print(f"Query rankings by {user.username} for {freeze.name} do not exist")
+
         indices = ",".join([index.remote_name for index in freeze.indices.all()])
-        fields = options["fields"]
-        output_folder = os.path.join(datagrowth_settings.DATAGROWTH_DATA_DIR, "elastic", freeze.name, user.username)
+        field_combinations = sorted(set([
+            tuple(sorted(set(combo)))
+            for combo in combinations_with_replacement(options["fields"], len(options["fields"]))
+        ]))
+        today = datetime.today()
+        freeze_folder = os.path.join(
+            datagrowth_settings.DATAGROWTH_DATA_DIR,
+            "elastic",
+            freeze.name,
+            f"{today:%Y-%m-%d}"
+        )
+        os.makedirs(freeze_folder, exist_ok=True)
 
         for metric_name in metrics:
 
             metric = copy(METRICS[metric_name])
             metric["k"] = options["result_count"]
+            results = {}
 
-            body = {
-                'requests': list(
-                    chain(
-                        ranking.get_elastic_ranking_request(get_query(ranking.query.query, fields))
-                        for ranking in QueryRanking.objects.filter(user=user, freeze=freeze)
-                    )
-                ),
-                'metric': {metric_name: metric}
+            for fields in field_combinations:
+                body = {
+                    'requests': list(
+                        chain(
+                            query.get_elastic_ranking_request(freeze, user, fields)
+                            for query in Query.objects.all()
+                        )
+                    ),
+                    'metric': {metric_name: metric}
+                }
+                endpoint, auth, _ = get_es_config()
+                result = requests.get(
+                    '{}/{}/_rank_eval'.format(endpoint, indices),
+                    auth=auth,
+                    json=body
+                )
+                response = json.loads(result.text)
+                results["|".join(fields)] = {
+                    query: response["details"][query]["metric_score"]
+                    for query in response["details"].keys()
+                }
+
+            output_file = f"{metric_name}.{user.id}.json"
+            output = {
+                "freeze": freeze.name,
+                "user": user.username,
+                "queries": results
             }
-
-            print(json.dumps(body, indent=4))
-            break  # TODO: make actual calls
-
-            endpoint, auth, _ = get_es_config()
-            result = requests.get(
-                '{}/{}/_rank_eval'.format(endpoint, indices),
-                auth=auth,
-                json=body
-            )
-            results = json.loads(result.text)
-            with open(os.path.join(output_folder, f'{indices}_{metric_name}.json'), 'w+t') as file:
-                json.dump(results, file)
-            print(f'{metric_name:<27}: {results["metric_score"]:>20}')
-
-        # TODO: remove debug output
-        print(indices)
-        print(output_folder)
+            with open(os.path.join(freeze_folder, output_file), 'w+t') as file:
+                json.dump(output, file)
