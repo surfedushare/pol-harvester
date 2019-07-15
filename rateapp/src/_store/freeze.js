@@ -3,10 +3,13 @@ import _ from "lodash";
 
 const state = {
     status: "",
+    name: "",
     freeze: {}
 };
 
 const getters = {
+    currentStatus: state => state.status,
+    currentName: state => state.name,
     currentFreeze: state => state.freeze,
     indices: state => _.map(state.freeze.indices, "remote_name"),
 };
@@ -19,15 +22,15 @@ const actions = {
                 .then(resp => {
                     let found = _.find(resp.data, {'name': freeze_name});
                     if (found) {
-                        commit("freeze_success", found);
+                        commit("freeze_success", {name: freeze_name, freeze: found});
                         resolve(resp)
                     } else {
-                        commit("freeze_error");
+                        commit("freeze_error", freeze_name);
                         reject("Freeze not found")
                     }
                 })
                 .catch(err => {
-                    commit("freeze_error");
+                    commit("freeze_error", freeze_name);
                     reject(err)
                 })
         })
@@ -40,11 +43,13 @@ const mutations = {
     },
     freeze_success(state, data) {
         state.status = "success";
+        state.name = data.name;
         state.freeze = data;
     },
-    freeze_error(state) {
+    freeze_error(state, name) {
         state.status = "error";
-        state.freeze = "";
+        state.name = name;
+        state.freeze= {};
     }
 };
 

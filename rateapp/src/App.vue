@@ -3,11 +3,16 @@
         <div class="navbar">
             <auth></auth>
             <div class="flex items-center">
-                <div class="mr-5">Freeze: <b>{{this.$store.getters['freeze/currentFreeze'].name}}</b></div>
+                <div v-if="this.$store.getters['freeze/currentStatus'] === 'success' " class="mr-5">
+                    <span>Freeze: <b class="text-green-500">{{this.$store.getters['freeze/currentName']}}</b></span>
+                </div>
+                <div v-if="this.$store.getters['freeze/currentStatus'] === 'error' " class="mr-5">
+                    <span class="text-red-500 font-bold">Freeze "{{this.$store.getters['freeze/currentName']}}" not found</span>
+                </div>
                 <img src="./assets/logo.svg">
             </div>
         </div>
-        <router-view/>
+        <router-view v-if="this.$store.getters['freeze/currentStatus'] === 'success'"/>
     </div>
 </template>
 
