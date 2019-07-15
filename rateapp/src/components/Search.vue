@@ -24,7 +24,7 @@
                 <span v-if="searchStatus === 'success'" class="inline-block font-semibold mb-3">{{totalResults}} zoekresultaten gevonden voor "{{this.$store.getters['search/currentQuery']}}"</span>
                 <drag v-for="result in searchResults"
                       class="drag card"
-                      :key="result._id"
+                      :key="result._index + ':' + result._id"
                       :transfer-data="result"
                       :class="matchRating(result._id)">
                     <h6 class="font-bold">{{result._source.title}}</h6>

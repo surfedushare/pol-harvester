@@ -10,7 +10,8 @@
                   :key="result.id"
                   :transfer-data="getDocumentData(result.reference)">
                 <div @click="remove(result.id)" class="remove">x</div>
-                <h6 class="font-bold">{{getDocumentData(result.reference) ? getDocumentData(result.reference)._source.title : result.id}}</h6>
+                <h6 class="font-bold">{{getDocumentData(result.reference) ?
+                    getDocumentData(result.reference)._source.title : result.id}}</h6>
                 <div v-if="getDocumentData(result.reference)">
                     <a :href="getDocumentData(result.reference)._source.url" target="_blank">{{getDocumentData(result.reference)._source.url}}</a>
                 </div>
@@ -51,25 +52,27 @@
                 return _.find(documents, {'_id': id});
             },
             filteredRating(rankings) {
+                let _this = this;
                 let rating = this.rating;
                 let deep_rankings = rankings.rankings;
                 let list = [];
                 _.forEach(deep_rankings, function (ranking) {
-                    _.forOwn(ranking.ranking, function (value, key) {
-                        if (value === rating) {
-                            let split = key.split(":");
-                            let index = split[0];
-                            let reference = split[1];
+                    if (ranking.freeze === _this.$store.getters['freeze/currentFreeze'].id) {
+                        _.forOwn(ranking.ranking, function (value, key) {
+                            if (value === rating) {
+                                let split = key.split(":");
+                                let index = split[0];
+                                let reference = split[1];
 
-                            list.push({
-                                id: key,
-                                index: index,
-                                reference: reference
-                            });
-                        }
-                    });
+                                list.push({
+                                    id: key,
+                                    index: index,
+                                    reference: reference
+                                });
+                            }
+                        });
+                    }
                 });
-
                 return list;
             },
             remove(id) {

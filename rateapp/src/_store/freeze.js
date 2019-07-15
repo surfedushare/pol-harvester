@@ -44,7 +44,7 @@ const mutations = {
     freeze_success(state, data) {
         state.status = "success";
         state.name = data.name;
-        state.freeze = data;
+        state.freeze = data.freeze;
     },
     freeze_error(state, name) {
         state.status = "error";

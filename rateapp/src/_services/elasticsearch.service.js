@@ -11,7 +11,12 @@ export const elasticSearchService = {
 };
 
 function get(search_string, from) {
-    let indices = store.getters['freeze/indices'].join();
+    let indices = '_all';
+
+    if (store.getters['freeze/indices'].length > 0) {
+        indices = store.getters['freeze/indices'].join();
+    }
+
     let query = {
         "query": {
             "multi_match": {

@@ -33,11 +33,22 @@ const actions = {
         return new Promise((resolve, reject) => {
             commit("rating_request");
             axios.get(process.env.VUE_APP_API_URL + 'search/query/').then(res => {
-                commit("rating_success", res.data)
+                commit("rating_success", res.data);
 
                 let queries = [];
                 _.forEach(res.data, function (ranking) {
-                    queries.push(ranking.query)
+                    let has_ranking = false;
+                    if (ranking.rankings.length > 0) {
+                        _.forEach(ranking.rankings, (deep_ranking) => {
+                            if (deep_ranking.freeze === store.getters['freeze/currentFreeze'].id && Object.keys(deep_ranking.ranking).length > 0) {
+                                has_ranking = true;
+                            }
+                        })
+                    }
+
+                    if (has_ranking) {
+                        queries.push(ranking.query)
+                    }
                 });
 
                 commit("set_rated_queries", queries);
@@ -50,7 +61,13 @@ const actions = {
         })
     },
     getDocuments({commit}, ids) {
-        let indices = store.getters['freeze/indices'];
+        let indices = [];
+        for (let i = 0; i < ids.length; i++) {
+            let index = ids[i].split(':')[0];
+            indices.push(index);
+        }
+        indices = _.uniq(indices);
+
         let promises = [];
 
         for (let i = 0; i < indices.length; i++) {
@@ -76,16 +93,21 @@ const actions = {
     },
     setQuery({commit}, search_string) {
         commit('documents_request', search_string);
-        let rating_object = _.find(state.all_query_data, {'query': search_string});
+        let rating_object = _.find(state.all_query_data, {
+            'query': search_string,
+        });
+
         if (rating_object) {
             let ids_array = [];
             _.forEach(rating_object.rankings, function (ranking_object) {
-                ids_array.push(_.keysIn(ranking_object.ranking))
+                if (ranking_object.freeze === store.getters['freeze/currentFreeze'].id) {
+                    ids_array.push(_.keysIn(ranking_object.ranking))
+                }
             });
             let ids = ids_array.flat();
 
             store.dispatch('rating/getDocuments', ids).then(documents => {
-                commit('documents_success', {ratings: rating_object, documents: documents.flat()})
+                commit('documents_success', {ratings: rating_object, documents: documents.flat()});
                 commit('set_rating_list');
             }).catch(() => {
                 commit('documents_error')
@@ -102,6 +124,7 @@ const actions = {
 
         return new Promise((resolve, reject) => {
             axios.post(process.env.VUE_APP_API_URL + 'search/query/', object).then((res) => {
+                store.dispatch('rating/getRatingData');
                 resolve(res);
             }).catch(err => {
                 reject(err)
@@ -112,6 +135,7 @@ const actions = {
         // TODO: ADD CHECK IF ID IS ALREAYD PRESENT;
         commit('add_document', data.document);
         commit('add_rating', {id: data.document._id, index: data.document._index, rating: data.rating});
+        commit('add_rated_query', state.current_query);
         commit('set_rating_list');
         store.dispatch('rating/post');
     },
@@ -184,9 +208,11 @@ const mutations = {
         }
 
         _.forEach(state.current_query_ratings.rankings, function (ranking) {
-            if (_.has(ranking.ranking, combined_identifier)) {
-                already_ranked = true;
-                subquery_ranking = ranking;
+            if (ranking.freeze === store.getters['freeze/currentFreeze'].id) {
+                if (_.has(ranking.ranking, combined_identifier)) {
+                    already_ranked = true;
+                    subquery_ranking = ranking;
+                }
             }
         });
 
@@ -194,7 +220,10 @@ const mutations = {
         if (already_ranked) {
             subquery_ranking.ranking[combined_identifier] = data.rating;
         } else {
-            let found_ranking = _.find(state.current_query_ratings.rankings, {'subquery': state.current_subquery});
+            let found_ranking = _.find(state.current_query_ratings.rankings, {
+                'subquery': state.current_subquery,
+                'freeze': store.getters['freeze/currentFreeze'].id
+            });
 
             // Check if already a ranking for current subquery, else create new object
             if (found_ranking) {
@@ -207,18 +236,22 @@ const mutations = {
     },
     remove_rating(state, id) {
         _.forEach(state.current_query_ratings.rankings, function (ranking) {
-            delete ranking.ranking[id];
+            if (ranking.freeze === store.getters['freeze/currentFreeze'].id) {
+                delete ranking.ranking[id];
+            }
         });
     },
     set_rating_list(state) {
         let list = {};
         _.forEach(state.current_query_ratings.rankings, function (ranking) {
-            _.forOwn(ranking.ranking, function (value, key) {
-                let split = key.split(":");
-                let reference = split[1];
+            if (ranking.freeze === store.getters['freeze/currentFreeze'].id) {
+                _.forOwn(ranking.ranking, function (value, key) {
+                    let split = key.split(":");
+                    let reference = split[1];
 
-                list[reference] = value;
-            });
+                    list[reference] = value;
+                });
+            }
         });
 
         state.current_query_ratings_list = list;
@@ -231,6 +264,10 @@ const mutations = {
         state.current_query_ratings = {};
         state.current_query_ratings_list = {};
         state.current_query_rating_documents = [];
+    },
+    add_rated_query(state, query) {
+        state.rated_queries.push(query);
+        state.rated_queries = _.uniq(state.rated_queries);
     }
 };
 
