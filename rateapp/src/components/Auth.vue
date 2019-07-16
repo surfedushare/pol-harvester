@@ -4,11 +4,13 @@
             <div class="inline-block mr-2 w-1/3">
                 <input v-model="username" id="username"
                        class="input"
-                       type="text" placeholder="Username"></div>
+                       type="text" placeholder="Username"
+                       v-on:keyup.enter="login()"></div>
             <div class="inline-block mr-2 w-1/3">
                 <input v-model="password" id="password"
                        class="input"
-                       type="password" placeholder="Password"></div>
+                       type="password" placeholder="Password"
+                       v-on:keyup.enter="login()"></div>
             <div class="inline-block">
                 <button @click="login()" class="btn">
                     Inloggen
