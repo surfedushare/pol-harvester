@@ -1,6 +1,7 @@
-# rateapp
+# SURFnet Rating application
 
 ## Project setup
+
 ```
 npm install
 ```
@@ -15,15 +16,17 @@ npm run serve
 npm run build
 ```
 
-### Run your tests
+
+## Selecting a freeze
+
+A default Freeze can be set in the .env file by setting the value of **VUE_APP_DEFAULT_FREEZE** to the Freeze name. 
+
+The default Freeze can be overwritten by using the following query in the URL:
 ```
-npm run test
+http://localhost:8080?freeze=<freeze_name>
 ```
 
-### Lints and fixes files
-```
-npm run lint
-```
+## Elastic Search Query
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+All calls to the ElasticSearch environment can be found in the **elasticSearchService** (*elasticsearch.service.js*) in the *_services* folder. 
+To change the query that's being performed, change the **query** object in the **get()** function.
