@@ -34,7 +34,11 @@ router.beforeEach((to, from, next) => {
             next();
             return
         }
-        next("/");
+        if(to.query.freeze) {
+            next({name: "find", query: {freeze: to.query.freeze}})
+        } else {
+            next("/");
+        }
     } else {
         next();
     }

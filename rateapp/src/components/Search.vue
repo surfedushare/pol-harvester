@@ -96,7 +96,11 @@
                     }
 
                     if (this.$route.name === 'find' && this.$store.getters['auth/isLoggedIn']) {
-                        this.$router.push({name: 'rate'});
+                        if(this.$route.query.freeze) {
+                            this.$router.push({name: 'rate', query: { freeze: this.$route.query.freeze}});
+                        } else {
+                            this.$router.push({name: 'rate'});
+                        }
                     }
                 }
             },

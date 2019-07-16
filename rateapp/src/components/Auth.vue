@@ -44,7 +44,11 @@
                     this.$store.dispatch('rating/getRatingData').then(() => {
                         if (this.$store.getters['rating/ratingQuery'].length > 0) {
                             this.$store.dispatch('rating/setQuery', this.$store.getters['rating/ratingQuery']);
-                            this.$router.push({name: 'rate'});
+                            if(this.$route.query.freeze) {
+                                this.$router.push({name: 'rate', query: { freeze: this.$route.query.freeze}});
+                            } else {
+                                this.$router.push({name: 'rate'});
+                            }
                         }
                     });
                 });
@@ -54,7 +58,11 @@
             logout() {
                 this.$store.dispatch("auth/logout")
                     .then(() => {
-                        this.$router.push("/")
+                        if (this.$route.query.freeze) {
+                            this.$router.push({name: 'find', query: { freeze: this.$route.query.freeze}})
+                        } else {
+                            this.$router.push({name: 'find'});
+                        }
                     })
             }
         },
