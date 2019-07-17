@@ -20,6 +20,9 @@ fi
 echo "=== TRANSCRIPTION ==="
 cat $OUTPUT_PATH/1Best.txt
 echo "=== END TRANSCRIPTION ==="
+echo "=== CONFIDENCES ==="
+cat $OUTPUT_PATH/1Best.ctm
+echo "=== END CONFIDENCES ==="
 
 # Clean up
 rm -r $OUTPUT_PATH
