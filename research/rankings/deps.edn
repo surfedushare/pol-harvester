@@ -1,0 +1,10 @@
+{:paths ["resources" "src"]
+
+ :deps {org.clojure/clojure                {:mvn/version "1.10.0"}
+        org.clojure/core.async             {:mvn/version "0.4.500"}
+        cheshire                           {:mvn/version "5.8.0"}
+        metasoarous/oz                     {:mvn/version "1.6.0-alpha3"}}
+
+ :aliases {:dev      {:extra-paths ["dev"]
+                      :extra-deps {org.clojure/tools.namespace  {:mvn/version "0.2.11"}}}}}
+

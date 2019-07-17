@@ -5,6 +5,7 @@
 .ipynb_checkpoints/
 __pycache__
 env/
+.cpcache/
 
 # Data and other too large files
 data/
