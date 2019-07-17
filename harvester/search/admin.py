@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from search.models import ElasticIndex, Query, QueryRanking
+from search.models import ElasticIndex, Query
 
 
 class ElasticIndexAdmin(admin.ModelAdmin):
