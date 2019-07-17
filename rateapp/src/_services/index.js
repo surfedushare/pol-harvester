@@ -1,0 +1,2 @@
+export * from './elasticsearch.service';
+
