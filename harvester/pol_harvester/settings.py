@@ -186,9 +186,12 @@ LOGGING = {
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'statics')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# We're serving static files through Whitenoise
+# See: http://whitenoise.evans.io/en/stable/index.html#
+# If you doubt this decision then read the "infrequently asked question" section for details
 WHITENOISE_INDEX_FILE = 'index.html'
 
 MEDIA_ROOT = os.path.join('..', 'media')
