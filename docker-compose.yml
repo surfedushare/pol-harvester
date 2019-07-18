@@ -2,7 +2,7 @@ version: '2'
 
 services:
   harvester:
-    build: harvester
+    build: .
     command: uwsgi --ini /usr/src/app/uwsgi.ini --py-autoreload=3 --honour-stdin
     volumes:
       - ./harvester:/usr/src/app

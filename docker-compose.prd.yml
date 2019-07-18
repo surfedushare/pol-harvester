@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  harvester:
+    restart: always
+  postgres:
+    restart: always
+  adminer:  # kills adminer in production, but the port should also be closed by the firewall
+    command: "true"
+    entrypoint: "true"
+
+volumes:
+  postgres-data:
