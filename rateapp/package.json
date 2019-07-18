@@ -9,25 +9,25 @@
         "kill": "taskkill -F -IM node.exe"
     },
     "dependencies": {
-        "axios": "^0.19.0",
-        "core-js": "^2.6.5",
-        "lodash": "^4.17.11",
-        "tailwindcss": "^1.0.4",
-        "urijs": "^1.19.1",
-        "vue": "^2.6.10",
-        "vue-drag-drop": "^1.1.4",
-        "vue-router": "^3.0.3",
-        "vuejs-paginate": "^2.1.0",
-        "vuex": "^3.0.1"
+        "axios": "0.19.0",
+        "core-js": "2.6.5",
+        "lodash": "4.17.14",
+        "tailwindcss": "1.0.4",
+        "urijs": "1.19.1",
+        "vue": "2.6.10",
+        "vue-drag-drop": "1.1.4",
+        "vue-router": "3.0.3",
+        "vuejs-paginate": "2.1.0",
+        "vuex": "3.0.1"
     },
     "devDependencies": {
-        "@vue/cli-plugin-babel": "^3.8.0",
-        "@vue/cli-plugin-eslint": "^3.8.0",
-        "@vue/cli-service": "^3.8.0",
-        "babel-eslint": "^10.0.1",
-        "eslint": "^5.16.0",
-        "eslint-plugin-vue": "^5.0.0",
-        "vue-template-compiler": "^2.6.10"
+        "@vue/cli-plugin-babel": "3.8.0",
+        "@vue/cli-plugin-eslint": "3.8.0",
+        "@vue/cli-service": "3.8.0",
+        "babel-eslint": "10.0.1",
+        "eslint": "5.16.0",
+        "eslint-plugin-vue": "5.0.0",
+        "vue-template-compiler": "2.6.10"
     },
     "eslintConfig": {
         "root": true,
