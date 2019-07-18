@@ -2,11 +2,11 @@
 # BUILD
 #################################################
 
-FROM node:10
+FROM node:10 AS builder
 
-RUN mkdir -p /usr/src/build
-WORKDIR /usr/src/build
-COPY rateapp /usr/src/build
+RUN mkdir -p /usr/src/rateapp
+WORKDIR /usr/src/rateapp
+COPY rateapp /usr/src/rateapp
 
 RUN npm install && npm run build
 
@@ -26,9 +26,10 @@ WORKDIR /usr/src/app
 COPY harvester/requirements.txt /usr/src/app/
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Frontend application
+# Copy application
 COPY harvester /usr/src/app
-COPY --from=0 /usr/src/build/dist /usr/src/app/search/static
+RUN mkdir -p /usr/src/rateapp
+COPY --from=builder /usr/src/rateapp/dist /usr/src/rateapp/dist
 
 # Entrypoint sets our environment correctly
 ENTRYPOINT [ "/usr/src/app/entrypoint.sh" ]

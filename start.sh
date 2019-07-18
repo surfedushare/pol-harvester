@@ -18,6 +18,10 @@ export DJANGO_GIT_COMMIT=$(git rev-parse HEAD)
 echo $DJANGO_GIT_COMMIT > harvester/.commit
 
 
+# Clearing static files in order to collect them again
+[[ -f "statics" ]] && rm -r statics
+
+
 # (Re-)building the containers and (re)starting them
 docker-compose build
 docker-compose down
