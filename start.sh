@@ -14,20 +14,11 @@ fi
 
 # Storing the git commit hash that belongs to this start
 # This hash will be included in command output to be able to replicate results
-# And it determines if the frontend needs a (re)build
 export DJANGO_GIT_COMMIT=$(git rev-parse HEAD)
-if [[ ! -e harvester/search/static/.commit || $(< harvester/search/static/.commit) != "$DJANGO_GIT_COMMIT" ]]; then
-    cd rateapp;
-    npm run build;
-    cd -;
-    echo $DJANGO_GIT_COMMIT > harvester/search/static/.commit;
-    echo "Build rate app inside of search application";
-    rm -r harvester/statics  # this forces static file collection at container start to get frontend into Django
-fi
 echo $DJANGO_GIT_COMMIT > harvester/.commit
 
 
 # (Re-)building the containers and (re)starting them
 docker-compose build
 docker-compose down
-docker-compose up -d -f docker-compose.yml -f docker-compose.prd.yml
+docker-compose  -f docker-compose.yml -f docker-compose.prd.yml up -d
