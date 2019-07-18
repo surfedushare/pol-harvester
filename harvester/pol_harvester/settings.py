@@ -197,6 +197,8 @@ WHITENOISE_INDEX_FILE = 'index.html'
 
 MEDIA_ROOT = os.path.join('..', 'media')
 
+SESSION_COOKIE_PATH = '/admin/'
+
 
 # Rest framework
 # https://www.django-rest-framework.org/
