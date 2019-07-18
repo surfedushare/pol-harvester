@@ -30,4 +30,4 @@ echo $DJANGO_GIT_COMMIT > harvester/.commit
 # (Re-)building the containers and (re)starting them
 docker-compose build
 docker-compose down
-docker-compose up -d
+docker-compose up -d -f docker-compose.yml -f docker-compose.prd.yml
