@@ -257,6 +257,7 @@ HUMANIZED_MIME_TYPES = {
     'text/html': 'html',
     'application/xhtml+xml': 'html',
     'video/flv': 'video',
+    'video/x-flv': 'video',
     'video': 'video',
     'image': 'image',
     'application/zip': 'zip',
