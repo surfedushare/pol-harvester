@@ -5,6 +5,7 @@ psycopg2-binary==2.7.7
 django==1.11.22
 djangorestframework==3.9.1
 django-cors-headers==2.4.0
+django-basicauth==0.5.2
 requests==2.20.0
 jsonschema==2.6.0
 pytz==2018.5

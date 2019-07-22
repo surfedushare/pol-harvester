@@ -66,6 +66,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'pol_harvester.authentication.SearchBasicAuthMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -126,6 +127,18 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+# Basic Auth
+# https://github.com/hirokiky/django-basicauth
+
+username = os.environ.get("ELASTIC_SEARCH_USERNAME")
+password = os.environ.get("ELASTIC_SEARCH_PASSWORD")
+if not username or not password:
+    raise ImproperlyConfigured("Username and/or password not specified for Basic Auth")
+BASICAUTH_USERS = {
+    username: password
+}
 
 
 # Internationalization
