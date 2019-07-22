@@ -39,7 +39,7 @@
                         <span v-for="keyword in result._source.keywords" :key="keyword" class="pill">{{keyword}} </span>
                     </div>
                     <div class="meta-info">
-                        <span>Type: {{result._source.mime_type}}</span>
+                        <span>Type: {{result._source.humanized_mime_type}}</span>
                         <span>Collection: {{result._source.arrangement_collection_name}}</span>
                     </div>
                 </drag>

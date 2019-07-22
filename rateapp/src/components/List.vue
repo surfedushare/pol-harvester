@@ -16,7 +16,7 @@
                     <a :href="getDocumentData(result.reference)._source.url" target="_blank">{{getDocumentData(result.reference)._source.url}}</a>
                 </div>
                 <div class="meta-info">
-                    <span>Type: {{getDocumentData(result.reference)._source.mime_type}}</span>
+                    <span>Type: {{getDocumentData(result.reference)._source.humanized_mime_type}}</span>
                     <span>Collection: {{getDocumentData(result.reference)._source.arrangement_collection_name}}</span>
                 </div>
             </drag>
