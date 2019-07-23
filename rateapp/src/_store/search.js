@@ -65,7 +65,7 @@ const actions = {
 
         return Promise.all(promises).then(values => {
             return values.flat();
-        }).catch(err => {
+        }).catch(() => {
             commit("search_error");
         });
     },
