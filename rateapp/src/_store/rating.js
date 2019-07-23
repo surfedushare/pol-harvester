@@ -97,7 +97,7 @@ const actions = {
             "query": search_string,
         });
 
-        if (rating_object) {
+        if (!_.isNil(rating_object)) {
             let ids_array = [];
             _.forEach(rating_object.rankings, function (ranking_object) {
                 if (ranking_object.freeze === store.getters["freeze/currentFreeze"].id) {
