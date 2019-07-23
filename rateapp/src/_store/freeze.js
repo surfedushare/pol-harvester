@@ -20,7 +20,7 @@ const actions = {
             commit("freeze_request");
             axios.get(process.env.VUE_APP_API_URL + "freeze/",)
                 .then(resp => {
-                    let found = _.find(resp.data, {'name': freeze_name});
+                    let found = _.find(resp.data, {"name": freeze_name});
                     if (found) {
                         commit("freeze_success", {name: freeze_name, freeze: found});
                         resolve(resp)

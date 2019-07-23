@@ -25,12 +25,12 @@
 </template>
 
 <script>
-    import {Drag, Drop} from 'vue-drag-drop';
-    import {mapGetters} from 'vuex';
-    import _ from 'lodash';
+    import {Drag, Drop} from "vue-drag-drop";
+    import {mapGetters} from "vuex";
+    import _ from "lodash";
 
     export default {
-        name: 'List',
+        name: "List",
         components: {Drag, Drop},
         props: {
             rating: {
@@ -44,12 +44,12 @@
         },
         methods: {
             handleDrop(toList, document) {
-                this.$store.dispatch('rating/addRating', {document: document, rating: this.rating});
+                this.$store.dispatch("rating/addRating", {document: document, rating: this.rating});
                 this.$nextTick(this.$forceUpdate());
             },
             getDocumentData(id) {
                 let documents = this.ratingDocuments;
-                return _.find(documents, {'_id': id});
+                return _.find(documents, {"_id": id});
             },
             filteredRating(rankings) {
                 let _this = this;
@@ -57,7 +57,7 @@
                 let deep_rankings = rankings.rankings;
                 let list = [];
                 _.forEach(deep_rankings, function (ranking) {
-                    if (ranking.freeze === _this.$store.getters['freeze/currentFreeze'].id) {
+                    if (ranking.freeze === _this.$store.getters["freeze/currentFreeze"].id) {
                         _.forOwn(ranking.ranking, function (value, key) {
                             if (value === rating) {
                                 let split = key.split(":");
@@ -76,7 +76,7 @@
                 return list;
             },
             remove(id) {
-                this.$store.dispatch('rating/removeRating', id);
+                this.$store.dispatch("rating/removeRating", id);
                 this.$nextTick(this.$forceUpdate());
             }
         },

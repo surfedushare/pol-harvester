@@ -8,10 +8,10 @@
 
 <script>
     import List from "@/components/List.vue";
-    import {mapGetters} from 'vuex';
+    import {mapGetters} from "vuex";
 
     export default {
-        name: 'rating',
+        name: "rating",
         components: {
             List
         },

@@ -24,13 +24,13 @@ const actions = {
         elasticSearchService.get(data.search_string, data.from).then(res => {
             let results = res.data.hits.hits;
             let total = res.data.hits.total;
-            commit('search_success', {query: data.search_string, results: results, total: total});
+            commit("search_success", {query: data.search_string, results: results, total: total});
         }).catch(() => {
             commit("search_error");
         });
     },
     multiGet({commit}, ids) {
-        let indices = store.getters['freeze/indices'];
+        let indices = store.getters["freeze/indices"];
         let query = {
             "ids": ids
         };
@@ -38,14 +38,14 @@ const actions = {
 
         for (let i = 0; i < indices.length; i++) {
             let promise = new Promise((resolve, reject) => {
-                axios.get(process.env.VUE_APP_ELASTIC_SEARCH_URL + indices[i] + '/_doc/_mget', {
+                axios.get(process.env.VUE_APP_ELASTIC_SEARCH_URL + indices[i] + "/_doc/_mget", {
                     auth: {
                         username: process.env.VUE_APP_ELASTIC_SEARCH_USERNAME,
                         password: process.env.VUE_APP_ELASTIC_SEARCH_PASSWORD
                     },
                     params: {
                         source: JSON.stringify(query),
-                        source_content_type: 'application/json',
+                        source_content_type: "application/json",
                     },
                 }).then((res) => {
                     let documents = res.data.docs;
