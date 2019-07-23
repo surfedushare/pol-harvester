@@ -22,6 +22,7 @@
             </div>
             <div class="bg-white p-4 results"
                  :class="this.subquery ? 'results-sub' : ''">
+                <loader v-if="isLoading"></loader>
                 <span v-if="searchStatus === 'success'" class="inline-block font-semibold mb-3">{{totalResults}} zoekresultaten gevonden voor "{{this.$store.getters['search/currentQuery']}}"</span>
                 <drag v-for="result in searchResults"
                       class="drag card"
@@ -63,11 +64,13 @@
 <script>
     import {Drag} from 'vue-drag-drop';
     import {mapGetters} from "vuex";
+    import Loader from "@/components/Loader.vue"
 
     export default {
         name: "Search",
         components: {
-            Drag
+            Drag,
+            Loader
         },
         props: {
             subquery: {
@@ -82,10 +85,15 @@
                 list: {}
             }
         },
+        mounted() {
+            if (this.$route.query.query) {
+                this.query = this.$route.query.query;
+            }
+        },
         methods: {
             search() {
-                let query = this.query.length > 0 ? this.query : this.$store.getters['rating/ratingQuery'];
-                if (query.length > 0) {
+                let query = this.query;
+                if (this.query.length > 0) {
                     let from = (this.page - 1) * 10;
                     this.$store.dispatch("search/get", {search_string: query, from: from});
                     if (this.page === 1 && !this.subquery) {
@@ -96,12 +104,17 @@
                     }
 
                     if (this.$route.name === 'find' && this.$store.getters['auth/isLoggedIn']) {
-                        if(this.$route.query.freeze) {
-                            this.$router.push({name: 'rate', query: { freeze: this.$route.query.freeze}});
+                        if (this.$route.query.freeze) {
+                            this.$router.push({name: 'rate', query: {freeze: this.$route.query.freeze, query: query}});
                         } else {
-                            this.$router.push({name: 'rate'});
+                            this.$router.push({name: 'rate', query: {query: query}});
                         }
+                    } else {
+                        this.$router.push({name: 'rate', query: {query: query}});
                     }
+
+                } else {
+                    this.$store.dispatch('search/reset');
                 }
             },
             selectQuery(event) {
@@ -111,6 +124,7 @@
             reset() {
                 this.$store.dispatch("resetModuleState", 'rating');
                 this.$store.dispatch("resetModuleState", 'search');
+                this.$router.push({name: 'find'});
             },
             matchRating(id) {
                 let rating = this.ratingList[id];
@@ -139,6 +153,9 @@
                     placeholder = "Verfijn je zoekresultaten"
                 }
                 return placeholder;
+            },
+            isLoading() {
+                return this.searchStatus === "loading"
             }
         },
         watch: {

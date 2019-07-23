@@ -68,6 +68,9 @@ const actions = {
         }).catch(err => {
             commit("search_error");
         });
+    },
+    reset({commit}) {
+        commit("reset_module");
     }
 };
 
@@ -89,7 +92,7 @@ const mutations = {
         state.total = 0
     },
     reset_module(state) {
-        state.status = "error";
+        state.status = "";
         state.query = "";
         state.results = [];
         state.total = 0
