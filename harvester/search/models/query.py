@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models, transaction
+from django.utils.text import slugify
 from django.contrib.postgres.fields import JSONField
 from rest_framework import serializers
 
@@ -18,6 +19,16 @@ class QueryRanking(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+
+    def get_elastic_ratings(self):
+        return [
+            {
+                "_index": key.split(":")[0],
+                "_id": key.split(":")[1],
+                "rating": value
+            }
+            for key, value in self.ranking.items()
+        ]
 
 
 class ListFromUserSerializer(serializers.ListSerializer):
@@ -43,6 +54,42 @@ class Query(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+
+    def get_elastic_ranking_request(self, freeze, user, fields):
+        ratings = []
+        for ranking in self.queryranking_set.filter(freeze=freeze, user=user):
+            ratings += ranking.get_elastic_ratings()
+        return {
+            "id": slugify(self.query),
+            "request": {
+                "query": {
+                    'bool': {
+                        'must': [
+                            {
+                                "multi_match": {
+                                    "fields": fields,
+                                    "fuzziness": 0,
+                                    "operator": "or",
+                                    "query": self.query,
+                                    "type": "best_fields",
+                                    "tie_breaker": 0.3
+                                }
+                            }
+                        ],
+                        'should': [
+                            {
+                                "multi_match": {
+                                    "fields": fields,
+                                    "query": self.query,
+                                    "type": "phrase"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            "ratings": ratings
+        }
 
     class Meta:
         verbose_name_plural = "queries"

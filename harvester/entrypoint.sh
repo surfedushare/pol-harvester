@@ -8,7 +8,7 @@ chown www-data:www-data /usr/src/app/pol_harvester/logs
 
 # The git commit gets stored during the execution of start.bash
 # Here we load the stored commit to be able to output it when running commands
-if [ -e "./.commit" ]; then
+if [[ -e "./.commit" ]]; then
     export DJANGO_GIT_COMMIT=$(cat ./.commit)
 fi
 
@@ -16,7 +16,7 @@ fi
 # See: http://whitenoise.evans.io/en/stable/index.html#
 # If you doubt this decision then read the "infrequently asked question" section for details
 # Here we gather static files that get served through uWSGI if they don't exist
-if [ ! -d "statics" ]; then
+if [[ ! -d "statics" ]]; then
     ./manage.py collectstatic --noinput
 fi
 

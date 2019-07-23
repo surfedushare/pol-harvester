@@ -36,6 +36,7 @@ ALLOWED_HOSTS = [
 ]
 CORS_ORIGIN_WHITELIST = [
     'localhost:8080',
+    'localhost:8000',
     '127.0.0.1:8080',
     'pol-tagger.dev.swarm.surfedu.nl'
 ]
@@ -186,12 +187,20 @@ LOGGING = {
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'statics')
+STATIC_URL = '/'
+STATIC_ROOT = os.path.join(BASE_DIR, '..', 'statics')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "..", "rateapp", "dist"),
+]
+# We're serving static files through Whitenoise
+# See: http://whitenoise.evans.io/en/stable/index.html#
+# If you doubt this decision then read the "infrequently asked question" section for details
 WHITENOISE_INDEX_FILE = 'index.html'
 
 MEDIA_ROOT = os.path.join('..', 'media')
+
+SESSION_COOKIE_PATH = '/admin/'
 
 
 # Rest framework
@@ -238,14 +247,17 @@ ELASTIC_SEARCH_ANALYSERS = {
 HUMANIZED_MIME_TYPES = {
     'unknown': 'unknown',
     'application/pdf': 'pdf',
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'powerp.',
-    'application/vnd.ms-powerpoint': 'powerp.',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'powerpoint',
+    'application/vnd.ms-powerpoint': 'powerpoint',
     'application/msword': 'word',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'word',
     'application/rtf': 'word',
     'text/plain': 'word',
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'excel',
     'text/html': 'html',
+    'application/xhtml+xml': 'html',
+    'video/flv': 'video',
+    'video/x-flv': 'video',
     'video': 'video',
     'image': 'image',
     'application/zip': 'zip',
