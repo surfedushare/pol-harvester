@@ -57,21 +57,23 @@
                 let deep_rankings = rankings.rankings;
                 let list = [];
                 _.forEach(deep_rankings, function (ranking) {
-                    if (ranking.freeze === _this.$store.getters["freeze/currentFreeze"].id) {
-                        _.forOwn(ranking.ranking, function (value, key) {
-                            if (value === rating) {
-                                let split = key.split(":");
-                                let index = split[0];
-                                let reference = split[1];
-
-                                list.push({
-                                    id: key,
-                                    index: index,
-                                    reference: reference
-                                });
-                            }
-                        });
+                    if (ranking.freeze !== _this.$store.getters["freeze/currentFreeze"].id) {
+                        return;
                     }
+
+                    _.forOwn(ranking.ranking, function (value, key) {
+                        if (value === rating) {
+                            let split = key.split(":");
+                            let index = split[0];
+                            let reference = split[1];
+
+                            list.push({
+                                id: key,
+                                index: index,
+                                reference: reference
+                            });
+                        }
+                    });
                 });
                 return list;
             },
