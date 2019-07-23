@@ -1,5 +1,5 @@
 import axios from "axios";
-import {store} from '../store';
+import {store} from "../store";
 
 const state = {
     status: "",
@@ -25,7 +25,7 @@ const actions = {
                 .then(resp => {
                     const token = resp.data.token;
                     const username = credentials.username;
-                    store.dispatch('auth/storeCredentials', {token: token, username: username});
+                    store.dispatch("auth/storeCredentials", {token: token, username: username});
                     resolve(resp)
                 })
                 .catch(err => {
@@ -38,7 +38,8 @@ const actions = {
     },
     logout({commit}) {
         return new Promise((resolve) => {
-            store.dispatch("resetAllState");
+            store.dispatch("resetModuleState", "rating");
+            store.dispatch("resetModuleState", "search");
 
             commit("logout");
             localStorage.removeItem("username");
@@ -49,7 +50,7 @@ const actions = {
     },
     storeCredentials({commit}, data) {
         commit("auth_success", {token: data.token, username: data.username});
-        localStorage.setItem('username', data.username);
+        localStorage.setItem("username", data.username);
         localStorage.setItem("token", data.token);
         axios.defaults.headers.common["Authorization"] = "Token " + data.token;
     }
