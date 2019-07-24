@@ -1,9 +1,9 @@
 <template>
     <div class="rate">
-        <div v-if="this.$store.getters['rating/ratingQuery'].length === 0">
+        <div v-if="!hasRatingQuery">
             <search class="flex-1"></search>
         </div>
-        <div v-if="this.$store.getters['rating/ratingQuery'].length > 0" class="flex">
+        <div v-if="hasRatingQuery" class="flex">
             <div class="w-2/5">
                 <search class="flex-1"></search>
                 <search :subquery="true" class="flex-1"></search>
@@ -26,6 +26,11 @@
         data() {
             return {}
         },
-        methods: {}
+        methods: {},
+        computed: {
+            hasRatingQuery() {
+                return this.$store.getters['rating/ratingQuery'].length > 0
+            }
+        }
     }
 </script>

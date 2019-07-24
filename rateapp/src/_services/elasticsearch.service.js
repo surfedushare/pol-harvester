@@ -11,10 +11,10 @@ export const elasticSearchService = {
 };
 
 function get(search_string, from) {
-    let indices = '_all';
+    let indices = "_all";
 
-    if (store.getters['freeze/indices'].length > 0) {
-        indices = store.getters['freeze/indices'].join();
+    if (store.getters["freeze/indices"].length > 0) {
+        indices = store.getters["freeze/indices"].join();
     }
 
     let query = {
@@ -36,14 +36,14 @@ function get(search_string, from) {
         "size": 10
     };
 
-    return axios.get(URL + indices + '/_search', {
+    return axios.get(URL + indices + "/_search", {
         auth: {
             username: USERNAME,
             password: PASSWORD
         },
         params: {
             source: JSON.stringify(query),
-            source_content_type: 'application/json',
+            source_content_type: "application/json",
         },
     });
 }
@@ -58,14 +58,14 @@ function mget(index, ids) {
         "ids": references
     };
 
-    return axios.get(process.env.VUE_APP_ELASTIC_SEARCH_URL + index + '/_doc/_mget', {
+    return axios.get(process.env.VUE_APP_ELASTIC_SEARCH_URL + index + "/_doc/_mget", {
         auth: {
             username: process.env.VUE_APP_ELASTIC_SEARCH_USERNAME,
             password: process.env.VUE_APP_ELASTIC_SEARCH_PASSWORD
         },
         params: {
             source: JSON.stringify(query),
-            source_content_type: 'application/json',
+            source_content_type: "application/json",
         },
     });
 }

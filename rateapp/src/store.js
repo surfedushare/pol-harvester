@@ -18,13 +18,6 @@ const modules = {
 export const store = new Vuex.Store({
     modules: modules,
     actions: {
-        resetAllState({dispatch}) {
-            for (const currentModule in modules) {
-                if (modules[currentModule].state.hasOwnProperty("initialState")) {
-                    dispatch("resetModuleState", currentModule);
-                }
-            }
-        },
         resetModuleState: ({commit}, currentModule) => {
             commit(`${currentModule}/reset_module`);
         }

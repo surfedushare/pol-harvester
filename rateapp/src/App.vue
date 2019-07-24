@@ -3,16 +3,16 @@
         <div class="navbar">
             <auth></auth>
             <div class="flex items-center">
-                <div v-if="this.$store.getters['freeze/currentStatus'] === 'success' " class="mr-5">
-                    <span>Freeze: <b class="text-green-500">{{this.$store.getters['freeze/currentName']}}</b></span>
+                <div v-if="freezeSuccess" class="mr-5">
+                    <span>Freeze: <b class="text-green-500">{{freezeName}}</b></span>
                 </div>
-                <div v-if="this.$store.getters['freeze/currentStatus'] === 'error' " class="mr-5">
-                    <span class="text-red-500 font-bold">Freeze "{{this.$store.getters['freeze/currentName']}}" not found</span>
+                <div v-if="freezeError" class="mr-5">
+                    <span class="text-red-500 font-bold">Freeze "{{freezeName}}" not found</span>
                 </div>
                 <img src="./assets/logo.svg">
             </div>
         </div>
-        <router-view v-if="this.$store.getters['freeze/currentStatus'] === 'success'"/>
+        <router-view v-if="freezeSuccess"/>
     </div>
 </template>
 
@@ -39,6 +39,17 @@
             let freeze = uri.search(true).freeze ? uri.search(true).freeze : process.env.VUE_APP_DEFAULT_FREEZE;
             this.$store.dispatch("freeze/setFreeze", freeze);
 
+        },
+        computed: {
+            freezeSuccess() {
+                return this.$store.getters['freeze/currentStatus'] === 'success'
+            },
+            freezeError() {
+                return this.$store.getters['freeze/currentStatus'] === 'error'
+            },
+            freezeName() {
+                return this.$store.getters['freeze/currentName']
+            }
         }
     }
 </script>
