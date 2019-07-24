@@ -55,3 +55,25 @@ jargon = {
      "6f6ae1d8cd6a2cc541620ded919f9f317466cdd5": 0.5354150799695354
 }
 ``` 
+
+
+Ranked query analysis
+---------------------
+
+There are also search query annotations that you can compare to search results.
+These annotations are made through the ``rateapp``.
+
+Elastic Search provides an experimental API interface to compare search query annotations with search results.
+By running the following command you compare search query annotations with different search query configurations.
+The results of the comparison get dumped to a directory. Other tools exist to visualize the outcomes.
+
+```bash
+./manage.py create_es_ranked_queries --freeze <freeze-name> --username <annotator-username>
+```
+
+This results into a dump file per metric inside of the folder ``data/elastic/<freeze-name>/<date-today>/``.
+Notice that for each user you run the command for you'll get different files with results for that user.
+
+By specifying ``--fields`` you overwrite which fields are taken into account when creating different query configurations.
+By specifying ``--results-count`` you specify how many results should be taken into account for the analysis.
+Be careful to run the same command with different fields and/or results-count options. They overwrite any existing results.
