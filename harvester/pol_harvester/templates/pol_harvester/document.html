@@ -1,0 +1,28 @@
+{% extends "pol_harvester/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ document.title }} (SURF Project Open Leermaterialen){% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <h1 class="col-md-12">{{ document.title }}</h1>
+        </div>
+        <div class="row">
+            <ul class="col-md-12 meta-info">
+                <li><a href="{{ document.url }}">{{ document.title }}</a></li>
+                <li>{{ document.language }}</li>
+                <li>{{ document.arrangement_collection_name }}</li>
+                <li>{{ document.keywords|join:", " }}</li>
+                <li>{{ document.humanized_mime_type }}</li>
+            </ul>
+        </div>
+        <div class="row">
+            {% if "video" in document.mime_type %}
+                <p class="video col-md-12">{{ document.text }}</p>
+            {% else %}
+                <pre class="col-md-12">{{ document.text }}</pre>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
