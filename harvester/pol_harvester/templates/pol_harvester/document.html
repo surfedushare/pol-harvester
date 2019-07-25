@@ -13,7 +13,7 @@
                 <li><a href="{{ document.url }}">{{ document.title }}</a></li>
                 <li>{{ document.language }}</li>
                 <li>{{ document.arrangement_collection_name }}</li>
-                <li>{{ document.keywords|join:", " }}</li>
+                {% if document.keywords %}<li>{{ document.keywords|join:", " }}</li>{% endif %}
                 <li>{{ document.humanized_mime_type }}</li>
             </ul>
         </div>
