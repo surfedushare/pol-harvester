@@ -27,3 +27,7 @@ class DGHttpError403LimitExceeded(DGResourceException):
 
 class DGHttpWarning204(DGResourceException):
     pass
+
+
+class DGInvalidResource(DGResourceException):
+    pass

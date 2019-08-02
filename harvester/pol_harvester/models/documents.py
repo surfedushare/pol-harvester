@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.db import models
 from django.contrib.postgres import fields as postgres_fields
+from django.contrib.sitemaps import Sitemap
+from django.urls import reverse
 
 from datagrowth.datatypes import DocumentBase, DocumentPostgres, CollectionBase, DocumentCollectionMixin
 
@@ -82,3 +84,22 @@ class Document(DocumentBase, DocumentPostgres):
             '_id': self.properties['id'],
             'arrangement_collection_name': self.collection.name
         }
+
+
+class DocumentSitemap(Sitemap):
+
+    changefreq = "never"
+    priority = 1  # Google ignores this
+
+    def __init__(self, freeze_name):
+        self.freeze_name = freeze_name
+
+    def items(self):
+        return Document.objects.filter(freeze__name=self.freeze_name)
+
+    def lastmod(self, obj):
+        return obj.modified_at
+
+    def location(self, obj):
+        print(reverse("content-document-html", args=(obj.id,)))
+        return reverse("content-document-html", args=(obj.id,))

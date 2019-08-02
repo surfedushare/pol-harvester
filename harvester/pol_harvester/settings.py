@@ -40,6 +40,7 @@ CORS_ORIGIN_WHITELIST = [
     '127.0.0.1:8080',
     'pol-tagger.dev.swarm.surfedu.nl'
 ]
+SITE_ID = 1
 
 
 # Application definition
@@ -54,6 +55,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
 
     'datagrowth',
     'pol_harvester',
@@ -210,6 +213,9 @@ STATICFILES_DIRS = [
 # See: http://whitenoise.evans.io/en/stable/index.html#
 # If you doubt this decision then read the "infrequently asked question" section for details
 WHITENOISE_INDEX_FILE = 'index.html'
+if DEBUG:
+    WHITENOISE_AUTOREFRESH = True
+    WHITENOISE_USE_FINDERS = True
 
 MEDIA_ROOT = os.path.join('..', 'media')
 
@@ -240,6 +246,8 @@ DATAGROWTH_KALDI_BASE_PATH = '/home/surf/kaldi'
 DATAGROWTH_KALDI_ASPIRE_BASE_PATH = '/home/surf/kaldi/egs/aspire/s5'
 DATAGROWTH_KALDI_NL_BASE_PATH = '/home/surf/Kaldi_NL'
 
+GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
+GOOGLE_CX = os.environ.get("GOOGLE_CX")
 MAX_BATCH_SIZE = 500
 
 

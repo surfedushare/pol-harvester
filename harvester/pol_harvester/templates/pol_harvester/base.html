@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>{% block title %}SURF Project Open Leermaterialen{% endblock %}</title>
+    <meta charset="utf-8">
+
+    {% block core-css %}
+        <link href="{% static "pol_harvester/css/bootstrap.min.css" %}" rel="stylesheet" />
+    {% endblock %}
+
+    {% block viewport %}
+        <meta name="viewport" content="height=device-height, width=device-width, user-scalable=no"/>
+    {% endblock %}
+
+    {% block theme-css %}
+        <link href="{% static "pol_harvester/css/style.css" %}" rel="stylesheet" />
+    {% endblock %}
+
+    {% block head-js %}
+        <script src="{% static "pol_harvester/js/jquery-1.11.1.min.js" %}"></script>
+        <script src="{% static "pol_harvester/js/uri.js" %}"></script>
+    {% endblock %}
+
+</head>
+
+<body>
+{% block header %}{% endblock %}
+{% block body %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block body-js %}{% endblock %}
+</body>
+
+</html>

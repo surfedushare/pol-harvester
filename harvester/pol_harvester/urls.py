@@ -16,10 +16,12 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.sitemaps.views import sitemap
 
 from rest_framework.authtoken import views as rest_views
 
 from pol_harvester import views
+from pol_harvester.models.documents import DocumentSitemap
 from search.urls import router as search_router
 
 
@@ -44,6 +46,9 @@ api_urlpatterns = [
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^content/sitemap.xml', sitemap, {'sitemaps': {"alpha": DocumentSitemap("alpha")}},
+        name='django.contrib.sitemaps.views.sitemap'),
+    url(r'^content/documents/(?P<pk>\d+)/$', views.document_html_view, name="content-document-html"),
     url(r'^api/v1/', include(api_urlpatterns, namespace="api-v1")),
     url(r'^api/v1/auth/token/?$', csrf_exempt(rest_views.obtain_auth_token)),
 ]
