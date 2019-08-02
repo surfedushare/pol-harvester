@@ -246,6 +246,8 @@ DATAGROWTH_KALDI_BASE_PATH = '/home/surf/kaldi'
 DATAGROWTH_KALDI_ASPIRE_BASE_PATH = '/home/surf/kaldi/egs/aspire/s5'
 DATAGROWTH_KALDI_NL_BASE_PATH = '/home/surf/Kaldi_NL'
 
+GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
+GOOGLE_CX = os.environ.get("GOOGLE_CX")
 MAX_BATCH_SIZE = 500
 
 
