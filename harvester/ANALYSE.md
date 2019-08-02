@@ -77,3 +77,14 @@ Notice that for each user you run the command for you'll get different files wit
 By specifying ``--fields`` you overwrite which fields are taken into account when creating different query configurations.
 By specifying ``--results-count`` you specify how many results should be taken into account for the analysis.
 Be careful to run the same command with different fields and/or results-count options. They overwrite any existing results.
+
+
+Google search analysis
+----------------------
+
+You can use a custom Google Search engine and see if the query annotations line up with those Google results.
+Run the following command to start the analysis:
+
+```bash
+./manage.py analyse_google_search
+```
