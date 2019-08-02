@@ -101,5 +101,4 @@ class DocumentSitemap(Sitemap):
         return obj.modified_at
 
     def location(self, obj):
-        print(reverse("content-document-html", args=(obj.id,)))
         return reverse("content-document-html", args=(obj.id,))
