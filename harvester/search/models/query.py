@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from django.conf import settings
 from django.db import models, transaction
 from django.utils.text import slugify
@@ -20,8 +22,8 @@ class QueryRanking(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
-    def get_elastic_ratings(self):
-        return [
+    def get_elastic_ratings(self, as_dict=False):
+        ratings = [
             {
                 "_index": key.split(":")[0],
                 "_id": key.split(":")[1],
@@ -29,6 +31,7 @@ class QueryRanking(models.Model):
             }
             for key, value in self.ranking.items()
         ]
+        return ratings if not as_dict else {rating["_id"]:rating["rating"] for rating in ratings}
 
 
 class ListFromUserSerializer(serializers.ListSerializer):
@@ -47,7 +50,18 @@ class UserQueryRankingSerializer(serializers.ModelSerializer):
         fields = ("subquery", "ranking", "freeze")
 
 
+class QueryManager(models.Manager):
+
+    def get_query_rankings(self, freeze, user):
+        rankings = defaultdict(dict)
+        for ranking in QueryRanking.objects.filter(freeze=freeze, user=user):
+            rankings[ranking.query].update(ranking.get_elastic_ratings(as_dict=True))
+        return rankings
+
+
 class Query(models.Model):
+
+    objects = QueryManager()
 
     query = models.CharField(max_length=255, db_index=True)
     users = models.ManyToManyField(settings.AUTH_USER_MODEL, through=QueryRanking)

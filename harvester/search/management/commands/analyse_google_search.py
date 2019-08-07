@@ -1,14 +1,19 @@
 import requests
 
 from django.core.management import BaseCommand
+from django.contrib.auth.models import User
 
 from datagrowth.exceptions import DGHttpWarning204
-from search.models import GoogleText
+from pol_harvester.models import Freeze
+from search.models import GoogleText, Query
 from search.utils.metrics import dcg_at_k
-from search.utils.rankings import yield_query_rankings
 
 
 class Command(BaseCommand):
+
+    def add_arguments(self, parser):
+        parser.add_argument('-u', '--username', type=str, required=True)
+        parser.add_argument('-f', '--freeze', type=str, required=True)
 
     def evaluate_google_results(self, results, ranking):
 
@@ -33,16 +38,19 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        for query, ranking in yield_query_rankings():
+        user = User.objects.get(username=options["username"])
+        freeze = Freeze.objects.get(name=options["freeze"])
 
-            print(query)
-            print("-" * len(query))
+        for query, ranking in Query.objects.get_query_rankings(user=user, freeze=freeze).items():
+            query_text = query.query
+            print(query_text)
+            print("-" * len(query_text))
             results = GoogleText()
             try:
-                results = results.get(query)
+                results = results.get(query_text)
                 results.close()
             except DGHttpWarning204:
-                print(f"WARNING: no Google search results for '{query}'")
+                print(f"WARNING: no Google search results for '{query_text}'")
             self.evaluate_google_results(results, ranking)
             print()
             print()
