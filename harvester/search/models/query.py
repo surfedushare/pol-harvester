@@ -69,9 +69,9 @@ class Query(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
-    def get_elastic_query_body(self, fields, enrichment=None):
-        enrichment = enrichment or []
-        query = "{} {}".format(self.query, " ".join(enrichment)).strip()
+    def get_elastic_query_body(self, fields, enrichments=None):
+        enrichments = enrichments or []
+        query = "{} {}".format(self.query, " ".join(enrichments)).strip()
         return {
             'bool': {
                 'must': [

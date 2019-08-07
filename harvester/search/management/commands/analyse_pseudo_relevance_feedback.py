@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from django.core.management import BaseCommand
 from django.contrib.auth.models import User
 
@@ -18,14 +20,16 @@ class Command(BaseCommand):
 
         ratings = []
 
+        print("Result ids:")
         for item in results["hits"]["hits"]:
-            print(item["_id"])
+            print("- ", item["_id"])
 
             rating = ranking[item["_id"]] if item["_id"] in ranking else 0
             ratings.append(rating)
 
-        print(ratings)
-        print(dcg_at_k(ratings, 10))
+        print()
+        print("Ratings of results:", ratings)
+        print("DCG:", dcg_at_k(ratings, 10))
 
     def handle(self, *args, **options):
 
@@ -34,11 +38,8 @@ class Command(BaseCommand):
 
         indices = freeze.get_elastic_indices()
         es_client = get_es_client()
-        vectorizer = freeze.get_tfidf_vectorizer()
-        top_k = 3
-
-        if vectorizer is None:
-            raise RuntimeError("Could not get vectorizer for freeze. Is it created?")
+        top_k_hits = 5
+        top_k_words = 3
 
         for query, ranking in Query.objects.get_query_rankings(freeze=freeze, user=user).items():
 
@@ -53,22 +54,35 @@ class Command(BaseCommand):
 
             # Prints results for the original query
             self.evaluate_elastic_results(pre_results, ranking)
-            print("-" * len(query_text))
+            print("*" * len(query_text))
 
             # Now we enrich the query with top k tfidf terms
-            tfidf_top_results = vectorizer.transform(
-                [hit["_source"]["text"] for hit in pre_results["hits"]["hits"] if hit["_source"]["text"]]
-            )
-            tfidf_words = tfidf_top_results.sum(axis=0)
-            tfidf_top_indices = tfidf_words.A1.argsort()[-1*top_k:]
-            feature_names = vectorizer.get_feature_names()
-            enrichment = [feature_names[ix] for ix in tfidf_top_indices]
-            print(enrichment)
+            enrichments = []
+            language_hits = defaultdict(list)
+            for hit in pre_results["hits"]["hits"]:
+                if not hit["_source"]["text"]:
+                    continue
+                language_hits[hit["_source"]["language"]].append(hit)
+            for language, hits in language_hits.items():
+                vectorizer = freeze.get_tfidf_vectorizer(language)
+                if vectorizer is None:
+                    raise RuntimeError("Could not get {language} vectorizer for freeze. Is it created?")
+                tfidf_top_results = vectorizer.transform([hit["_source"]["text"] for hit in hits[:top_k_hits]])
+                tfidf_words = tfidf_top_results.sum(axis=0)
+                tfidf_top_indices = tfidf_words.A1.argsort()[-1*top_k_words*top_k_words:]
+                feature_names = vectorizer.get_feature_names()
+                enrichments += [
+                    (feature_names[ix], tfidf_words.A1[ix],) for ix in tfidf_top_indices
+                    if feature_names[ix] not in query_text
+                ]
+            enrichments = sorted(enrichments, key=lambda item: item[1], reverse=True)[:top_k_words]
+            enrichments = [enrichment[0] for enrichment in enrichments]
+            print("Applied enrichments:", enrichments)
 
             # Perform new query and evaluate
             results = es_client.search(
                 index=indices,
-                body={"query": query.get_elastic_query_body(options["fields"], enrichment)}
+                body={"query": query.get_elastic_query_body(options["fields"], enrichments)}
             )
             self.evaluate_elastic_results(results, ranking)
 

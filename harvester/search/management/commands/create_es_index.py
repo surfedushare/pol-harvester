@@ -30,10 +30,7 @@ class Command(BaseCommand):
             for dictionary in (doc.to_search() for doc in arrangement.documents.all()):
                 lang_doc.append((dictionary["language"], dictionary,))
 
-        lang_doc_dict = defaultdict(list)
-        # create a list so we can report counts
-        for lang, doc in lang_doc:
-            lang_doc_dict[lang].append(doc)
+        lang_doc_dict = freeze.get_documents_by_language()
         for lang in lang_doc_dict.keys():
             log.info(f'{lang}:{len(lang_doc_dict[lang])}')
 
