@@ -69,6 +69,35 @@ class Query(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
+    def get_elastic_query_body(self, fields, enrichment=None):
+        enrichment = enrichment or []
+        query = "{} {}".format(self.query, " ".join(enrichment)).strip()
+        return {
+            'bool': {
+                'must': [
+                    {
+                        "multi_match": {
+                            "fields": fields,
+                            "fuzziness": 0,
+                            "operator": "or",
+                            "query": query,
+                            "type": "best_fields",
+                            "tie_breaker": 0.3
+                        }
+                    }
+                ],
+                'should': [
+                    {
+                        "multi_match": {
+                            "fields": fields,
+                            "query": query,
+                            "type": "phrase"
+                        }
+                    }
+                ]
+            }
+        }
+
     def get_elastic_ranking_request(self, freeze, user, fields):
         ratings = []
         for ranking in self.queryranking_set.filter(freeze=freeze, user=user):
@@ -76,31 +105,7 @@ class Query(models.Model):
         return {
             "id": slugify(self.query),
             "request": {
-                "query": {
-                    'bool': {
-                        'must': [
-                            {
-                                "multi_match": {
-                                    "fields": fields,
-                                    "fuzziness": 0,
-                                    "operator": "or",
-                                    "query": self.query,
-                                    "type": "best_fields",
-                                    "tie_breaker": 0.3
-                                }
-                            }
-                        ],
-                        'should': [
-                            {
-                                "multi_match": {
-                                    "fields": fields,
-                                    "query": self.query,
-                                    "type": "phrase"
-                                }
-                            }
-                        ]
-                    }
-                }
+                "query": self.get_elastic_query_body(fields)
             },
             "ratings": ratings
         }

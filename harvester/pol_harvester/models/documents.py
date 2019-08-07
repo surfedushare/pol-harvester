@@ -1,9 +1,14 @@
+import os
+from sklearn.feature_extraction.text import TfidfVectorizer
+import joblib
+
 from django.conf import settings
 from django.db import models
 from django.contrib.postgres import fields as postgres_fields
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 
+from datagrowth import settings as datagrowth_settings
 from datagrowth.datatypes import DocumentBase, DocumentPostgres, CollectionBase, DocumentCollectionMixin
 
 
@@ -17,6 +22,27 @@ class Freeze(DocumentCollectionMixin, CollectionBase):
     def __str__(self):
         return "{} (id={})".format(self.name, self.id)
 
+    def get_elastic_indices(self):
+        return ",".join([index.remote_name for index in self.indices.all()])
+
+    def create_tfidf_vectorizer(self):
+        if not self.name:
+            raise ValueError("Can't create a vectorizer without a freeze name")
+        vec = TfidfVectorizer(max_df=0.7)
+        vec.fit_transform([doc.properties["text"] for doc in self.documents.all() if doc.properties["text"]])
+        # Store to disk
+        dst = os.path.join(datagrowth_settings.DATAGROWTH_DATA_DIR, self.name)
+        os.makedirs(dst, exist_ok=True)
+        joblib.dump(vec, os.path.join(dst, "tfidf.pkl"))
+
+    def get_tfidf_vectorizer(self):
+        src = os.path.join(datagrowth_settings.DATAGROWTH_DATA_DIR, self.name, "tfidf.pkl")
+        vec = None
+        try:
+            vec = joblib.load(src)
+        except FileNotFoundError:
+            pass
+        return vec
 
 class Collection(DocumentCollectionMixin, CollectionBase):
 
