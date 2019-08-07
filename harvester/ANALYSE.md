@@ -86,5 +86,17 @@ You can use a custom Google Search engine and see if the query annotations line 
 Run the following command to start the analysis:
 
 ```bash
-./manage.py analyse_google_search
+./manage.py analyse_google_search --freeze <freeze-name> --username <annotator-username>
+```
+
+
+Pseudo Relevance Feedback (PRF) analysis
+----------------------------------------
+
+One trick that people do to improve search results is to add terms from the first results with a high tfidf to queries.
+This type of query enrichment is called PRF.
+You can see how PRF improves our results by running:
+
+```bash
+./manage.py analyse_pseudo_relevance_feedback --freeze <freeze-name> --username <annotator-username>
 ```

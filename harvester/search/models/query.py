@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from django.conf import settings
 from django.db import models, transaction
 from django.utils.text import slugify
@@ -20,8 +22,8 @@ class QueryRanking(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
-    def get_elastic_ratings(self):
-        return [
+    def get_elastic_ratings(self, as_dict=False):
+        ratings = [
             {
                 "_index": key.split(":")[0],
                 "_id": key.split(":")[1],
@@ -29,6 +31,7 @@ class QueryRanking(models.Model):
             }
             for key, value in self.ranking.items()
         ]
+        return ratings if not as_dict else {rating["_id"]:rating["rating"] for rating in ratings}
 
 
 class ListFromUserSerializer(serializers.ListSerializer):
@@ -47,13 +50,53 @@ class UserQueryRankingSerializer(serializers.ModelSerializer):
         fields = ("subquery", "ranking", "freeze")
 
 
+class QueryManager(models.Manager):
+
+    def get_query_rankings(self, freeze, user):
+        rankings = defaultdict(dict)
+        for ranking in QueryRanking.objects.filter(freeze=freeze, user=user):
+            rankings[ranking.query].update(ranking.get_elastic_ratings(as_dict=True))
+        return rankings
+
+
 class Query(models.Model):
+
+    objects = QueryManager()
 
     query = models.CharField(max_length=255, db_index=True)
     users = models.ManyToManyField(settings.AUTH_USER_MODEL, through=QueryRanking)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+
+    def get_elastic_query_body(self, fields, enrichments=None):
+        enrichments = enrichments or []
+        query = "{} {}".format(self.query, " ".join(enrichments)).strip()
+        return {
+            'bool': {
+                'must': [
+                    {
+                        "multi_match": {
+                            "fields": fields,
+                            "fuzziness": 0,
+                            "operator": "or",
+                            "query": query,
+                            "type": "best_fields",
+                            "tie_breaker": 0.3
+                        }
+                    }
+                ],
+                'should': [
+                    {
+                        "multi_match": {
+                            "fields": fields,
+                            "query": query,
+                            "type": "phrase"
+                        }
+                    }
+                ]
+            }
+        }
 
     def get_elastic_ranking_request(self, freeze, user, fields):
         ratings = []
@@ -62,31 +105,7 @@ class Query(models.Model):
         return {
             "id": slugify(self.query),
             "request": {
-                "query": {
-                    'bool': {
-                        'must': [
-                            {
-                                "multi_match": {
-                                    "fields": fields,
-                                    "fuzziness": 0,
-                                    "operator": "or",
-                                    "query": self.query,
-                                    "type": "best_fields",
-                                    "tie_breaker": 0.3
-                                }
-                            }
-                        ],
-                        'should': [
-                            {
-                                "multi_match": {
-                                    "fields": fields,
-                                    "query": self.query,
-                                    "type": "phrase"
-                                }
-                            }
-                        ]
-                    }
-                }
+                "query": self.get_elastic_query_body(fields)
             },
             "ratings": ratings
         }

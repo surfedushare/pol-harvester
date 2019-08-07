@@ -1,19 +1,21 @@
-import os
-import json
-from collections import OrderedDict
 import requests
-from itertools import chain
 
 from django.core.management import BaseCommand
+from django.contrib.auth.models import User
 
 from datagrowth.exceptions import DGHttpWarning204
-from search.models import GoogleText
-from search.rank_metrics import dcg_at_k
+from pol_harvester.models import Freeze
+from search.models import GoogleText, Query
+from search.utils.metrics import dcg_at_k
 
 
 class Command(BaseCommand):
 
-    def evaluate_google_results(self, query, results, ranking):
+    def add_arguments(self, parser):
+        parser.add_argument('-u', '--username', type=str, required=True)
+        parser.add_argument('-f', '--freeze', type=str, required=True)
+
+    def evaluate_google_results(self, results, ranking):
 
         ratings = []
         content_type, data = results.content
@@ -35,31 +37,20 @@ class Command(BaseCommand):
         print(dcg_at_k(ratings, 10))
 
     def handle(self, *args, **options):
-        with open(os.path.join("..", "data", "queries", "queries-en.json")) as en_queries_file:
-            en_queries = json.load(en_queries_file)
-        with open(os.path.join("..", "data", "queries", "queries-nl.json")) as nl_queries_file:
-            nl_queries = json.load(nl_queries_file)
 
-        for query_info in chain(nl_queries, en_queries):
-            query = query_info["queries"][0]
+        user = User.objects.get(username=options["username"])
+        freeze = Freeze.objects.get(name=options["freeze"])
 
-            print(query)
-            print("-" * len(query))
-
-            sorted_items = sorted(
-                ((item["hash"], item["rating"],) for item in query_info["items"]),
-                key=lambda item: item[1],
-                reverse=True  # TODO: check if higher is indeed better, it's required for the metric it seems
-            )
-            ranking = OrderedDict(sorted_items)
-
+        for query, ranking in Query.objects.get_query_rankings(user=user, freeze=freeze).items():
+            query_text = query.query
+            print(query_text)
+            print("-" * len(query_text))
             results = GoogleText()
             try:
-                results = results.get(query)
+                results = results.get(query_text)
                 results.close()
             except DGHttpWarning204:
-                print(f"WARNING: no Google search results for '{query}'")
-
-            self.evaluate_google_results(query, results, ranking)
+                print(f"WARNING: no Google search results for '{query_text}'")
+            self.evaluate_google_results(results, ranking)
             print()
             print()

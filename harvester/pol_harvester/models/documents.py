@@ -1,9 +1,15 @@
+import os
+from collections import defaultdict
+from sklearn.feature_extraction.text import TfidfVectorizer
+import joblib
+
 from django.conf import settings
 from django.db import models
 from django.contrib.postgres import fields as postgres_fields
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 
+from datagrowth import settings as datagrowth_settings
 from datagrowth.datatypes import DocumentBase, DocumentPostgres, CollectionBase, DocumentCollectionMixin
 
 
@@ -17,6 +23,35 @@ class Freeze(DocumentCollectionMixin, CollectionBase):
     def __str__(self):
         return "{} (id={})".format(self.name, self.id)
 
+    def get_elastic_indices(self):
+        return ",".join([index.remote_name for index in self.indices.all()])
+
+    def get_documents_by_language(self):
+        by_language = defaultdict(list)
+        for doc in self.documents.all():
+            language = doc.get_language()
+            by_language[language].append(doc)
+        return by_language
+
+    def create_tfidf_vectorizers(self):
+        if not self.name:
+            raise ValueError("Can't create a vectorizer without a freeze name")
+        dst = os.path.join(datagrowth_settings.DATAGROWTH_DATA_DIR, self.name)
+        os.makedirs(dst, exist_ok=True)
+
+        for language, docs in self.get_documents_by_language().items():
+            vec = TfidfVectorizer(max_df=0.7)
+            vec.fit_transform([doc.properties["text"] for doc in docs if doc.properties["text"]])
+            joblib.dump(vec, os.path.join(dst, f"tfidf.{language}.pkl"))
+
+    def get_tfidf_vectorizer(self, language):
+        src = os.path.join(datagrowth_settings.DATAGROWTH_DATA_DIR, self.name, f"tfidf.{language}.pkl")
+        vec = None
+        try:
+            vec = joblib.load(src)
+        except FileNotFoundError:
+            pass
+        return vec
 
 class Collection(DocumentCollectionMixin, CollectionBase):
 
@@ -50,6 +85,13 @@ class Document(DocumentBase, DocumentPostgres):
     # NB: Collection foreign key is added by the base class
     arrangement = models.ForeignKey("Arrangement", blank=True, null=True)
 
+    def get_language(self):
+        for field in ['from_text', 'from_title', 'metadata']:
+            if field in self.properties['language']:
+                language = self.properties['language'][field]
+                if language is not None:
+                    return language
+
     def to_search(self):
         meta = self.arrangement.meta
         keys = meta.keys()
@@ -62,20 +104,13 @@ class Document(DocumentBase, DocumentPostgres):
                 self.properties[key] = meta[key]
             else:
                 self.properties[f'arrangement_{key}'] = meta[key]
-        # we pick the language by looking at a few language sources
-        language = None
-        for field in ['from_text', 'from_title', 'metadata']:
-            if field in self.properties['language']:
-                language = self.properties['language'][field]
-                if language is not None:
-                    break
 
         # these dicts are compatible with Elastic Search
         return {
             'title': self.properties['title'],
             'text': self.properties['text'],
             'url': self.properties['url'],
-            'language': language,
+            'language': self.get_language(),
             'title_plain': self.properties['title'],
             'text_plain': self.properties['text'],
             'keywords': self.properties['arrangement_keywords'],

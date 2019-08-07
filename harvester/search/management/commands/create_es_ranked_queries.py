@@ -52,7 +52,7 @@ class Command(BaseCommand):
         if not QueryRanking.objects.filter(user=user, freeze=freeze).exists():
             print(f"Query rankings by {user.username} for {freeze.name} do not exist")
 
-        indices = ",".join([index.remote_name for index in freeze.indices.all()])
+        indices = freeze.get_elastic_indices()
         field_combinations = sorted(set([
             tuple(sorted(set(combo)))
             for combo in combinations_with_replacement(options["fields"], len(options["fields"]))
