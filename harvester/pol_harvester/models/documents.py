@@ -53,6 +53,7 @@ class Freeze(DocumentCollectionMixin, CollectionBase):
             pass
         return vec
 
+
 class Collection(DocumentCollectionMixin, CollectionBase):
 
     freeze = models.ForeignKey("Freeze", blank=True, null=True)

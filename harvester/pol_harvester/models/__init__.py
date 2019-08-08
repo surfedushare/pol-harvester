@@ -4,3 +4,4 @@ from .tika import HttpTikaResource
 from .documents import Document, Arrangement, Collection, Freeze
 from .annotations import Annotation
 from .wikipedia.categories import WikipediaCategories, WikipediaCategoryMembers
+from .corpera import Corpus, Article
