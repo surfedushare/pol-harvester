@@ -1,2 +1,2 @@
 from .iterators import ibatch, batchize
-from .data import reach
+from .data import reach, override_dict
