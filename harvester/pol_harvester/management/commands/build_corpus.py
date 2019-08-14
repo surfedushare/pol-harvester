@@ -31,7 +31,7 @@ class Command(BaseCommand):
     def clean_text(self, text, category_namespace):
         lines = text.split("\n")
         return "\n".join([
-            line.replace("thumb:", "").replace(category_namespace, "")
+            line.replace("thumb:", "").replace(category_namespace, "").replace(category_namespace.lower(), "")
             for line in lines
         ])
 
@@ -74,7 +74,10 @@ class Command(BaseCommand):
         for result in results:
             if not result["wikitext"]:
                 continue
-            result["text"] = mwparserfromhell.parse(result["wikitext"]).strip_code()
+            result["text"] = self.clean_text(
+                mwparserfromhell.parse(result["wikitext"]).strip_code(),
+                category_namespace
+            )
             articles.append(Article(properties=result, collection=corpus, schema={}))
         corpus.add(articles, reset=True)
 

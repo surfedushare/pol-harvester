@@ -11,6 +11,15 @@ class Corpus(DocumentCollectionMixin, CollectionBase):
         # This method should use "Document" with local app label and get_model function to load the model
         return apps.get_model("{}.Article".format(cls._meta.app_label))
 
+    def to_text_file(self, file_path):
+        texts = [doc.properties["text"] for doc in self.documents.all() if doc.properties["text"]]
+        with open(file_path, "w") as text_file:
+            text_file.write("\n\n\n\n".join(texts))
+
+    class Meta:
+        verbose_name = "corpus"
+        verbose_name_plural = "corpera"
+
 
 class Article(DocumentBase, DocumentPostgres):
 

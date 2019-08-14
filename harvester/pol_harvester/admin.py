@@ -1,8 +1,9 @@
 from django.contrib import admin
 
 from datagrowth.admin import ShellResourceAdmin, HttpResourceAdmin, DataStorageAdmin, AnnotationAdmin
-from pol_harvester.models import (KaldiAspireResource, KaldiNLResource, YouTubeDLResource, HttpTikaResource, Freeze,
-                                  Collection, Arrangement, Document, Annotation, WikipediaCategoryMembers)
+from pol_harvester.models import (KaldiAspireResource, KaldiNLResource, YouTubeDLResource, HttpTikaResource,
+                                  Freeze, Collection, Arrangement, Document, Annotation,
+                                  WikipediaCategoryMembers, Corpus, Article)
 
 
 class KaldiAspireResourceAdmin(ShellResourceAdmin):
@@ -39,3 +40,5 @@ admin.site.register(Document, DocumentAdmin)
 admin.site.register(Annotation, AnnotationAdmin)
 
 admin.site.register(WikipediaCategoryMembers, HttpResourceAdmin)
+admin.site.register(Corpus, DataStorageAdmin)
+admin.site.register(Article, DataStorageAdmin)
