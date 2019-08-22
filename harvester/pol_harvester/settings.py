@@ -28,7 +28,7 @@ if not GIT_COMMIT:
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'm+2zzqoclh8b6um4%#k&(gw!!(=mmw&$y&u^14jkyt$t==p-$e')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(int(os.environ.get('DJANGO_DEBUG', False)))
+DEBUG = bool(int(os.environ.get('DJANGO_DEBUG', "0")))
 
 ALLOWED_HOSTS = [
     'localhost',
