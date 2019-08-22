@@ -204,7 +204,7 @@ LOGGING = {
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/'
-STATIC_ROOT = os.path.join(BASE_DIR, '..', 'statics')
+STATIC_ROOT = os.path.join(BASE_DIR, 'statics')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "..", "rateapp", "dist"),
