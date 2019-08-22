@@ -11,18 +11,30 @@ export LC_ALL=C
 # Transcribe files
 ./decode.sh $INPUT_AUDIO $OUTPUT_PATH
 
-# Fail if there were no transcripts
-if [ ! -f "$OUTPUT_PATH/1Best.txt" ]; then
+# Check transcription success and exit on fail
+STAGE=$(<$OUTPUT_PATH/intermediate/stage)
+if [ "$STAGE" != "Done" ]; then
+    echo "Stage: $STAGE"
+    cat $OUTPUT_PATH/intermediate/log 1>&2
     exit 1
 fi
 
 # Pass results to stdout
+echo "Stage: $STAGE"
+echo "=== LOG ==="
+cat $OUTPUT_PATH/intermediate/log
+echo "=== END LOG ==="
 echo "=== TRANSCRIPTION ==="
 cat $OUTPUT_PATH/1Best.txt
 echo "=== END TRANSCRIPTION ==="
 echo "=== CONFIDENCES ==="
 cat $OUTPUT_PATH/1Best.ctm
 echo "=== END CONFIDENCES ==="
+echo "=== SEGMENTATION ==="
+for liumsegments in $OUTPUT_PATH/liumlog/*.seg; do
+    cat $liumsegments
+done
+echo "=== END SEGMENTATION ==="
 
 # Clean up
 rm -r $OUTPUT_PATH
