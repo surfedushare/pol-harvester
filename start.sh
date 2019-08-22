@@ -22,7 +22,6 @@ echo $DJANGO_GIT_COMMIT > harvester/.commit
 [[ -f "statics" ]] && rm -r statics
 
 
-# (Re-)building the containers and (re)starting them
-docker-compose build
-docker-compose down
-docker-compose  -f docker-compose.yml -f docker-compose.prd.yml up -d
+# Deploying containers to the stack
+docker build . -t registry.surfedu.nl/surfpol/harvester:latest
+docker stack deploy  -c docker-compose.yml -c docker-compose.prd.yml --prune pol-harvester

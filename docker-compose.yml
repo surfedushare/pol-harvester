@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
   harvester:
@@ -22,6 +22,7 @@ services:
       - ELASTIC_SEARCH_PASSWORD=${ELASTIC_SEARCH_PASSWORD}
       - ELASTIC_SEARCH_URL=${ELASTIC_SEARCH_URL}
       - ELASTIC_SEARCH_HOST=${ELASTIC_SEARCH_HOST}
+
   postgres:
     image: postgres:11.1
     command: postgres -c 'config_file=/etc/postgresql/postgresql.conf'
@@ -37,6 +38,7 @@ services:
       - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     ports:
       - 5432:5432
+
   adminer:
     image: adminer
     ports:
@@ -44,3 +46,6 @@ services:
 
 volumes:
   postgres-data:
+
+networks:
+  webnet:
