@@ -8,7 +8,7 @@
   (cognitect.rebl/ui)
   nil)
 
-(def data (-> "resources/ranking.json"
+(def data (-> "resources/mean_reciprocal_rank.3.json"
               io/reader
               (json/parse-stream)))
 
@@ -47,7 +47,7 @@
     (for [[field-str scores] queries]
       (-> new-record
           (assoc :fields (field-str->field-map field-str))
-          (assoc :dcg (get scores query))))))
+          (assoc :score (get scores query))))))
 
 (def tidy-data
   (->> data

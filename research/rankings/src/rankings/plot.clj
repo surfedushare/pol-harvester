@@ -32,7 +32,7 @@
              :source "rawData"
              :transform [{:type :aggregate
                           :groupby field-names
-                          :fields [:dcg :dcg]
+                          :fields [:score :score]
                           :ops [:mean :stdev]
                           :as [:mean :stdev]}
                          {:type :identifier
@@ -138,9 +138,7 @@
                       :orient "bottom"
                       :offset {:signal "length(data('aggrData')) * cellSize + 5"}}]}]}))
 
-
-
-
+(oz/view! plot :mode :vega)
 
 (comment
   (copy-plot plot)

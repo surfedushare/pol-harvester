@@ -1,0 +1,9 @@
+surfedu.nl:53 {
+  auto surfedu.nl {
+    directory /root
+    reload 10s
+  }
+  log
+  errors
+  reload
+}
