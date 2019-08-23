@@ -13,6 +13,8 @@ services:
         condition: on-failure
     networks:
       - webnet
+      - default
+
   postgres:
     deploy:
       replicas: 1
@@ -22,8 +24,7 @@ services:
           memory: 2048M
       restart_policy:
         condition: on-failure
-    networks:
-      - webnet
+
   adminer:  # kills adminer in production, but the port should also be closed by the firewall
     command: "true"
     entrypoint: "true"
