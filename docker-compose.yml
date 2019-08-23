@@ -3,6 +3,7 @@ version: '3'
 services:
   harvester:
     build: .
+    image: pol-harvester_harvester
     command: uwsgi --ini /usr/src/app/uwsgi.ini --py-autoreload=3 --honour-stdin
     volumes:
       - ./harvester:/usr/src/app
@@ -10,6 +11,27 @@ services:
       - ./${HARVESTER_MEDIA_ROOT}/:/usr/src/media
     ports:
       - "8000:8000"
+    depends_on:
+      - "postgres"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - POSTGRES_HOST=postgres
+      - DJANGO_POSTGRES_PASSWORD=${DJANGO_POSTGRES_PASSWORD}
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DJANGO_DEBUG=${DJANGO_DEBUG}
+      - ELASTIC_SEARCH_USERNAME=${ELASTIC_SEARCH_USERNAME}
+      - ELASTIC_SEARCH_PASSWORD=${ELASTIC_SEARCH_PASSWORD}
+      - ELASTIC_SEARCH_URL=${ELASTIC_SEARCH_URL}
+      - ELASTIC_SEARCH_HOST=${ELASTIC_SEARCH_HOST}
+
+  tasks:
+    image: pol-harvester_harvester
+    command: celery -A pol_harvester worker --loglevel=info
+    container_name: tasks
+    volumes:
+      - ./harvester:/usr/src/app
+      - ./${HARVESTER_DATA_DIR}/:/usr/src/data
+      - ./${HARVESTER_MEDIA_ROOT}/:/usr/src/media
     depends_on:
       - "postgres"
     environment:
@@ -38,6 +60,14 @@ services:
       - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     ports:
       - 5432:5432
+
+  redis:
+    image: redis
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
 
   adminer:
     image: adminer

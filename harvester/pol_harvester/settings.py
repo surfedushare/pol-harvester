@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django.contrib.sites',
     'django.contrib.sitemaps',
+    'django_celery_results',
 
     'datagrowth',
     'pol_harvester',
@@ -232,6 +233,17 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     )
 }
+
+
+# Celery
+# https://docs.celeryproject.org/en/v4.1.0/
+
+CELERY_BROKER_URL = 'redis://redis:6379/0' # 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERYD_TASK_TIME_LIMIT = 300  # 5 minutes for a single task
 
 
 # Datagrowth

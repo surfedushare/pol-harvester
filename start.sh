@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 
-# This script starts all services that are needed to run the harvester
-# It makes available an API on localhost:8000, which nginx can expose
-# You can also run harvest commands through docker-compose. For example:
-#     docker-compose run harvester ./manage.py freeze_edurep -f <freeze-name> -c <collection-name> -i <input-file>
+# This script starts a Docker Swarm that is needed to run the project.
+# It makes available an API on localhost:8000, which nginx can expose.
+# You can run harvest commands through the tasks server. For example:
+#     docker exec -it tasks ./entrypoint.sh ./manage.py freeze_edurep -f <freeze-name> -c <collection-name> -i <input-file>
 
 if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
