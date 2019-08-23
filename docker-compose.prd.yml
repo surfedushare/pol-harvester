@@ -2,6 +2,7 @@ version: '3'
 
 services:
   harvester:
+    command: uwsgi --ini /usr/src/app/uwsgi.ini
     deploy:
       replicas: 2
       resources:
