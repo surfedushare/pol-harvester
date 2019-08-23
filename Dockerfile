@@ -32,7 +32,7 @@ RUN mkdir -p /usr/src/rateapp
 COPY --from=builder /usr/src/rateapp/dist /usr/src/rateapp/dist
 
 # Entrypoint sets our environment correctly
-ENTRYPOINT [ "/usr/src/app/entrypoint.sh" ]
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
 
 # The default command is to start a uWSGI server
 CMD ["uwsgi", "--ini", "/usr/src/app/uwsgi.ini"]
