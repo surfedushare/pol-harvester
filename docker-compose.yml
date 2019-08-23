@@ -13,6 +13,7 @@ services:
       - "8000:8000"
     depends_on:
       - "postgres"
+      - "redis"
     environment:
       - PYTHONUNBUFFERED=1
       - POSTGRES_HOST=postgres
@@ -33,6 +34,7 @@ services:
       - ./${HARVESTER_MEDIA_ROOT}/:/usr/src/media
     depends_on:
       - "postgres"
+      - "redis"
     labels:
       nl.surfpol.tasks: "tasks"
     environment:
