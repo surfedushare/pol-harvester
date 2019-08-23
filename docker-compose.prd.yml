@@ -40,7 +40,7 @@ services:
       replicas: 1
       resources:
         limits:
-          cpu: "4"
+          cpus: "4"
           memory: 10G
       restart_policy:
         condition: on-failure
