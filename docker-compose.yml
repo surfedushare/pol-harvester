@@ -46,6 +46,3 @@ services:
 
 volumes:
   postgres-data:
-
-networks:
-  webnet:

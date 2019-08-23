@@ -11,7 +11,7 @@ if __name__ == "__main__":
         repo = Repo('..')
         commit = str(repo.head.commit)
     except InvalidGitRepositoryError as exc:
-        commit = None
+        commit = ""
     os.environ.setdefault("DJANGO_GIT_COMMIT", commit)
 
     try:

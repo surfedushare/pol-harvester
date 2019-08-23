@@ -12,6 +12,10 @@ if [ "$EUID" -ne 0 ]
 fi
 
 
+# Set the environment variables and activates the Conda environment
+source activate.sh
+
+
 # Storing the git commit hash that belongs to this start
 # This hash will be included in command output to be able to replicate results
 export DJANGO_GIT_COMMIT=$(git rev-parse HEAD)
@@ -19,7 +23,7 @@ echo $DJANGO_GIT_COMMIT > harvester/.commit
 
 
 # Clearing static files in order to collect them again
-[[ -f "statics" ]] && rm -r statics
+[[ -f "harvester/statics" ]] && rm -r harvester/statics
 
 
 # Deploying containers to the stack
