@@ -6,6 +6,7 @@ from jsonschema.exceptions import ValidationError as SchemaValidationError
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.postgres import fields as postgres_fields
+from django.core.urlresolvers import reverse
 import json_field
 
 from datagrowth.utils import reach
@@ -14,15 +15,26 @@ from .base import DataStorage
 
 class DocumentBase(DataStorage):
 
-    collection = models.ForeignKey("Collection", blank=True, null=True)
+    collection = models.ForeignKey("Collection", blank=True, null=True, on_delete=models.CASCADE)
     identity = models.CharField(max_length=255, blank=True, null=True, db_index=True)
     reference = models.CharField(max_length=255, blank=True, null=True, db_index=True)
+
+    @property
+    def properties(self):
+        raise NotImplementedError("DocumentBase does not implement properties, use DocumentPostgres or DocumentMysql")
 
     def __getitem__(self, key):
         return self.properties[key]
 
     def __setitem__(self, key, value):
         self.properties[key] = value
+
+    @property
+    def url(self):  # TODO: move to base class
+        if not self.id:
+            raise ValueError("Can't get url for unsaved Document")
+        view_name = "v1:{}:document-content".format(self._meta.app_label.replace("_", "-"))
+        return reverse(view_name, args=[self.id])  # TODO: make version aware
 
     @staticmethod
     def validate(data, schema):
@@ -83,15 +95,11 @@ class DocumentBase(DataStorage):
             _id=self.id
         )
 
-    @property
-    def json_content(self):
-        return self.get_properties_json()
-
     def output(self, *args):
-        return self.output_from_content(self.properties, *args)
+        return self.output_from_content(self.content, *args)
 
     @staticmethod
-    def output_from_content(content, *args):  # TODO: test to unlock
+    def output_from_content(content, *args):
         if len(args) > 1:
             return map(DocumentBase.output_from_content, repeat(content), args)
         frm = args[0]
@@ -129,8 +137,8 @@ class DocumentBase(DataStorage):
 
     class Meta:
         abstract = True
-        get_latest_by = "created_at"
-        ordering = ["created_at"]
+        get_latest_by = "id"
+        ordering = ["id"]
 
 
 class DocumentMysql(models.Model):
@@ -139,6 +147,8 @@ class DocumentMysql(models.Model):
 
     class Meta:
         abstract = True
+        get_latest_by = "id"
+        ordering = ["id"]
 
 
 class DocumentPostgres(models.Model):
@@ -147,3 +157,5 @@ class DocumentPostgres(models.Model):
 
     class Meta:
         abstract = True
+        get_latest_by = "id"
+        ordering = ["id"]

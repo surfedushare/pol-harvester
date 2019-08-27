@@ -80,7 +80,7 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
         return doc
 
 
-class Document(DocumentBase, DocumentPostgres):
+class Document(DocumentPostgres, DocumentBase):
 
     freeze = models.ForeignKey("Freeze", blank=True, null=True)
     # NB: Collection foreign key is added by the base class
