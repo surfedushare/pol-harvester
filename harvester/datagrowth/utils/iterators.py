@@ -26,11 +26,3 @@ def ibatch(iterable, batch_size, progress_bar=False, total=None):
         if progress_bar:
             progress_bar.update(1)
         yield batch
-
-
-def batchize(elements, batch_size):  # TODO: test to unlock
-    batches = int(math.floor(elements / batch_size))
-    rest = elements % batch_size
-    if rest:
-        batches += 1
-    return batches, rest
