@@ -46,6 +46,9 @@ services:
           memory: 10G
       restart_policy:
         condition: on-failure
+    volumes:
+     - /home/surf/kaldi:/home/surf/kaldi
+     - /home/surf/Kaldi_NL:/home/surf/Kaldi_NL
 
   adminer:  # kills adminer in production, but the port should also be closed by the firewall
     command: "true"
