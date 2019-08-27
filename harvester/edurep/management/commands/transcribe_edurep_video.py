@@ -1,6 +1,5 @@
 import logging
 import os
-from tqdm import tqdm
 import json
 from urlobject import URLObject
 from collections import defaultdict
@@ -73,7 +72,7 @@ class Command(BaseCommand):
                 err.warning("Path does not exist: {}".format(file_path))
                 skipped_missing += 1
                 continue
-            file_paths[kaldi_model].append(file_path)
+            video_tasks[kaldi_model].append(file_path)
 
         successes = []
         errors = []
