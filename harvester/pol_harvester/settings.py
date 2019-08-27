@@ -236,9 +236,9 @@ REST_FRAMEWORK = {
 
 
 # Celery
-# https://docs.celeryproject.org/en/v4.1.0/
+# https://docs.celeryproject.org/en/v4.3.0/
 
-CELERY_BROKER_URL = 'redis://redis:6379/0' # 'redis://localhost:6379/0'
+CELERY_BROKER_URL = 'redis://{}:6379/0'.format(os.environ.get("DJANGO_TASKS_HOST", "localhost"))
 CELERY_RESULT_BACKEND = "django-db"
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'

@@ -20,5 +20,9 @@ if [[ ! -d "statics" ]]; then
     ./manage.py collectstatic --noinput
 fi
 
+# Setting the environment for running Celery tasks from within a container
+# The default setting allows running Celery tasks from the host instead
+export DJANGO_TASKS_HOST=redis
+
 # Executing the normal commands
 exec "$@"
