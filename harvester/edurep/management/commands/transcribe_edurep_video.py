@@ -3,11 +3,12 @@ import os
 from tqdm import tqdm
 import json
 from urlobject import URLObject
+from collections import defaultdict
 
 from django.core.management.base import BaseCommand
 
 from datagrowth.configuration import create_config
-from datagrowth.resources.shell.tasks import run
+from datagrowth.resources.shell.tasks import run_mass
 from datagrowth.exceptions import DGShellError
 from pol_harvester.utils.logging import log_header
 from pol_harvester.models import YouTubeDLResource
@@ -31,7 +32,7 @@ class Command(BaseCommand):
         with open(options["input"], "r") as json_file:
             records = json.load(json_file)
 
-        # TODO: handle video lists differently
+        # TODO: get the EdurepFile+Tika objects for the videos and determine video strategy from there
         video_records = []
         skipped_domain = 0
         for record in records:
@@ -46,9 +47,8 @@ class Command(BaseCommand):
         skipped_download = 0
         skipped_language = 0
         skipped_missing = 0
-        successes = []
-        errors = []
-        for video_record in tqdm(video_records):
+        video_tasks = defaultdict(list)
+        for video_record in video_records:
             try:
                 download = YouTubeDLResource().run(video_record["url"])
             except DGShellError:
@@ -68,17 +68,28 @@ class Command(BaseCommand):
                 skipped_language += 1
                 err.warning("Unknown language for: {}".format(video_record["title"]))
                 continue
-            config = create_config("shell_resource", {
-                "resource": kaldi_model
-            })
             file_path = file_paths[0]
             if not os.path.exists(file_path):
                 err.warning("Path does not exist: {}".format(file_path))
                 skipped_missing += 1
                 continue
-            sccs, errs = run(file_path, config=config)
-            successes += sccs
-            errors += errs
+            file_paths[kaldi_model].append(file_path)
+
+        successes = []
+        errors = []
+        for kaldi_model, file_paths in video_tasks.items():
+            config = create_config("shell_resource", {
+                "resource": kaldi_model,
+                "batch_size": 20
+            })
+            task = run_mass(
+                [[file_path] for file_path in file_paths],
+                [{} for _ in file_paths],
+                config=config
+            )
+            success, error = task.get()
+            successes += success
+            errors += error
 
         out.info("Skipped video content due to domain restrictions: {}".format(skipped_domain))
         out.info("Skipped video content due to download failure: {}".format(skipped_download))

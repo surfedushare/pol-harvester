@@ -31,7 +31,8 @@ class Command(BaseCommand):
             "_private": ["_private", "_namespace", "_defaults"]
         }
 
-        # TODO: handle video lists differently
+        # TODO: get the EdurepFile+Tika objects for the videos and determine video strategy from there
+        # TODO: how can EdurepFile+TIka help with the IMSCP content?
         video_urls = []
         skipped = 0
         for record in records:
