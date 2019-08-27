@@ -42,7 +42,7 @@ def run_serie(config, args_list, kwargs_list):
     return [success, errors]
 
 
-@app.task(name="datagrowth.send_mass_aggregate")
+@app.task(name="datagrowth.run_mass_aggregate")
 def run_mass_aggregate(batch_results):
     success = []
     error = []
