@@ -24,9 +24,7 @@ class CollectionBase(DataStorage):
 
     @property
     def documents(self):
-        # This method should be smart about returning the correct document_set
-        Document = self.get_document_model()
-        return Document.objects.all()
+        raise NotImplementedError("CollectionBase needs to implement the documents property to work correctly")
 
     @property
     def annotations(self):
@@ -40,6 +38,13 @@ class CollectionBase(DataStorage):
             schema=self.schema,
             properties=data
         )
+
+    @property
+    def url(self):  # TODO: move to base class
+        if not self.id:
+            raise ValueError("Can't get url for unsaved Collection")
+        view_name = "api-v1:{}:collection-content".format(self._meta.app_label.replace("_", "-"))
+        return reverse(view_name, args=[self.id])  # TODO: make version aware
 
     @classmethod
     def validate(cls, data, schema):
@@ -58,11 +63,13 @@ class CollectionBase(DataStorage):
 
     def add(self, data, validate=True, reset=False, batch_size=500, collection=None):
         """
-        Update the instance with new data by adding to the Collection
-        or by updating Documents that members off the Collection.
+        Add new data to the Collection in batches, possibly deleting all data before adding.
 
         :param data: The data to use for the update
         :param validate: (optional) whether to validate data or not (yes by default)
+        :param reset: (optional) whether to delete existing data or not (no by default)
+        :param batch_size: (optional) how many instances to add in a single batch (default: 500)
+        :param collection: (optional) a collection instance to add the data to (default: self)
         :return: A list of updated or created instances.
         """
         collection = collection or self
@@ -118,11 +125,6 @@ class CollectionBase(DataStorage):
         :return: True if there are Documents, False otherwise
         """
         return self.documents.exists()
-
-    @property
-    def json_content(self):
-        json_content = [ind.json_content for ind in self.documents.all()]
-        return "[{}]".format(",".join(json_content))
 
     def split(self, train=0.8, validate=0.1, test=0.1, query_set=None, as_content=False):  # TODO: test to unlock
         assert train + validate + test == 1.0, "Expected sum of train, validate and test to be 1"
@@ -198,8 +200,8 @@ class CollectionBase(DataStorage):
 
     class Meta:
         abstract = True
-        get_latest_by = "created_at"
-        ordering = ["created_at"]
+        get_latest_by = "id"
+        ordering = ["id"]
 
 
 class DocumentCollectionMixin(object):
