@@ -45,6 +45,7 @@ DATAGROWTH_DEFAULT_CONFIGURATION = getattr(settings, "DATAGROWTH_DEFAULT_CONFIGU
     "http_resource_concat_args_symbol": "|",
 
     "shell_resource_batch_size": 0,
+    "shell_resource_concat_args_size": 0,
 
     "google_api_key": getattr(settings, 'GOOGLE_API_KEY', ''),
     "google_cx": getattr(settings, 'GOOGLE_CX', ''),
