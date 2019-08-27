@@ -1,12 +1,9 @@
-import os
 import logging
-from tqdm import tqdm
 
 from django.conf import settings
 from django.core.management.base import LabelCommand
 from django.apps import apps
 
-from datagrowth import settings as datagrowth_settings
 from datagrowth.resources import HttpFileResource
 from datagrowth.utils import ibatch
 
