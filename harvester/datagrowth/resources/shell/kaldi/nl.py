@@ -1,5 +1,6 @@
 import hashlib
 import re
+import os
 
 from django.conf import settings
 
@@ -34,7 +35,7 @@ class KaldiNLResource(ShellResource):
         hsh = hashlib.sha1()
         vars = self.variables(*args)
         hsh.update(" ".join(vars["input"]).encode("utf-8"))
-        env["OUTPUT_PATH"] = hsh.hexdigest()
+        env["OUTPUT_PATH"] = os.path.join("output", hsh.hexdigest())
         return env
 
     def clean_stdout(self, stdout):
