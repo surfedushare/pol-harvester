@@ -1,6 +1,6 @@
 from copy import copy
 
-from datagrowth.configuration import ConfigurationProperty, DEFAULT_CONFIGURATION
+from datagrowth.configuration import ConfigurationProperty, DEFAULT_CONFIGURATION, ConfigurationType
 from datagrowth.utils import reach
 from datagrowth.exceptions import DGNoContent
 
@@ -15,7 +15,7 @@ class ExtractProcessor(object):
     )
 
     def __init__(self, config):
-        assert isinstance(config, dict), "Processor expects to always get a configuration."
+        assert isinstance(config, (dict, ConfigurationType)), "Processor expects to get a configuration."
         self.config = config
         self._at = None
         self._context = {}
