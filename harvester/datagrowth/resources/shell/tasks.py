@@ -83,7 +83,7 @@ def run_mass(config, args_list, kwargs_list):
         prc_kwargs_list = kwargs_list
 
     # If there is only one batch we return results immediately
-    if config.batch_size == 0:
+    if config.batch_size == 0 or len(prc_args_list) <= config.batch_size:
         return run_serie.delay(
             prc_args_list,
             prc_kwargs_list,
