@@ -2,6 +2,7 @@ version: '3'
 
 services:
   harvester:
+    image: registry.surfedu.nl/edu/pol-harvester:latest
     command: uwsgi --ini /usr/src/app/uwsgi.ini
     deploy:
       replicas: 2
@@ -36,6 +37,7 @@ services:
         condition: on-failure
 
   tasks:
+    image: registry.surfedu.nl/edu/pol-harvester:latest
     deploy:
       replicas: 1
       resources:

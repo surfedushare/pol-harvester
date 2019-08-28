@@ -22,5 +22,7 @@ echo $DJANGO_GIT_COMMIT > harvester/.commit
 
 
 # Deploying containers to the stack
-docker build . -t pol-harvester_harvester
+
+docker build . -t registry.surfedu.nl/edu/pol-harvester:latest
+docker push registry.surfedu.nl/edu/pol-harvester:latest
 docker-compose -f docker-compose.yml -f docker-compose.prd.yml --log-level ERROR config | docker stack deploy  -c - --prune pol-harvester
