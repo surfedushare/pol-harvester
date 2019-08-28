@@ -4,6 +4,7 @@ from datagrowth.admin import ShellResourceAdmin, HttpResourceAdmin, DataStorageA
 from pol_harvester.models import (KaldiAspireResource, KaldiNLResource, YouTubeDLResource, HttpTikaResource,
                                   Freeze, Collection, Arrangement, Document, Annotation,
                                   WikipediaCategoryMembers, Corpus, Article)
+from edurep.admin import EdurepHarvestAdminInline
 
 
 class KaldiAspireResourceAdmin(ShellResourceAdmin):
@@ -27,12 +28,16 @@ class ExtendedDocumentAdmin(DocumentAdmin):
     list_filter = ('freeze', 'collection',)
 
 
+class FreezeAdmin(DataStorageAdmin):
+    inlines = [EdurepHarvestAdminInline]
+
+
 admin.site.register(KaldiAspireResource, KaldiAspireResourceAdmin)
 admin.site.register(KaldiNLResource, KaldiNLResourceAdmin)
 admin.site.register(YouTubeDLResource, YouTubeDLResourceAdmin)
 admin.site.register(HttpTikaResource, HttpTikaResourceAdmin)
 
-admin.site.register(Freeze, DataStorageAdmin)
+admin.site.register(Freeze, FreezeAdmin)
 admin.site.register(Collection, DataStorageAdmin)
 admin.site.register(Arrangement, DataStorageAdmin)
 admin.site.register(Document, ExtendedDocumentAdmin)
