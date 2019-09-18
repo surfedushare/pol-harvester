@@ -8,7 +8,6 @@ from django.utils.timezone import now
 
 from datagrowth.resources.http.tasks import send, send_serie
 from datagrowth.configuration import create_config
-from pol_harvester.models import Freeze
 from pol_harvester.constants import HarvestStages
 from pol_harvester.utils.logging import log_header
 from edurep.models import EdurepHarvest, EdurepFile
