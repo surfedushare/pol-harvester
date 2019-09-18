@@ -2,8 +2,10 @@ import logging
 
 from datagrowth.configuration import create_config
 from datagrowth.processors import ExtractProcessor
+from datagrowth.exceptions import DGHttpError40X
 
-from edurep.models import EdurepSearch
+from pol_harvester.models import HttpTikaResource
+from edurep.models import EdurepSearch, EdurepFile
 
 
 err = logging.getLogger("pol_harvester")
@@ -32,3 +34,13 @@ def get_edurep_query_seeds(query):
         except ValueError as exc:
             err.warning("Invalid XML:", exc, search.uri)
     return results
+
+
+def get_edurep_basic_resources(url):
+    # TODO: make this cache_only
+    try:
+        file_resource = EdurepFile().get(url)
+    except (DGHttpError40X, EdurepFile.DoesNotExist):
+        return None, None
+    tika_resource = HttpTikaResource().post(file=file_resource.body)
+    return file_resource, tika_resource
