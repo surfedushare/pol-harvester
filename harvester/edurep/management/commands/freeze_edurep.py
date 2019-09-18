@@ -19,6 +19,9 @@ out = logging.getLogger("freeze")
 
 class Command(OutputCommand):
 
+    def add_arguments(self, parser):
+        parser.add_argument('-f', '--freeze', type=str, required=True)
+
     def get_documents_from_transcription(self, transcription_resource, metadata, pipeline):
         if transcription_resource is None or not transcription_resource.success:
             return []
