@@ -29,7 +29,7 @@ class Command(BaseCommand):
         video_seeds = {}
         for seed in seeds:
             file_resource, tika_resource = get_edurep_basic_resources(seed["url"])
-            if tika_resource.has_video():
+            if tika_resource is not None and tika_resource.has_video():
                 video_seeds[seed["url"]] = seed
         return video_seeds
 
