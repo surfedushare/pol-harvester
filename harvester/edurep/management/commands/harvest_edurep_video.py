@@ -77,9 +77,9 @@ class Command(BaseCommand):
                 "resource": kaldi_model
             })
             sccs, errs = run_serie(
-                [
+                tqdm([
                     [path] for path in paths
-                ],
+                ]),
                 [
                     {} for _ in paths
                 ],
@@ -127,8 +127,8 @@ class Command(BaseCommand):
             self.transcribe_video_resources(download_scc, video_seeds)
         out.info("Skipped video content due to missing audio file: {}".format(no_paths_count + invalid_paths_count))
         out.info("Skipped video content due to unknown language: {}".format(no_language_count))
-        out.info("Errors while transcribing videos: {}".format(len(error_count)))
-        out.info("Videos transcribed successfully: {}".format(len(success_count)))
+        out.info("Errors while transcribing videos: {}".format(error_count))
+        out.info("Videos transcribed successfully: {}".format(success_count))
 
         # Finish the basic harvest
         for harvest in harvest_queryset:
