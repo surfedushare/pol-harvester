@@ -36,7 +36,7 @@ class Command(OutputCommand):
         files = set()
         texts_by_file = defaultdict(list)
         for resource in cc.get_resources().values():
-            files.add(resource["files"])
+            files.update(resource["files"])
         tika_content_type, data = tika_resource.content
         if data is None:
             return False
