@@ -75,7 +75,7 @@ class Command(OutputCommand):
             if not text:
                 return []
             return [self._create_document(text, meta=metadata, pipeline=pipeline)]
-        out.warning("No output at all for HttpTikaResource: {tika_resource.id}")
+        out.warning(f"No output at all for HttpTikaResource: {tika_resource.id}")
         return []
 
     def handle(self, *args, **options):
@@ -124,6 +124,8 @@ class Command(OutputCommand):
 
             skipped = 0
             dumped = 0
+            documents_count = 0
+            print(f"Dumping {collection.name} ...")
             for seed in tqdm(seeds):
                 file_resource, tika_resource, video_resource, kaldi_resource = \
                     get_edurep_resources(seed["url"], seed.get("title", None))
@@ -157,10 +159,11 @@ class Command(OutputCommand):
                 )
                 if len(documents):
                     arrangement.add(documents, collection=collection)
+                    documents_count += len(documents)
 
             out.info(f"Skipped URL's for {collection.name} during dump: {skipped}")
             out.info(f"Dumped Arrangements for {collection.name}: {dumped}")
-            out.info(f"Dumped Documents for {collection.name}: {len(documents)}")
+            out.info(f"Dumped Documents for {collection.name}: {documents_count}")
 
         # Finish the freeze and harvest
         for harvest in harvest_queryset:
