@@ -40,6 +40,7 @@ class EdurepSource(models.Model):
     name = models.CharField(max_length=50)
     query = models.CharField(max_length=255)
     freezes = models.ManyToManyField(Freeze, through="EdurepHarvest")
+    collection_name = models.CharField(max_length=255)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
