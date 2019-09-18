@@ -108,7 +108,7 @@ class Command(OutputCommand):
             query = harvest.source.query
             query_seeds = get_edurep_query_seeds(query)
             total_seeds += len(query_seeds)
-            seeds_by_collection[harvest.collection_name] += query_seeds
+            seeds_by_collection[harvest.source.collection_name] += query_seeds
         out.info("Files considered for processing: {}".format(len(total_seeds)))
 
         for collection_name, seeds in seeds_by_collection.items():
