@@ -28,7 +28,7 @@ class Command(BaseCommand):
     def filter_video_seeds(self, seeds):
         video_seeds = {}
         for seed in seeds:
-            file_resource, tika_resource = get_edurep_basic_resources(seed)
+            file_resource, tika_resource = get_edurep_basic_resources(seed["url"])
             if tika_resource.is_video():
                 video_seeds[seed["url"]] = seed
         return video_seeds
