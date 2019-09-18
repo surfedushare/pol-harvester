@@ -9,7 +9,6 @@ from pol_harvester.models import Freeze, Collection, Arrangement
 from pol_harvester.constants import HarvestStages
 from pol_harvester.management.base import OutputCommand
 from pol_harvester.utils.logging import log_header
-from edurep.constants import TIKA_MIME_TYPES, VIDEO_DOMAINS
 from edurep.models import EdurepHarvest
 from edurep.utils import get_edurep_query_seeds, get_edurep_resources
 from ims.models import CommonCartridge
@@ -36,7 +35,7 @@ class Command(OutputCommand):
         # Extract texts per file in the Common Cartridge
         files = set()
         texts_by_file = defaultdict(list)
-        for resource in cc.get_resources():
+        for resource in cc.get_resources().values():
             files.add(resource["files"])
         tika_content_type, data = tika_resource.content
         if data is None:
@@ -65,7 +64,7 @@ class Command(OutputCommand):
             return []
         if tika_resource.is_zip():
             return self.get_documents_from_zip(file_resource, tika_resource, metadata, pipeline)
-        if tika_resource.has_html():
+        if tika_resource.has_plain():
             tika_content_type, data = tika_resource.content
             if data is None:
                 return []
