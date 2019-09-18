@@ -158,3 +158,8 @@ class Command(OutputCommand):
             out.info(f"Skipped URL's for {collection.name} during dump: {skipped}")
             out.info(f"Dumped Arrangements for {collection.name}: {dumped}")
             out.info(f"Dumped Documents for {collection.name}: {len(documents)}")
+
+        # Finish the freeze and harvest
+        for harvest in harvest_queryset:
+            harvest.stage = HarvestStages.COMPLETE
+            harvest.save()
