@@ -27,7 +27,7 @@ class Command(BaseCommand):
 
     def filter_video_seeds(self, seeds):
         video_seeds = {}
-        for seed in seeds:
+        for seed in tqdm(seeds):
             file_resource, tika_resource = get_edurep_basic_resources(seed["url"])
             if tika_resource is not None and tika_resource.has_video():
                 video_seeds[seed["url"]] = seed
@@ -118,13 +118,13 @@ class Command(BaseCommand):
         out.info("Total videos: {}".format(len(video_seeds)))
 
         print("Downloading videos ...")
-        download_scc, download_err = self.download_seed_videos(seeds.values())
+        download_scc, download_err = self.download_seed_videos(video_seeds.values())
         out.info("Errors while downloading audio from videos: {}".format(len(download_err)))
         out.info("Audio downloaded successfully: {}".format(len(download_scc)))
 
         print("Transcribing videos ...")
         no_paths_count, invalid_paths_count, no_language_count, success_count, error_count = \
-            self.transcribe_video_resources(download_scc, seeds)
+            self.transcribe_video_resources(download_scc, video_seeds)
         out.info("Skipped video content due to missing audio file: {}".format(no_paths_count + invalid_paths_count))
         out.info("Skipped video content due to unknown language: {}".format(no_language_count))
         out.info("Errors while transcribing videos: {}".format(len(error_count)))
