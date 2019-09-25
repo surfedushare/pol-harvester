@@ -40,10 +40,14 @@ def get_edurep_query_seeds(query):
             results += list(prc.extract_from_resource(search))
         except ValueError as exc:
             err.warning("Invalid XML:", exc, search.uri)
-    seeds = {
-        seed["url"]: seed
-        for seed in sorted(results, key=lambda rsl: rsl["publisher_date"])
-    }
+    seeds = {}
+    for seed in sorted(results, key=lambda rsl: rsl["publisher_date"]):
+        # We adjust url's of seeds if the source files are not at the URL
+        # We should improve data extraction to always get source files
+        if seed["mime_type"] == "application/x-Wikiwijs-Arrangement":
+            seed["package_url"] = seed["url"]
+            seed["url"] += "?p=imscp"
+        seeds[seed["url"]] = seed
     return seeds.values()
 
 

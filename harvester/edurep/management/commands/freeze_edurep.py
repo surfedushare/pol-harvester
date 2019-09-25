@@ -61,7 +61,7 @@ class Command(OutputCommand):
         for file, texts in texts_by_file.items():
             doc = self._create_document(
                 "\n".join(texts),
-                url="{}/{}".format(metadata.get("url"), file),
+                url="{}/{}".format(metadata.get("package_url"), file),
                 meta=metadata,
                 pipeline=pipeline,
                 hash_postfix=""  # updating URL to create unique hash instead, keeps legacy ids intact
