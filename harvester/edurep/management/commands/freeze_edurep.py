@@ -60,7 +60,7 @@ class Command(OutputCommand):
         documents = {}
         for file, texts in texts_by_file.items():
             doc = self._create_document(
-                " ".join(texts),
+                "\n".join(texts),
                 url="{}/{}".format(metadata.get("url"), file),
                 meta=metadata,
                 pipeline=pipeline,
