@@ -69,7 +69,7 @@ def get_edurep_basic_resources(url):
 def get_edurep_resources(url, language_hint):
     # Checking for basic resources
     file_resource, tika_resource = get_edurep_basic_resources(url)
-    if file_resource is None or not file_resource.success or tika_resource is None or tika_resource.success:
+    if file_resource is None or not file_resource.success or tika_resource is None or not tika_resource.success:
         return file_resource, tika_resource, None, None
     # Getting the video download
     video_resource = YouTubeDLResource(config={"fetch_only": True}).run(url)
