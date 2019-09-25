@@ -1,3 +1,4 @@
+import warnings
 import logging
 from tqdm import tqdm
 import json
@@ -20,6 +21,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
+        warnings.warn("download_edurep_video is now deprecated in favour of harvest_edurep_video", DeprecationWarning)
+
         log_header(out, "EDUREP DOWNLOAD AUDIO FROM VIDEOS", options)
 
         with open(options["input"], "r") as json_file:
@@ -31,7 +34,6 @@ class Command(BaseCommand):
             "_private": ["_private", "_namespace", "_defaults"]
         }
 
-        # TODO: handle video lists differently
         video_urls = []
         skipped = 0
         for record in records:
