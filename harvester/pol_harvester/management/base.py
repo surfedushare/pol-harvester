@@ -46,8 +46,8 @@ class OutputCommand(BaseCommand):
     def _create_document(self, text, meta, title=None, url=None, mime_type=None, pipeline=None, hash_postfix=None):
 
         url = url or meta.get("url")
-        mime_type = mime_type or meta.get("mime_type", None),
-        hash_postfix = hash_postfix or mime_type
+        mime_type = mime_type or meta.get("mime_type", None)
+        hash_postfix = hash_postfix if hash_postfix is not None else mime_type
         identifier = self.get_hash_from_url(url, postfix=hash_postfix)
 
         text_language = get_language_from_snippet(text)

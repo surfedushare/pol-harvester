@@ -61,11 +61,12 @@ class Command(OutputCommand):
         for file, texts in texts_by_file.items():
             doc = self._create_document(
                 " ".join(texts),
+                url="{}/{}".format(metadata.get("url"), file),
                 meta=metadata,
                 pipeline=pipeline,
-                hash_postfix=file
+                hash_postfix=""  # updating URL to create unique hash instead, keeps legacy ids intact
             )
-            documents[doc.id] = doc
+            documents[doc["id"]] = doc
         return list(documents.values())
 
     def get_documents(self, file_resource, tika_resource, metadata, pipeline):
@@ -133,6 +134,9 @@ class Command(OutputCommand):
             documents_count = 0
             print(f"Dumping {collection.name} ...")
             for seed in tqdm(seeds):
+                url = seed["url"]
+                if seed["mime_type"] == "application/x-Wikiwijs-Arrangement":
+                    url += "?p=imscp"
                 file_resource, tika_resource, video_resource, kaldi_resource = \
                     get_edurep_resources(seed["url"], seed.get("title", None))
                 pipeline = {
