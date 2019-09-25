@@ -28,6 +28,7 @@ def get_edurep_query_seeds(query):
             "mime_type": "el.find('czp:format').text",
             "copyright": "el.find('czp:copyrightandotherrestrictions').find('czp:value').find('czp:langstring').text if el.find('czp:copyrightandotherrestrictions') else None",
             "author": "[card.text for card in el.find(string='author').find_parent('czp:contribute').find_all('czp:vcard')] if el.find(string='author') and el.find(string='author').find_parent('czp:contribute') else []",
+            "publisher_date": "el.find(string='publisher').find_parent('czp:contribute').find('czp:datetime').text if el.find(string='publisher') and el.find(string='publisher').find_parent('czp:contribute') and el.find(string='publisher').find_parent('czp:contribute').find('czp:datetime') else None",
             "education_level": "el.find('czp:educational').find('czp:context').find('czp:value').find('czp:langstring').text if el.find('czp:educational') and el.find('czp:educational').find('czp:context') else None"
         }
     })
@@ -39,7 +40,11 @@ def get_edurep_query_seeds(query):
             results += list(prc.extract_from_resource(search))
         except ValueError as exc:
             err.warning("Invalid XML:", exc, search.uri)
-    return results
+    seeds = {
+        seed["url"]: seed
+        for seed in sorted(results, key=lambda rsl: rsl["publisher_date"])
+    }
+    return seeds.values()
 
 
 def get_edurep_basic_resources(url):
