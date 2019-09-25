@@ -26,6 +26,9 @@ def get_edurep_query_seeds(query):
             "keywords": "[keyword.find('czp:langstring').text for keyword in el.find_all('czp:keyword')]",
             "description": "el.find('czp:description').find('czp:langstring').text if el.find('czp:description') else None",
             "mime_type": "el.find('czp:format').text",
+            "copyright": "el.find('czp:copyrightandotherrestrictions').find('czp:value').find('czp:langstring').text if el.find('czp:copyrightandotherrestrictions') else None",
+            "author": "[card.text for card in el.find(string='author').find_parent('czp:contribute').find_all('czp:vcard')] if el.find(string='author') and el.find(string='author').find_parent('czp:contribute') else []",
+            "education_level": "el.find('czp:educational').find('czp:context').find('czp:value').find('czp:langstring').text if el.find('czp:educational') and el.find('czp:educational').find('czp:context') else None"
         }
     })
     prc = ExtractProcessor(config=extract_config)

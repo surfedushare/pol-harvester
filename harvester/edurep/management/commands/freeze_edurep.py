@@ -146,7 +146,6 @@ class Command(OutputCommand):
                 documents += self.get_documents(file_resource, tika_resource, seed, pipeline)
                 documents += self.get_documents_from_transcription(kaldi_resource, seed, pipeline)
 
-                # TODO: interesting to optionally add filters for Creative Commons and/or education level
                 if not len(documents):
                     skipped += 1
                     continue
