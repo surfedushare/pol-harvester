@@ -26,7 +26,12 @@ class Command(OutputCommand):
         if transcription_resource is None or not transcription_resource.success:
             return []
         _, transcript = transcription_resource.content
-        return [self._create_document(transcript, meta=metadata, pipeline=pipeline)]
+        return [self._create_document(
+            transcript,
+            meta=metadata,
+            pipeline=pipeline,
+            mime_type="video"  # true mime_type is ambiguous as Youtube offers many different formats
+        )]
 
     def get_documents_from_zip(self, file_resource, tika_resource, metadata, pipeline):
         # Load zip as an IMS Common Cardridge

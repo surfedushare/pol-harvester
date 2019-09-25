@@ -51,7 +51,7 @@ class Command(BaseCommand):
         no_paths_count, invalid_paths_count, success_count, error_count = 0, 0, 0, 0
         kaldi_file_paths = defaultdict(list)
         # Preprocess the videos
-        for video_download_resource in YouTubeDLResource.objects.filter(id__in=video_download_ids):
+        for video_download_resource in YouTubeDLResource.objects.filter(id__in=video_download_ids, status=0):
             # Make sure that the video has a valid audio file
             _, file_paths = video_download_resource.content
             if not len(file_paths):
