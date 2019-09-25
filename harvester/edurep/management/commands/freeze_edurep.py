@@ -157,6 +157,7 @@ class Command(OutputCommand):
                     schema={},
                     referee="id",
                     meta={
+                        "reference_id": self.get_hash_from_url(seed["url"]),
                         "url": seed["url"],
                         "keywords": seed.get("keywords", [])
                     }

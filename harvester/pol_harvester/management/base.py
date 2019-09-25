@@ -36,12 +36,16 @@ class OutputCommand(BaseCommand):
             "resource": ["{}.{}".format(resource._meta.app_label, resource._meta.model_name), resource.id]
         }
 
+    @staticmethod
+    def get_hash_from_url(url):
+        hasher = hashlib.sha1()
+        hasher.update(url.encode("utf-8"))
+        return hasher.hexdigest()
+
     def _create_document(self, text, meta, title=None, url=None, mime_type=None, pipeline=None):
 
         url = url or meta.get("url")
-        hasher = hashlib.sha1()
-        hasher.update(url.encode("utf-8"))
-        identifier = hasher.hexdigest()
+        identifier = self.get_hash_from_url(url)
 
         text_language = get_language_from_snippet(text)
         title = title or meta.get("title", None)
