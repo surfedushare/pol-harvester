@@ -37,15 +37,18 @@ class OutputCommand(BaseCommand):
         }
 
     @staticmethod
-    def get_hash_from_url(url):
+    def get_hash_from_url(url, postfix=None):
         hasher = hashlib.sha1()
-        hasher.update(url.encode("utf-8"))
+        payload = url + postfix if postfix else url
+        hasher.update(payload.encode("utf-8"))
         return hasher.hexdigest()
 
-    def _create_document(self, text, meta, title=None, url=None, mime_type=None, pipeline=None):
+    def _create_document(self, text, meta, title=None, url=None, mime_type=None, pipeline=None, hash_postfix=None):
 
         url = url or meta.get("url")
-        identifier = self.get_hash_from_url(url)
+        mime_type = mime_type or meta.get("mime_type", None),
+        hash_postfix = hash_postfix or mime_type
+        identifier = self.get_hash_from_url(url, postfix=hash_postfix)
 
         text_language = get_language_from_snippet(text)
         title = title or meta.get("title", None)
@@ -66,7 +69,7 @@ class OutputCommand(BaseCommand):
             },
             "url": url,
             "text": text,
-            "mime_type": mime_type or meta.get("mime_type", None),
+            "mime_type": mime_type,
             "pipeline": pipeline
         }
 

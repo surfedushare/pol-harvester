@@ -57,15 +57,16 @@ class Command(OutputCommand):
                 continue
             if current_file and line:
                 texts_by_file[current_file].append(line)
-        documents = []
+        documents = {}
         for file, texts in texts_by_file.items():
             doc = self._create_document(
                 " ".join(texts),
                 meta=metadata,
-                pipeline=pipeline
+                pipeline=pipeline,
+                hash_postfix=file
             )
-            documents.append(doc)
-        return documents
+            documents[doc.id] = doc
+        return list(documents.values())
 
     def get_documents(self, file_resource, tika_resource, metadata, pipeline):
         if tika_resource is None or not tika_resource.success:
