@@ -76,7 +76,7 @@ def get_edurep_resources(url, language_hint):
     if not video_resource.id:
         return file_resource, tika_resource, None, None
     _, file_paths = video_resource.content
-    if not len(file_paths):
+    if not video_resource.success or not len(file_paths):
         return file_resource, tika_resource, video_resource, None
     # Getting the transcription for the download
     file_path = file_paths[0]
