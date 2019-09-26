@@ -31,5 +31,5 @@ class HttpTikaResource(HttpResource):
         tika_content_type, data = self.content
         if data is None:
             return False
-        content_type = data.get("content-type", "")
+        content_type = data.get("mime-type", "")
         return content_type == "application/zip"
