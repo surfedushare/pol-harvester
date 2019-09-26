@@ -1,3 +1,4 @@
+import warnings
 import logging
 import os
 from tqdm import tqdm
@@ -26,12 +27,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
+        warnings.warn("transcribe_edurep_video is now deprecated in favour of harvest_edurep_video", DeprecationWarning)
+
         log_header(out, "EDUREP TRANSCRIBE VIDEOS", options)
 
         with open(options["input"], "r") as json_file:
             records = json.load(json_file)
 
-        # TODO: handle video lists differently
         video_records = []
         skipped_domain = 0
         for record in records:
