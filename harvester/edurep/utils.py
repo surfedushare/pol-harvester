@@ -42,13 +42,17 @@ def get_edurep_query_seeds(query):
             err.warning("Invalid XML:", exc, search.uri)
     seeds = {}
     for seed in sorted(results, key=lambda rsl: rsl["publisher_date"] or ""):
+        # Some records in Edurep do not have any known URL
+        # As we can't possibly process those we ignore them (silently)
+        # If we want to fix this it should happen on Edurep's or Sharekit's side
+        # We informed Kirsten van Veelo and Martine Teirlinck about the situation.
+        if not seed["url"]:
+            continue
         # We adjust url's of seeds if the source files are not at the URL
         # We should improve data extraction to always get source files
         if seed["mime_type"] == "application/x-Wikiwijs-Arrangement":
             seed["package_url"] = seed["url"]
             seed["url"] += "?p=imscp"
-        if not seed["url"]:
-            continue
         seeds[seed["url"]] = seed
     return seeds.values()
 
