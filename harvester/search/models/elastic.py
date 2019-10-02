@@ -48,7 +48,11 @@ class ElasticIndex(models.Model):
         if self.remote_exists and recreate:
             self.client.indices.delete(remote_name)
 
-        self.client.indices.create(index=remote_name, body=self.configuration)
+        self.client.indices.create(
+            index=remote_name,
+            body=self.configuration,
+            request_timeout=300  # a bit of a workaround, why is the elastic cluster slow?
+        )
         if recreate:
             self.error_count = 0
         for is_ok, result in streaming_bulk(self.client, elastic_documents, index=remote_name, doc_type="_doc",

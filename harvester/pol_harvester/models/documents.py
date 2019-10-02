@@ -26,11 +26,11 @@ class Freeze(DocumentCollectionMixin, CollectionBase):
     def get_elastic_indices(self):
         return ",".join([index.remote_name for index in self.indices.all()])
 
-    def get_documents_by_language(self):
+    def get_documents_by_language(self, as_search=False):
         by_language = defaultdict(list)
         for doc in self.documents.all():
             language = doc.get_language()
-            by_language[language].append(doc)
+            by_language[language].append(doc if not as_search else doc.to_search())
         return by_language
 
     def create_tfidf_vectorizers(self):
