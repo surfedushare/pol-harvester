@@ -20,9 +20,9 @@ def get_edurep_query_seeds(query):
     extract_config = create_config("extract_processor", {
         "objective": {
             "@": "soup.find_all('srw:record')",
-            "url": "el.find('czp:location').text",
+            "url": "el.find('czp:location').text if el.find('czp:location') else None",
             "title": "el.find('czp:title').find('czp:langstring').text",
-            "language": "el.find('czp:language').text",
+            "language": "el.find('czp:language').text if el.find('czp:language') else None",
             "keywords": "[keyword.find('czp:langstring').text for keyword in el.find_all('czp:keyword')]",
             "description": "el.find('czp:description').find('czp:langstring').text if el.find('czp:description') else None",
             "mime_type": "el.find('czp:format').text if el.find('czp:format') else None",
@@ -41,12 +41,14 @@ def get_edurep_query_seeds(query):
         except ValueError as exc:
             err.warning("Invalid XML:", exc, search.uri)
     seeds = {}
-    for seed in sorted(results, key=lambda rsl: rsl["publisher_date"]):
+    for seed in sorted(results, key=lambda rsl: rsl["publisher_date"] or ""):
         # We adjust url's of seeds if the source files are not at the URL
         # We should improve data extraction to always get source files
         if seed["mime_type"] == "application/x-Wikiwijs-Arrangement":
             seed["package_url"] = seed["url"]
             seed["url"] += "?p=imscp"
+        if not seed["url"]:
+            continue
         seeds[seed["url"]] = seed
     return seeds.values()
 
