@@ -25,7 +25,7 @@ def get_edurep_query_seeds(query):
             "language": "el.find('czp:language').text",
             "keywords": "[keyword.find('czp:langstring').text for keyword in el.find_all('czp:keyword')]",
             "description": "el.find('czp:description').find('czp:langstring').text if el.find('czp:description') else None",
-            "mime_type": "el.find('czp:format').text",
+            "mime_type": "el.find('czp:format').text if el.find('czp:format') else None",
             "copyright": "el.find('czp:copyrightandotherrestrictions').find('czp:value').find('czp:langstring').text if el.find('czp:copyrightandotherrestrictions') else None",
             "author": "[card.text for card in el.find(string='author').find_parent('czp:contribute').find_all('czp:vcard')] if el.find(string='author') and el.find(string='author').find_parent('czp:contribute') else []",
             "publisher_date": "el.find(string='publisher').find_parent('czp:contribute').find('czp:datetime').text if el.find(string='publisher') and el.find(string='publisher').find_parent('czp:contribute') and el.find(string='publisher').find_parent('czp:contribute').find('czp:datetime') else None",
