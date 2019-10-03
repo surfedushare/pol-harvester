@@ -28,7 +28,7 @@ def get_es_client():
                               port=443,
                               http_compress=True)
     # test if it works
-    if not es_client.cat.health():
+    if not es_client.cat.health(request_timeout=30):
         raise ValueError('Credentials do not work for Elastic search')
     return es_client
 
