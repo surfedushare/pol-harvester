@@ -22,7 +22,7 @@ scikit-learn==0.21.3
 mwparserfromhell==0.5.4
 
 # Celery and its plugins
-celery==4.1.1
+celery==4.3.0
 django-celery-results==1.0.1
 anyjson==0.3.3
 redis==3.2.1
