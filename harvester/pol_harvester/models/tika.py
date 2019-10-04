@@ -4,7 +4,7 @@ from pol_harvester.constants import PLAIN_TEXT_MIME_TYPES
 
 
 class HttpTikaResource(HttpResource):
-    URI_TEMPLATE = "https://analyzer.metadata.surfcatalog.nl/upload"
+    URI_TEMPLATE = "https://analyzer.surfpol.nl/upload"
     FILE_DATA_KEYS = ["file"]
 
     def has_video(self):
