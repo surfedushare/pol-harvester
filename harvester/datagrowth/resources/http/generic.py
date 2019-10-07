@@ -441,9 +441,16 @@ class HttpResource(Resource):
         if not data:
             return ""
         hsh = hashlib.sha1()
-        data_tuple = sorted(data.items(), key=lambda item: item[0])
-        hash_data = json.dumps(data_tuple).encode("utf-8")
-        hsh.update(hash_data)
+        payload = []
+        for key, value in data.items():
+            if not isinstance(value, dict):
+                payload.append((key, value))
+            else:
+                payload.append((key, HttpResource.hash_from_data(value)))
+
+        payload.sort(key=lambda item: item[0])
+        hash_payload = json.dumps(payload).encode("utf-8")
+        hsh.update(hash_payload)
         return hsh.hexdigest()
 
     @staticmethod
