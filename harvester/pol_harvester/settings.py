@@ -38,7 +38,7 @@ CORS_ORIGIN_WHITELIST = [
     'localhost:8080',
     'localhost:8000',
     '127.0.0.1:8080',
-    'pol-tagger.dev.swarm.surfedu.nl'
+    'tagger.surfpol.nl'
 ]
 SITE_ID = 1
 
