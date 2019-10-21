@@ -10,7 +10,7 @@ from pol_harvester.models import Freeze
 from search.utils.elastic import get_index_config, get_es_client
 
 
-elastic_client = get_es_client()
+elastic_client = get_es_client(silent=True)
 
 
 class ElasticIndex(models.Model):
