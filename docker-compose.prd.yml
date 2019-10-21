@@ -15,6 +15,11 @@ services:
     networks:
       - webnet
       - default
+    healthcheck:
+      test: curl -sS http://localhost:8000/health || exit 1
+      interval: 5s
+      timeout: 10s
+      retries: 3
 
   postgres:
     deploy:
