@@ -30,7 +30,7 @@ class Command(OutputCommand):
             transcript,
             meta=metadata,
             pipeline=pipeline,
-            mime_type="video"  # true mime_type is ambiguous as Youtube offers many different formats
+            file_type="video"
         )]
 
     def get_documents_from_zip(self, file_resource, tika_resource, metadata, pipeline):

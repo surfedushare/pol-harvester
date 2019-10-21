@@ -276,7 +276,7 @@ ELASTIC_SEARCH_ANALYSERS = {
 
 # Project Open Leermaterialen
 
-HUMANIZED_MIME_TYPES = {
+MIME_TYPE_TO_FILE_TYPE = {
     'unknown': 'unknown',
     'application/pdf': 'pdf',
     'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'powerpoint',
@@ -295,4 +295,21 @@ HUMANIZED_MIME_TYPES = {
     'application/zip': 'zip',
     'audio/mpeg': 'audio',
     'application/octet-stream': 'other'
+}
+
+EXTENSION_TO_FILE_TYPE = {
+    '.html': 'html',
+    '.pdf': 'pdf',
+    '.pptx': 'powerpoint',
+    '.ppt': 'powerpoint',
+    '.doc': 'word',
+    '.docx': 'word',
+    '.rtf': 'word',
+    '.txt': 'word',
+    '.xls': 'excel',
+    '.xlsx': 'excel',
+    '.png': 'image',
+    '.jpeg': 'image',
+    '.jpg': 'image',
+    '.zip': 'zip',
 }

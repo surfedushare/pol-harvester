@@ -54,7 +54,9 @@ class Command(OutputCommand):
         for record in tqdm(wur_urls):
             documents = []
             for document in record.get("documents", []):
-                documents.append(self._create_document(document["text"], document, pipeline={"raw": True}))
+                documents.append(
+                    self._create_document(document["text"], document, file_type="video", pipeline={"raw": True})
+                )
             dumped += 1
             docs += len(documents)
 

@@ -34,7 +34,6 @@ class WurLibrary4Learning(object):
                     "url": url_element.text,
                     "title": title_element.text,
                     "text": None,  # gets set later
-                    "content_type": "video/mp4"  # assumption, file type is not in the meta data
                 }]
             }
 
