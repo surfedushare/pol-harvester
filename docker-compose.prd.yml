@@ -22,7 +22,7 @@ services:
       resources:
         limits:
           cpus: "2"
-          memory: 3G
+          memory: 2G
       restart_policy:
         condition: on-failure
 
@@ -43,7 +43,7 @@ services:
       resources:
         limits:
           cpus: "4"
-          memory: 9G
+          memory: 10G
       restart_policy:
         condition: on-failure
     volumes:
