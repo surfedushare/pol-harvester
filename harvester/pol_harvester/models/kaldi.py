@@ -1,4 +1,4 @@
-from psycopg2 import OperationalError
+from django.db.utils import OperationalError
 
 from datagrowth.resources import KaldiNLResource as KaldiNL, KaldiAspireResource as KaldiEN
 
