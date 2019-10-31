@@ -15,4 +15,11 @@ class KaldiNLResource(KaldiNL):
 
 
 class KaldiAspireResource(KaldiEN):
-    pass
+
+    def save(self, *args, **kwargs):
+        try:
+            super().save(*args, **kwargs)
+        except OperationalError:
+            print("Problem with KaldiAspire command:", self.uri)
+            self.stdout = ""
+            super().save(*args, **kwargs)
