@@ -13,7 +13,6 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('-f', '--from', type=str, required=True)
         parser.add_argument('-t', '--to', type=str, required=True)
-        parser.add_argument('-r', '--recreate', action="store_true")
 
     def handle(self, *args, **options):
 
