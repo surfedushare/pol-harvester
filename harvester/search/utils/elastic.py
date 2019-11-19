@@ -59,11 +59,11 @@ def get_index_config(lang):
                     'url': {'type': 'text'},
                     'title_plain': {'type': 'text'},
                     'text_plain': {'type': 'text'},
-                    'keywords': {'type': 'text'},
-                    'mime_type': {'type': 'text'},
-                    'humanized_mime_type': {'type': 'text'},
+                    'keywords': {'type': 'keyword'},
+                    'mime_type': {'type': 'keyword'},
+                    'humanized_mime_type': {'type': 'keyword'},
                     'id': {'type': 'text'},
-                    'arrangement_collection_name': {'type': 'text'}
+                    'arrangement_collection_name': {'type': 'keyword'}
                 }
             }
         }
