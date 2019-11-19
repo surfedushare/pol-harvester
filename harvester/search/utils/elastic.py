@@ -59,11 +59,23 @@ def get_index_config(lang):
                     'url': {'type': 'text'},
                     'title_plain': {'type': 'text'},
                     'text_plain': {'type': 'text'},
-                    'keywords': {'type': 'keyword'},
-                    'mime_type': {'type': 'keyword'},
-                    'humanized_mime_type': {'type': 'keyword'},
+                    'keywords': {
+                        'type': 'keyword',
+                        "ignore_above": 256
+                    },
+                    'mime_type': {
+                        'type': 'keyword',
+                        "ignore_above": 256
+                    },
+                    'humanized_mime_type': {
+                        'type': 'keyword',
+                        "ignore_above": 256
+                    },
                     'id': {'type': 'text'},
-                    'arrangement_collection_name': {'type': 'keyword'}
+                    'arrangement_collection_name': {
+                        'type': 'keyword',
+                        "ignore_above": 256
+                    }
                 }
             }
         }
