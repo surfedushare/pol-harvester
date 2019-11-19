@@ -60,21 +60,41 @@ def get_index_config(lang):
                     'title_plain': {'type': 'text'},
                     'text_plain': {'type': 'text'},
                     'keywords': {
-                        'type': 'keyword',
-                        "ignore_above": 256
+                        'type': 'text',
+                        'fields': {
+                            'keyword': {
+                                'type': 'keyword',
+                                "ignore_above": 256
+                            }
+                        }
                     },
                     'mime_type': {
-                        'type': 'keyword',
-                        "ignore_above": 256
+                        'type': 'text',
+                        'fields': {
+                            'keyword': {
+                                'type': 'keyword',
+                                "ignore_above": 256
+                            }
+                        }
                     },
                     'humanized_mime_type': {
-                        'type': 'keyword',
-                        "ignore_above": 256
+                        'type': 'text',
+                        'fields': {
+                            'keyword': {
+                                'type': 'keyword',
+                                "ignore_above": 256
+                            }
+                        }
                     },
                     'id': {'type': 'text'},
                     'arrangement_collection_name': {
-                        'type': 'keyword',
-                        "ignore_above": 256
+                        'type': 'text',
+                        'fields': {
+                            'keyword': {
+                                'type': 'keyword',
+                                "ignore_above": 256
+                            }
+                        }
                     }
                 }
             }
