@@ -62,8 +62,23 @@ services:
       restart_policy:
         condition: none
 
+  metabase:
+    image: metabase/metabase
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - metabase-data:/metabase-data
+    environment:
+      - MB_DB_FILE=/metabase-data/metabase.db
+      - JAVA_TIMEZONE=Europe/Amsterdam
+    ports:
+      - 3000:3000
+
 volumes:
   postgres-data:
+  metabase-data:
 
 networks:
   webnet:
