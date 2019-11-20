@@ -69,18 +69,6 @@
                    (assoc :query query)
                    (assoc :score score)))))))
 
-(def user-query-mapping)
-
-(defn incorrect-datum?
-  "Filters out incorrect datums
-  quite a lot of datums have 0 values for
-  their score because the user is not
-  the one who made the ranking."
-  [datum])
-
-
-
-
 (def data
   (->> files
        (map import-file)
