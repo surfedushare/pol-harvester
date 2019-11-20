@@ -14,7 +14,7 @@ class QueryRankingAdminInline(admin.TabularInline):
 
 
 class QueryAdmin(admin.ModelAdmin):
-    list_display = ("query", "user", "created_at", "modified_at",)
+    list_display = ("query", "created_at", "modified_at",)
     search_fields = ("query",)
     inlines = [QueryRankingAdminInline]
 
