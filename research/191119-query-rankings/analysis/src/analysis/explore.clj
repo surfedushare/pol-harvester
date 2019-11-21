@@ -139,8 +139,22 @@
 
 ; === histogram ===
 
+(defn best-field-combo?
+  [{:keys [field-title field-title-plain field-text field-text-plain field-keywords]}]
+  (if (and (= field-title 0)
+           (= field-title-plain 1)
+           (= field-text 0)
+           (= field-text-plain 1)
+           (= field-keywords 0))
+    true
+    false))
+
+(best-field-combo? (first data))
+
 (def dcg-histogram
-  (let [data (filter #(= (:metric %) "dcg") data)]
+  (let [data (->> data
+                  (filter #(= (:metric %) "dcg")))]
+                  ;(filter best-field-combo?))]
     {:data {:values data}
 
      :title "dcg histogram"
