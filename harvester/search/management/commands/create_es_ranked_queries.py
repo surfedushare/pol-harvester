@@ -78,7 +78,7 @@ class Command(BaseCommand):
                     'requests': list(
                         chain(
                             query.get_elastic_ranking_request(freeze, user, fields)
-                            for query in Query.objects.all()
+                            for query in Query.objects.filter(users=user)
                         )
                     ),
                     'metric': {metric_name: metric}
