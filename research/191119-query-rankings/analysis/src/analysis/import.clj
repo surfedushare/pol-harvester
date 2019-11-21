@@ -31,8 +31,6 @@
         (assoc :filename filename
                :metric metric))))
 
-(import-file (first files))
-
 (defn field-multiplier
   [field]
   (let [keywordize (fn [s] (-> s
@@ -69,7 +67,49 @@
                    (assoc :query query)
                    (assoc :score score)))))))
 
+(def user-query-mapping
+  {"docent1" #{"amoxicilline"
+               "calcium-antagonist"
+               "daibetes-mellitus"
+               "diabetes-mellitus"
+               "dna"
+               "dopamine"
+               "furosemide"
+               "hartfalen"
+               "longkanker"}
+   "docent3" #{"beroepsonderwijs"
+               "de-adolecent"
+               "instructie"}
+   "docent4" #{"onderwijsinnovatie"
+                "reflecteren-studenten"
+                "toetsing"}
+   "docent5" #{"crispr-cas"
+               "dna-replicatie"
+               "fotosynthese"
+               "osmose"
+               "pcr-reactie"
+               "restrictie-enzym"
+               "sequencing"}
+   "docent6" #{"begrijpend-lezen"
+               "datavisualisatie"
+               "mindmappen"
+               "onderzoek aanpak"
+               "onderzoeksaanpak-visualiseren"
+               "onderzoeksruimte-veld"
+               "scannend-lezen"}
+   "docent7" #{"cellulose"
+               "lab-safety"
+               "mutant"
+               "pcr-machine"
+               "scientific-writing"}})
+
+(defn user-query-match?
+  [{:keys [user query]}]
+  (let [user-queries (get user-query-mapping user)]
+    (user-queries query)))
+
 (def data
   (->> files
        (map import-file)
-       (mapcat tidy-data)))
+       (mapcat tidy-data)
+       (filter user-query-match?)))
