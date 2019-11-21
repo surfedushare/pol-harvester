@@ -1,29 +1,20 @@
-(ns rankings.plot
+(ns analysis.plot
   (:require [oz.core :as oz]
-            [rankings.data :refer [tidy-data]]
-            [cheshire.core :as json]
-            [rankings.dev.clipboard :refer [spit-raw]]))
+            [analysis.import :refer [data]]
+            [cheshire.core :as json]))
 
-(defn copy-plot
-  [plot]
-  (spit-raw
-    (json/generate-string plot {:pretty true})))
-
-(defn flatten-record
-  [{:keys [fields] :as m}]
-  (-> (apply merge m fields)
-      (dissoc :fields)))
+(first data)
 
 (def plot
-  (let [field-names (->> tidy-data
-                         (map :fields)
-                         (mapcat keys)
-                         distinct)
-        data (map flatten-record tidy-data)]
+  (let [field-names [:field-title
+                     :field-title-plain
+                     :field-text
+                     :field-text-plain
+                     :field-keywords]]
 
     {:$schema "https://vega.github.io/schema/vega/v5.json"
-     :signals [{:name "cellSize" :value 20}
-               {:name "valueWidth" :value 200}]
+     :signals [{:name "cellSize" :value 30}
+               {:name "valueWidth" :value 400}]
 
      :data [{:name "rawData"
              :values data}
@@ -103,8 +94,8 @@
                                              :band 0.5}
                                          :y {:offset -2}
                                          :text {:field :field}
-                                         :fontSize {:value 10}
-                                         :fontWeight {:value 200}
+                                         :fontSize {:value 18}
+                                         :fontWeight {:value :normal}
                                          :angle {:value -90}
                                          :align {:value :left}
                                          :baseline {:value :middle}}}}]}
@@ -115,7 +106,7 @@
 
               :scales [{:name "values"
                         :type :linear
-                        :domain [0 1]
+                        :domain [-0.2 1]
                         :range [0 {:signal "valueWidth"}]}]
 
               :marks [{:type :symbol

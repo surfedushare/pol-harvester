@@ -184,7 +184,3 @@
            [:vega-lite (field-contribution :text)]
            [:vega-lite (field-contribution :text-plain)]
            [:vega-lite (field-contribution :keywords)]])
-
-
-(first data)
-
