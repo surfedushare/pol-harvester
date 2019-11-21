@@ -29,16 +29,15 @@
 
      :title (str metric " teacher scatter plot")
 
-     :mark {:type :point
-            :filled true
-            :tooltip {:content :data}}
+     :mark {:type :boxplot
+            :extent 1.5
+            :median {:color :red}
+            :ticks true}
 
      :encoding {:x {:field :user
                     :type :ordinal}
                 :y {:field :score
-                    :type :quantitative}
-                :color {:field :field-total
-                        :type :quantitative}}
+                    :type :quantitative}}
 
      :width 600
      :height 700}))
@@ -67,6 +66,7 @@
      :width 600
      :height 700}))
 (oz/view! (scatter-plot "dcg"))
+
 ; === query length ===
 (defn add-query-length
   [datum]
@@ -153,8 +153,8 @@
 
 (def dcg-histogram
   (let [data (->> data
-                  (filter #(= (:metric %) "dcg")))]
-                  ;(filter best-field-combo?))]
+                  (filter #(= (:metric %) "dcg"))
+                  (filter best-field-combo?))]
     {:data {:values data}
 
      :title "dcg histogram"
