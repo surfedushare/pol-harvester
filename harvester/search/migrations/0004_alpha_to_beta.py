@@ -8,7 +8,11 @@ def migrate_query_rankings(apps, schema_editor):
     Arrangement = apps.get_model('pol_harvester', 'Arrangement')
     Document = apps.get_model('pol_harvester', 'Document')
 
-    beta_freeze = Freeze.objects.get(name="beta")
+    try:
+        beta_freeze = Freeze.objects.get(name="beta")
+    except Freeze.DoesNotExist:
+        return
+
     noop = 0
     success = 0
     fail = 0
