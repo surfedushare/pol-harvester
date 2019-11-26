@@ -47,7 +47,7 @@ api_urlpatterns = [
 urlpatterns = [
     url(r'^health/?$', views.health, name="health-check"),
     url(r'^admin/', admin.site.urls),
-    url(r'^content/sitemap.xml', sitemap, {'sitemaps': {"alpha": DocumentSitemap("alpha")}},
+    url(r'^content/sitemap.xml', sitemap, {'sitemaps': {"beta": DocumentSitemap("beta")}},
         name='django.contrib.sitemaps.views.sitemap'),
     url(r'^content/documents/(?P<pk>\d+)/$', views.document_html_view, name="content-document-html"),
     url(r'^api/v1/', include(api_urlpatterns, namespace="api-v1")),
