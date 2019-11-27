@@ -76,9 +76,43 @@ services:
     ports:
       - 3000:3000
 
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.3
+    environment:
+      - node.name=elastic
+      - discovery.type=single-node
+      - cluster.name=elastic
+      - xpack.security.enabled=true
+      #- xpack.security.transport.ssl.enabled=true
+      - xpack.security.audit.enabled=true
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - network.host=0.0.0.0
+      - http.cors.enabled=true
+      - http.cors.allow-origin=https://surfpol.nl
+      - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+      - http.cors.allow-credentials=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elastic-data:/usr/share/elasticsearch/data
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 60s
+        max_attempts: 0
+        window: 0s
+    ports:
+      - 9200:9200
+
 volumes:
   postgres-data:
   metabase-data:
+  elastic-data:
 
 networks:
   webnet:
