@@ -36,6 +36,7 @@ def get_edurep_query_seeds(query):
             "education_level": "[edu.find('czp:value').find('czp:langstring').text for edu in el.find('czp:educational').find_all('czp:context')] if el.find('czp:educational') and el.find('czp:educational').find('czp:context') else []",
             "education_level_taxon": "[entry.find('czp:langstring').text for entry in el.find(string='educational level').find_parent('czp:classification').find_all('czp:entry')] if el.find(string='educational level') and el.find(string='educational level').find_parent('czp:classification') else []",
             "disciplines": "[entry.find('czp:langstring').text for entry in el.find(string='discipline').find_parent('czp:classification').find_all('czp:entry')] if el.find(string='discipline') and el.find(string='discipline').find_parent('czp:classification') else []",
+            "discipline_ids": "[discipline.text for discipline in el.find(string='discipline').find_parent('czp:classification').find_all('czp:id')] if el.find(string='discipline') and el.find(string='discipline').find_parent('czp:classification') else []",
         }
     })
     prc = ExtractProcessor(config=extract_config)
