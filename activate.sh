@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 export $(cat .env | xargs)
-source activate surf-harvester
+conda activate surf-harvester
