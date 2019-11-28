@@ -2,7 +2,7 @@ import logging
 from tqdm import tqdm
 
 from pol_harvester.models import Freeze, Collection, Arrangement
-from pol_harvester.management.base import OutputCommand, FreezeCommand
+from pol_harvester.management.base import OutputCommand
 from pol_harvester.utils.logging import log_header
 from pol_harvester.readers.library4learning import WurLibrary4Learning
 
