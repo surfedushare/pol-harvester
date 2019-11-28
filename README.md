@@ -6,13 +6,20 @@ A repo meant to scrape, extract and publish education materials.
 Prerequisites
 -------------
 
-This project uses ``Docker`` and ``docker-compose``. Make sure they are installed on your system before installing the project.
+This project uses ``Docker``, ``docker-compose``, ``uwsgi`` and (optionally) ``Conda``.
+Make sure they are installed on your system before installing the project.
 
 
 Getting started
 ---------------
 
-Copy the ``.env.development`` file to ``.env`` and update the variable values to fit your system.
+To start you'll need to first setup a local environment on a host machine with:
+
+```bash
+conda env create -f environment.yml
+```
+
+Then copy the ``.env.development`` file to ``.env`` and update the variable values to fit your system.
 When you're running the project locally you'll only need to provide your Elastic Search credentials.
 
 Inside of the root directory of this repo run the following command:
