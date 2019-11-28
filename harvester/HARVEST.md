@@ -103,7 +103,6 @@ By running the commands below we store the data from the previous steps into the
 ```bash
 ./manage.py freeze_edurep --freeze <pipeline-name> --collection <source-name> --input <data-file>
 ./manage.py freeze_library_4_learning --freeze <pipeline-name> --collection <source-name> --input <data-file>
-./manage.py freeze_surfshare --freeze <pipeline-name> --collection <source-name> --input <data-file>
 ```
 
 Putting data in Elastic Search
