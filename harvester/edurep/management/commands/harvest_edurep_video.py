@@ -24,6 +24,12 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('-f', '--freeze', type=str, required=True)
+        parser.add_argument('-d', '--dummy', action="store_true")
+
+    def finish(self, harvest_queryset):
+        for harvest in harvest_queryset:
+            harvest.stage = HarvestStages.VIDEO
+            harvest.save()
 
     def filter_video_seeds(self, seeds):
         video_seeds = {}
@@ -92,6 +98,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         freeze_name = options["freeze"]
+        is_dummy = options["dummy"]
 
         harvest_queryset = EdurepHarvest.objects.filter(
             freeze__name=freeze_name,
@@ -104,6 +111,11 @@ class Command(BaseCommand):
             )
 
         log_header(out, "HARVEST EDUREP VIDEO", options)
+
+        if is_dummy:
+            out.info("Skipping command because dummy mode was specified")
+            self.finish(harvest_queryset)
+            return
 
         print("Extracting data from sources ...")
         seeds = []
@@ -130,7 +142,4 @@ class Command(BaseCommand):
         out.info("Errors while transcribing videos: {}".format(error_count))
         out.info("Videos transcribed successfully: {}".format(success_count))
 
-        # Finish the basic harvest
-        for harvest in harvest_queryset:
-            harvest.stage = HarvestStages.VIDEO
-            harvest.save()
+        self.finish(harvest_queryset)
