@@ -52,6 +52,7 @@ def get_edurep_query_seeds(query):
     seeds = {}
     duplicate_counts = 0
     overwrite_counts = 0
+    missing_disciplines_counts = 0
     for seed in sorted(results, key=lambda rsl: rsl["publisher_date"] or ""):
         # Some records in Edurep do not have any known URL
         # As we can't possibly process those we ignore them (silently)
@@ -81,7 +82,9 @@ def get_edurep_query_seeds(query):
         seed["humanized_disciplines"] = list(set(seed["humanized_disciplines"]))
         # And deduplicate entire seeds based on title
         seeds[seed["title"]] = seed
-    print("Counts:", overwrite_counts, duplicate_counts)
+        if not len(seed["disciplines"]):
+            missing_disciplines_counts += 1
+    print("Counts:", overwrite_counts, duplicate_counts, missing_disciplines_counts)
     return seeds.values()
 
 
