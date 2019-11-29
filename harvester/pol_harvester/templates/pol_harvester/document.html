@@ -14,7 +14,7 @@
                 <li>{{ document.language }}</li>
                 <li>{{ document.arrangement_collection_name }}</li>
                 {% if document.keywords %}<li>{{ document.keywords|join:", " }}</li>{% endif %}
-                <li>{{ document.humanized_mime_type }}</li>
+                <li>{{ document.file_type }}</li>
             </ul>
         </div>
         <div class="row">
