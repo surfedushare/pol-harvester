@@ -9,8 +9,6 @@ from pol_harvester.management.base import OutputCommand
 from edurep.constants import HBOVPK_TEST_REFERENCES
 
 
-
-
 class Command(OutputCommand):
 
     def add_arguments(self, parser):
