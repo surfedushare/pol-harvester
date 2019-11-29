@@ -50,6 +50,8 @@ def get_edurep_query_seeds(query):
         except ValueError as exc:
             err.warning("Invalid XML:", exc, search.uri)
     seeds = {}
+    duplicate_counts = 0
+    overwrite_counts = 0
     for seed in sorted(results, key=lambda rsl: rsl["publisher_date"] or ""):
         # Some records in Edurep do not have any known URL
         # As we can't possibly process those we ignore them (silently)
@@ -66,14 +68,20 @@ def get_edurep_query_seeds(query):
         for field in UNESCAPE_TARGET_FIELDS:
             if seed[field]:
                 seed[field] = unescape(seed[field])
+        if seed["title"] in seeds:
+            duplicate_counts += 1
+            if len(seeds[seed["title"]]["disciplines"]) and not len(seed["disciplines"]):
+                overwrite_counts += 1
+            #print(len(seeds[seed["url"]]["disciplines"]), len(seed["disciplines"]))
         # We deduplicate some fields
         seed["lom_educational_levels"] = list(set(seed["lom_educational_levels"]))
         seed["educational_levels"] = list(set(seed["educational_levels"]))
         seed["humanized_educational_levels"] = list(set(seed["humanized_educational_levels"]))
         seed["disciplines"] = list(set(seed["disciplines"]))
         seed["humanized_disciplines"] = list(set(seed["humanized_disciplines"]))
-        # And deduplicate entire seeds based on URL
-        seeds[seed["url"]] = seed
+        # And deduplicate entire seeds based on title
+        seeds[seed["title"]] = seed
+    print("Counts:", overwrite_counts, duplicate_counts)
     return seeds.values()
 
 
