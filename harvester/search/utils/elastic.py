@@ -60,42 +60,25 @@ def get_index_config(lang):
                     'title_plain': {'type': 'text'},
                     'text_plain': {'type': 'text'},
                     'keywords': {
-                        'type': 'text',
-                        'fields': {
-                            'keyword': {
-                                'type': 'keyword',
-                                "ignore_above": 256
-                            }
-                        }
+                        'type': 'keyword'
                     },
-                    'mime_type': {
-                        'type': 'text',
-                        'fields': {
-                            'keyword': {
-                                'type': 'keyword',
-                                "ignore_above": 256
-                            }
-                        }
-                    },
-                    'humanized_mime_type': {
-                        'type': 'text',
-                        'fields': {
-                            'keyword': {
-                                'type': 'keyword',
-                                "ignore_above": 256
-                            }
-                        }
+                    'file_type': {
+                        'type': 'keyword'
                     },
                     'id': {'type': 'text'},
+                    'external_id': {'type': 'text'},
                     'arrangement_collection_name': {
-                        'type': 'text',
-                        'fields': {
-                            'keyword': {
-                                'type': 'keyword',
-                                "ignore_above": 256
-                            }
-                        }
-                    }
+                        'type': 'keyword'
+                    },
+                    'educational_levels': {
+                        'type': 'keyword'
+                    },
+                    'disciplines': {
+                        'type': 'keyword'
+                    },
+                    "suggest" : {
+                        "type" : "completion"
+                    },
                 }
             }
         }

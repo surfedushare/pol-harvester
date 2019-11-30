@@ -71,6 +71,7 @@ class OutputCommand(BaseCommand):
 
         return {
             "id": identifier,
+            "external_id": meta["external_id"],
             "title": title,
             "language": {
                 "metadata": meta_language,
@@ -81,5 +82,8 @@ class OutputCommand(BaseCommand):
             "text": text,
             "file_type": file_type,
             "mime_type": mime_type,
+            "disciplines": meta["disciplines"],
+            "educational_levels": meta["educational_levels"],
+            "suggest": title,
             "pipeline": pipeline
         }

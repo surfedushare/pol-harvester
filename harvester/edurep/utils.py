@@ -24,6 +24,7 @@ def get_edurep_query_seeds(query):
     extract_config = create_config("extract_processor", {
         "objective": {
             "@": "soup.find_all('srw:record')",
+            "external_id": "el.find('srw:recordidentifier').text",
             "url": "el.find('czp:location').text if el.find('czp:location') else None",
             "title": "el.find('czp:title').find('czp:langstring').text",
             "language": "el.find('czp:language').text if el.find('czp:language') else None",
@@ -33,10 +34,11 @@ def get_edurep_query_seeds(query):
             "copyright": "el.find('czp:copyrightandotherrestrictions').find('czp:value').find('czp:langstring').text if el.find('czp:copyrightandotherrestrictions') else None",
             "author": "[card.text for card in el.find(string='author').find_parent('czp:contribute').find_all('czp:vcard')] if el.find(string='author') and el.find(string='author').find_parent('czp:contribute') else []",
             "publisher_date": "el.find(string='publisher').find_parent('czp:contribute').find('czp:datetime').text if el.find(string='publisher') and el.find(string='publisher').find_parent('czp:contribute') and el.find(string='publisher').find_parent('czp:contribute').find('czp:datetime') else None",
-            "education_level": "[edu.find('czp:value').find('czp:langstring').text for edu in el.find('czp:educational').find_all('czp:context')] if el.find('czp:educational') and el.find('czp:educational').find('czp:context') else []",
-            "education_level_taxon": "[entry.find('czp:langstring').text for entry in el.find(string='educational level').find_parent('czp:classification').find_all('czp:entry')] if el.find(string='educational level') and el.find(string='educational level').find_parent('czp:classification') else []",
-            "disciplines": "[entry.find('czp:langstring').text for entry in el.find(string='discipline').find_parent('czp:classification').find_all('czp:entry')] if el.find(string='discipline') and el.find(string='discipline').find_parent('czp:classification') else []",
-            "discipline_ids": "[discipline.text for discipline in el.find(string='discipline').find_parent('czp:classification').find_all('czp:id')] if el.find(string='discipline') and el.find(string='discipline').find_parent('czp:classification') else []",
+            "lom_education_levels": "[edu.find('czp:value').find('czp:langstring').text for edu in el.find('czp:educational').find_all('czp:context')] if el.find('czp:educational') and el.find('czp:educational').find('czp:context') else []",
+            "educational_levels": "[level.text for level in el.find(string='educational level').find_parent('czp:classification').find_all('czp:id')] if el.find(string='educational level') and el.find(string='educational level').find_parent('czp:classification') else []",
+            "humanized_educational_levels": "[entry.find('czp:langstring').text for entry in el.find(string='educational level').find_parent('czp:classification').find_all('czp:entry')] if el.find(string='educational level') and el.find(string='educational level').find_parent('czp:classification') else []",
+            "disciplines": "[discipline.text for discipline in el.find(string='discipline').find_parent('czp:classification').find_all('czp:id')] if el.find(string='discipline') and el.find(string='discipline').find_parent('czp:classification') else []",
+            "humanized_disciplines": "[entry.find('czp:langstring').text for entry in el.find(string='discipline').find_parent('czp:classification').find_all('czp:entry')] if el.find(string='discipline') and el.find(string='discipline').find_parent('czp:classification') else []",
         }
     })
     prc = ExtractProcessor(config=extract_config)
@@ -63,6 +65,13 @@ def get_edurep_query_seeds(query):
         # We unescape HTML entities, because Edurep doesn't do it for us
         for field in UNESCAPE_TARGET_FIELDS:
             seed[field] = unescape(seed[field])
+        # We deduplicate some fields
+        seed["lom_education_levels"] = list(set(seed["lom_education_levels"]))
+        seed["educational_levels"] = list(set(seed["educational_levels"]))
+        seed["humanized_educational_levels"] = list(set(seed["humanized_educational_levels"]))
+        seed["disciplines"] = list(set(seed["disciplines"]))
+        seed["humanized_disciplines"] = list(set(seed["humanized_disciplines"]))
+        # And deduplicate entire seeds based on URL
         seeds[seed["url"]] = seed
     return seeds.values()
 
