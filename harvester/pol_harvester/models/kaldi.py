@@ -1,9 +1,21 @@
+from datetime import datetime
+
+from django.db import models
 from django.db.utils import OperationalError
 
 from datagrowth.resources import KaldiNLResource as KaldiNL, KaldiAspireResource as KaldiEN
 
 
 class KaldiNLResource(KaldiNL):
+
+    runtime = models.FloatField(null=True, blank=True)
+
+    def _run(self):
+        t0 = datetime.now()
+        super()._run()
+        t1 = datetime.now()
+        runtime = t1 - t0
+        self.runtime = float(runtime.seconds)
 
     def save(self, *args, **kwargs):
         # This is a tough cookie
@@ -17,6 +29,15 @@ class KaldiNLResource(KaldiNL):
 
 
 class KaldiAspireResource(KaldiEN):
+
+    runtime = models.FloatField(null=True, blank=True)
+
+    def _run(self):
+        t0 = datetime.now()
+        super()._run()
+        t1 = datetime.now()
+        runtime = t1 - t0
+        self.runtime = float(runtime.seconds)
 
     def save(self, *args, **kwargs):
         # This is a tough cookie
