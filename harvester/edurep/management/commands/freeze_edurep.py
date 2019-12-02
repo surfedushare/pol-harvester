@@ -1,6 +1,7 @@
 import logging
 from tqdm import tqdm
 from collections import defaultdict
+from zipfile import BadZipFile
 
 from django.utils.timezone import now
 from django.core.exceptions import ValidationError
@@ -39,7 +40,8 @@ class Command(OutputCommand):
         cc = CommonCartridge(file=file_resource.body)
         try:
             cc.clean()
-        except ValidationError:
+        except (ValidationError, BadZipFile):
+            out.warning("Invalid or missing common cartridge for: {}".format(cc.id))
             return []
         # Extract texts per file in the Common Cartridge
         files = set()
