@@ -63,10 +63,11 @@ Deploy on a server
 ------------------
 
 The repo expects to be deployed on a Docker swarm.
-You'll need to init the swarm.
+You'll need to init the swarm and set your conda shell.
 
 
 ```bash
+conda init bash
 docker swarm init
 ```
 
@@ -83,7 +84,8 @@ To update the code it's sufficient to re-run the start command.
 Documentation
 -------------
 
-How to harvest Edurep learning materials is described in detail in the [Edurep harvester documentation](harvester/edurep/HARVEST.md).
+How to harvest learning materials from repositories or other harvesters is described in detail in the
+[harvester documentation](harvester/pol_harvester/HARVEST.md).
 
 If you want to know more about the available API please read the [API documentation](harvester/API.md).
 
