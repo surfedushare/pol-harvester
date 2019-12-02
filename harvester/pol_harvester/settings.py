@@ -345,7 +345,7 @@ MIME_TYPE_TO_FILE_TYPE = {
 }
 
 EXTENSION_TO_FILE_TYPE = {
-    '.html': 'html',
+    '.html': 'text',
     '.pdf': 'pdf',
     '.pptx': 'presentation',
     '.ppt': 'presentation',
