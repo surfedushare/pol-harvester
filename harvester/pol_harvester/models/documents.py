@@ -117,7 +117,6 @@ class Document(DocumentPostgres, DocumentBase):
             'keywords': self.properties['arrangement_keywords'],
             'file_type': self.properties.get('file_type', 'unknown'),
             'mime_type': self.properties['mime_type'],
-            'humanized_mime_type': settings.MIME_TYPE_TO_FILE_TYPE.get(self.properties['mime_type'], 'unknown'),  # TODO: legacy, adjust frontend and remove
             '_id': self.properties['id'],
             'arrangement_collection_name': self.collection.name
         }
