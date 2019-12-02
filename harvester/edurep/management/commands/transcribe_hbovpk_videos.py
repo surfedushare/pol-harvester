@@ -5,13 +5,11 @@ from datagrowth.configuration import create_config
 from datagrowth.resources.shell.tasks import run
 from datagrowth.exceptions import DGShellError
 from pol_harvester.models import Freeze, YouTubeDLResource
-from pol_harvester.management.base import OutputCommand, FreezeCommand
+from pol_harvester.management.base import OutputCommand
 from edurep.constants import HBOVPK_TEST_REFERENCES
 
 
-
-
-class Command(FreezeCommand, OutputCommand):
+class Command(OutputCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('-f', '--freeze', type=str, required=True)

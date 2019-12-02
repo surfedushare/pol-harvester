@@ -25,7 +25,7 @@ When you're running the project locally you'll only need to provide your Elastic
 Inside of the root directory of this repo run the following command:
 
 ```bash
-bash start.sh
+docker-compose up
 ```
 
 This will build and run the backend software in the background.
@@ -58,22 +58,36 @@ Don't forget to stop your Docker containers when you're done working:
 docker-compose down
 ```
 
-When developing it can be useful to see the uWSGI output.
-To run the project locally with visible output you can simply run:
+
+Deploy on a server
+------------------
+
+The repo expects to be deployed on a Docker swarm.
+You'll need to init the swarm and set your conda shell.
+
 
 ```bash
-docker-compose up
+conda init bash
+docker swarm init
 ```
+
+Now make sure that the ``registry.surfedu.nl`` repository is available.
+Then run the following:
+
+```bash
+bash start.sh
+```
+
+To update the code it's sufficient to re-run the start command.
 
 
 Documentation
 -------------
 
-How to harvest learning materials is described in detail in the [harvester documentation](harvester/HARVEST.md). 
+How to harvest learning materials from repositories or other harvesters is described in detail in the
+[harvester documentation](harvester/pol_harvester/HARVEST.md).
 
 If you want to know more about the available API please read the [API documentation](harvester/API.md).
-
-You can read more about Elastic Search in the [Elastic Search documentation](elasticsearch/readme.md).
 
 More information about the commands we use to analyse the system is in the [analysis documentation](harvester/ANALYSE.md)
 

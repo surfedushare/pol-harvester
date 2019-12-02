@@ -275,9 +275,13 @@ class HttpResource(Resource):
             return None, None
         files = {}
         for file_key in self.FILE_DATA_KEYS:
-            file_path = os.path.join(datagrowth_settings.DATAGROWTH_MEDIA_ROOT, data.pop(file_key))
-            files[file_key] = open(file_path, "rb")
-        return data, files if files else None
+            relative_path = data.get(file_key, None)
+            if relative_path:
+                file_path = os.path.join(datagrowth_settings.DATAGROWTH_MEDIA_ROOT, relative_path)
+                files[file_key] = open(file_path, "rb")
+        data = {key: value for key, value in data.items() if key not in files}  # data copy without "files"
+        files = files or None
+        return data, files
 
     #######################################################
     # AUTH LOGIC

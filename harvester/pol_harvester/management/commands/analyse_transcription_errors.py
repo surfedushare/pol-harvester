@@ -6,7 +6,7 @@ import numpy as np
 
 from datagrowth import settings as datagrowth_settings
 from pol_harvester.models import Freeze, Annotation, KaldiNLResource
-from pol_harvester.management.base import OutputCommand, FreezeCommand
+from pol_harvester.management.base import OutputCommand
 from pol_harvester.utils.word_error_rates import wer, cleanstring
 from edurep.constants import HBOVPK_TEST_REFERENCES
 
@@ -14,7 +14,7 @@ from edurep.constants import HBOVPK_TEST_REFERENCES
 out = logging.getLogger("freeze")
 
 
-class Command(FreezeCommand, OutputCommand):
+class Command(OutputCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('references', nargs='*', type=str)
