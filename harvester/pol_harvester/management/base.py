@@ -82,8 +82,8 @@ class OutputCommand(BaseCommand):
             "text": text,
             "file_type": file_type,
             "mime_type": mime_type,
-            "disciplines": meta["disciplines"],
-            "educational_levels": meta["educational_levels"],
+            "disciplines": meta.get("disciplines", []),
+            "educational_levels": meta.get("educational_levels", []),
             "suggest": title,
             "pipeline": pipeline
         }

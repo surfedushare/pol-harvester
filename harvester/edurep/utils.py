@@ -34,7 +34,7 @@ def get_edurep_query_seeds(query):
             "copyright": "el.find('czp:copyrightandotherrestrictions').find('czp:value').find('czp:langstring').text if el.find('czp:copyrightandotherrestrictions') else None",
             "author": "[card.text for card in el.find(string='author').find_parent('czp:contribute').find_all('czp:vcard')] if el.find(string='author') and el.find(string='author').find_parent('czp:contribute') else []",
             "publisher_date": "el.find(string='publisher').find_parent('czp:contribute').find('czp:datetime').text if el.find(string='publisher') and el.find(string='publisher').find_parent('czp:contribute') and el.find(string='publisher').find_parent('czp:contribute').find('czp:datetime') else None",
-            "lom_education_levels": "[edu.find('czp:value').find('czp:langstring').text for edu in el.find('czp:educational').find_all('czp:context')] if el.find('czp:educational') and el.find('czp:educational').find('czp:context') else []",
+            "lom_educational_levels": "[edu.find('czp:value').find('czp:langstring').text for edu in el.find('czp:educational').find_all('czp:context')] if el.find('czp:educational') and el.find('czp:educational').find('czp:context') else []",
             "educational_levels": "[level.text for level in el.find(string='educational level').find_parent('czp:classification').find_all('czp:id')] if el.find(string='educational level') and el.find(string='educational level').find_parent('czp:classification') else []",
             "humanized_educational_levels": "[entry.find('czp:langstring').text for entry in el.find(string='educational level').find_parent('czp:classification').find_all('czp:entry')] if el.find(string='educational level') and el.find(string='educational level').find_parent('czp:classification') else []",
             "disciplines": "[discipline.text for discipline in el.find(string='discipline').find_parent('czp:classification').find_all('czp:id')] if el.find(string='discipline') and el.find(string='discipline').find_parent('czp:classification') else []",
@@ -66,7 +66,7 @@ def get_edurep_query_seeds(query):
         for field in UNESCAPE_TARGET_FIELDS:
             seed[field] = unescape(seed[field])
         # We deduplicate some fields
-        seed["lom_education_levels"] = list(set(seed["lom_education_levels"]))
+        seed["lom_educational_levels"] = list(set(seed["lom_educational_levels"]))
         seed["educational_levels"] = list(set(seed["educational_levels"]))
         seed["humanized_educational_levels"] = list(set(seed["humanized_educational_levels"]))
         seed["disciplines"] = list(set(seed["disciplines"]))
