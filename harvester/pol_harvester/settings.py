@@ -32,7 +32,8 @@ DEBUG = bool(int(os.environ.get('DJANGO_DEBUG', "0")))
 
 ALLOWED_HOSTS = [
     'localhost',
-    '.surfpol.nl'
+    '.surfpol.nl',
+    '.surfcatalog.nl'
 ]
 CORS_ORIGIN_WHITELIST = [
     'localhost:8080',
