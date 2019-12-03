@@ -6,7 +6,7 @@ services:
     command:
       - --providers.docker=true
       - --providers.docker.exposedByDefault=false
-      - --providers.docker.network=webnet
+      - --providers.docker.network=pol-harvester_webnet
       - --providers.docker.swarmMode=true
       - --entryPoints.web.address=:80
       - --entryPoints.websecure.address=:443
@@ -147,14 +147,14 @@ services:
         window: 0s
       labels:
         - traefik.enable=true
-        - traefik.docker.network = webnet
+        - traefik.docker.network=pol-harvester_webnet
         - traefik.http.routers.web.rule=Host(`elastic.search-prod.surfcatalog.nl`)
         - traefik.http.routers.web.entrypoints=web
         - traefik.http.routers.web-secured.rule=Host(`elastic.search-prod.surfcatalog.nl`)
         - traefik.http.routers.web-secured.entrypoints=websecure
         - traefik.http.routers.web-secured.tls=true
         - traefik.http.services.elastic.loadbalancer.server.port=9200
-        - traefik.http.middlewares.test-ipwhitelist.ipwhitelist.sourcerange="145.90.230.0/23,145.101.60.0/23,2001:0610:0450:50::/60,2001:610:3:2151::/60,145.100.190.134"
+        - traefik.http.middlewares.elastic.ipwhitelist.sourcerange="145.90.230.0/23,145.101.60.0/23,2001:0610:0450:50::/60,2001:610:3:2151::/60,145.100.190.134"
     ports:
       - 9200:9200
 
