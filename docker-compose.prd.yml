@@ -25,6 +25,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - traefik-data:/etc/traefik/acme
+    networks:
+      - webnet
     deploy:
       mode: global
       placement:
