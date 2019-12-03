@@ -41,6 +41,7 @@ services:
         max_attempts: 0
         window: 0s
       labels:
+        - "treafik.enable=true"
         # global redirect to https
         - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
         - "traefik.http.routers.http-catchall.entrypoints=web"
