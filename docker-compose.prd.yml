@@ -160,8 +160,6 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=pol-harvester_webnet"
-        - "traefik.http.routers.web.rule=Host(`elastic.search-prod.surfcatalog.nl`)"
-        - "traefik.http.routers.web.entrypoints=web"
         - "traefik.http.routers.websecure.rule=Host(`elastic.search-prod.surfcatalog.nl`)"
         - "traefik.http.routers.websecure.entrypoints=websecure"
         - "traefik.http.routers.websecure.tls=true"
