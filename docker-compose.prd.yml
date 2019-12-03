@@ -154,8 +154,10 @@ services:
         - traefik.http.routers.websecure.rule=Host(`elastic.search-prod.surfcatalog.nl`)
         - traefik.http.routers.websecure.entrypoints=websecure
         - traefik.http.routers.websecure.tls=true
+        - traefik.http.routers.myrouter.tls.certresolver=default
         - traefik.http.services.elastic.loadbalancer.server.port=9200
         - traefik.http.middlewares.elastic.ipwhitelist.sourcerange="145.90.230.0/23,145.101.60.0/23,2001:0610:0450:50::/60,2001:610:3:2151::/60,145.100.190.134"
+        - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
     ports:
       - 9200:9200
 
