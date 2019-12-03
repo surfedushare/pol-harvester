@@ -1,6 +1,42 @@
 version: '3'
 
 services:
+  loadbalancer:
+    image: traefik:v2.0
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedByDefault=false
+      - --providers.docker.network=webnet
+      - --providers.docker.swarmMode=true
+      - --entryPoints.web.address=:80
+      - --entryPoints.websecure.address=:443
+      - --certificatesResolvers.default.acme.email=edu-beheer@surfnet.nl
+      - --certificatesResolvers.default.acme.storage=acme.json
+      - --certificatesResolvers.default.acme.httpChallenge.entryPoint=web
+    ports:
+      - target: 80
+        published: 80
+        mode: host
+      - target: 443
+        published: 443
+        mode: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - traefik-data:/etc/traefik/acme
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role == manager
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: any
+        delay: 60s
+        max_attempts: 0
+        window: 0s
+
   harvester:
     image: registry.surfedu.nl/edu/pol-harvester:latest
     command: uwsgi --ini /usr/src/app/uwsgi.ini
@@ -98,6 +134,9 @@ services:
         hard: -1
     volumes:
       - elastic-data:/usr/share/elasticsearch/data
+    networks:
+      - default
+      - webnet
     deploy:
       mode: replicated
       replicas: 1
@@ -106,6 +145,16 @@ services:
         delay: 60s
         max_attempts: 0
         window: 0s
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network = webnet
+        - traefik.http.routers.web.rule=Host(`elastic.search-prod.surfcatalog.nl`)
+        - traefik.http.routers.web.entrypoints=web
+        - traefik.http.routers.web-secured.rule=Host(`elastic.search-prod.surfcatalog.nl`)
+        - traefik.http.routers.web-secured.entrypoints=websecure
+        - traefik.http.routers.web-secured.tls=true
+        - traefik.http.services.elastic.loadbalancer.server.port=9200
+        - traefik.http.middlewares.test-ipwhitelist.ipwhitelist.sourcerange="145.90.230.0/23,145.101.60.0/23,2001:0610:0450:50::/60,2001:610:3:2151::/60"
     ports:
       - 9200:9200
 
@@ -113,6 +162,7 @@ volumes:
   postgres-data:
   metabase-data:
   elastic-data:
+  traefik-data:
 
 networks:
   webnet:
