@@ -1,0 +1,94 @@
+version: '3.7'
+
+services:
+
+  harvester:
+    image: registry.surfedu.nl/edu/pol-harvester:${DJANGO_GIT_COMMIT}
+    command: uwsgi --ini /usr/src/app/uwsgi.ini
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=pol-harvester_webnet"
+        - "traefik.http.services.harvester.loadbalancer.server.port=8000"
+        - "traefik.http.routers.harvester.rule=Host(`${HARVESTER_HOSTNAME}`)"
+        - "traefik.http.routers.harvester.entrypoints=websecure"
+        - "traefik.http.routers.harvester.tls=true"
+        - "traefik.http.routers.harvester.tls.certresolver=default"
+        - "traefik.http.middlewares.harvester.ipwhitelist.sourcerange=${HARVESTER_IP_WHITELIST}"
+    networks:
+      - webnet
+      - default
+    healthcheck:
+      test: curl -sS http://localhost:8000/health || exit 1
+      interval: 5s
+      timeout: 10s
+      retries: 3
+
+  postgres:
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
+      restart_policy:
+        condition: on-failure
+
+  redis:
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+      restart_policy:
+        condition: on-failure
+
+  tasks:
+    image: registry.surfedu.nl/edu/pol-harvester:${DJANGO_GIT_COMMIT}
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "4"
+          memory: 10G
+      restart_policy:
+        condition: on-failure
+    volumes:
+     - /home/surf/kaldi:/home/surf/kaldi
+     - /home/surf/Kaldi_NL:/home/surf/Kaldi_NL
+
+  adminer:  # kills adminer in production, but the port should also be closed by the firewall
+    command: "true"
+    entrypoint: "true"
+    deploy:
+      restart_policy:
+        condition: none
+
+  metabase:
+    image: metabase/metabase
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - metabase-data:/metabase-data
+    environment:
+      - MB_DB_FILE=/metabase-data/metabase.db
+      - JAVA_TIMEZONE=Europe/Amsterdam
+    ports:
+      - 3000:3000
+
+volumes:
+  postgres-data:
+  metabase-data:
+
+networks:
+  webnet:

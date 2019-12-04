@@ -25,4 +25,4 @@ echo $DJANGO_GIT_COMMIT > harvester/.commit
 
 docker build . -t registry.surfedu.nl/edu/pol-harvester:$DJANGO_GIT_COMMIT
 docker push registry.surfedu.nl/edu/pol-harvester:$DJANGO_GIT_COMMIT
-docker-compose -f docker-compose.yml -f docker-compose.prd.yml --log-level ERROR config | docker stack deploy  -c - --prune pol-harvester
+docker-compose -f docker-compose.yml -f docker-compose.${MODE:-prd}.yml --log-level ERROR config | docker stack deploy  -c - --prune pol-harvester
