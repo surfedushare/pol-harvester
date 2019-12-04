@@ -20,6 +20,7 @@ gitpython==2.1.11
 elasticsearch==6.3.1
 scikit-learn==0.21.3
 mwparserfromhell==0.5.4
+gitpython==2.1.11
 
 # Celery and its plugins
 celery==4.3.0
