@@ -64,7 +64,8 @@ def get_edurep_query_seeds(query):
             seed["url"] += "?p=imscp"
         # We unescape HTML entities, because Edurep doesn't do it for us
         for field in UNESCAPE_TARGET_FIELDS:
-            seed[field] = unescape(seed[field])
+            if field in seed:
+                seed[field] = unescape(seed[field])
         # We deduplicate some fields
         seed["lom_educational_levels"] = list(set(seed["lom_educational_levels"]))
         seed["educational_levels"] = list(set(seed["educational_levels"]))
