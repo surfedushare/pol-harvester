@@ -117,6 +117,7 @@ class Document(DocumentPostgres, DocumentBase):
             'keywords': self.properties['arrangement_keywords'],
             'file_type': self.properties.get('file_type', 'unknown'),
             'mime_type': self.properties['mime_type'],
+            'suggest': self.properties['title'].split(" ") if self.properties['title'] else [],
             '_id': self.properties['id'],
             'arrangement_collection_name': self.collection.name
         }
