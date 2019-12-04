@@ -186,7 +186,7 @@ services:
   kibana:
     image: docker.elastic.co/kibana/kibana:6.8.3
     environment:
-      SERVER_NAME: kibana.search-prod.surfcatalog.nl
+      SERVER_NAME: "${KIBANA_HOSTNAME}"
       ELASTICSEARCH_HOSTS: "${ELASTIC_SEARCH_URL}"
       ELASTICSEARCH_USERNAME: "${ELASTIC_KIBANA_USERNAME}"
       ELASTICSEARCH_PASSWORD: "${ELASTIC_KIBANA_PASSWORD}"
