@@ -74,6 +74,15 @@ services:
           memory: 1G
       restart_policy:
         condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=pol-harvester_webnet"
+        - "traefik.http.services.elastic.loadbalancer.server.port=8000"
+        - "traefik.http.routers.elastic.rule=Host(`${HARVESTER_HOSTNAME}`)"
+        - "traefik.http.routers.elastic.entrypoints=websecure"
+        - "traefik.http.routers.elastic.tls=true"
+        - "traefik.http.routers.elastic.tls.certresolver=default"
+        - "traefik.http.middlewares.elastic.ipwhitelist.sourcerange=${HARVESTER_IP_WHITELIST}"
     networks:
       - webnet
       - default
