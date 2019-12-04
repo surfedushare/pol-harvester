@@ -64,7 +64,7 @@ services:
         - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 
   harvester:
-    image: registry.surfedu.nl/edu/pol-harvester:latest
+    image: registry.surfedu.nl/edu/pol-harvester:${$DJANGO_GIT_COMMIT}
     command: uwsgi --ini /usr/src/app/uwsgi.ini
     deploy:
       replicas: 2
@@ -113,7 +113,7 @@ services:
         condition: on-failure
 
   tasks:
-    image: registry.surfedu.nl/edu/pol-harvester:latest
+    image: registry.surfedu.nl/edu/pol-harvester:${$DJANGO_GIT_COMMIT}
     deploy:
       replicas: 1
       resources:
