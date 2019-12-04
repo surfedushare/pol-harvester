@@ -196,12 +196,12 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=pol-harvester_webnet"
-        - "traefik.http.services.elastic.loadbalancer.server.port=5601"
-        - "traefik.http.routers.elastic.rule=Host(`${KIBANA_HOSTNAME}`)"
-        - "traefik.http.routers.elastic.entrypoints=websecure"
-        - "traefik.http.routers.elastic.tls=true"
-        - "traefik.http.routers.elastic.tls.certresolver=default"
-        - "traefik.http.middlewares.elastic.ipwhitelist.sourcerange=${KIBANA_IP_WHITELIST}"
+        - "traefik.http.services.kibana.loadbalancer.server.port=5601"
+        - "traefik.http.routers.kibana.rule=Host(`${KIBANA_HOSTNAME}`)"
+        - "traefik.http.routers.kibana.entrypoints=websecure"
+        - "traefik.http.routers.kibana.tls=true"
+        - "traefik.http.routers.kibana.tls.certresolver=default"
+        - "traefik.http.middlewares.kibana.ipwhitelist.sourcerange=${KIBANA_IP_WHITELIST}"
       restart_policy:
         condition: on-failure
         delay: 60s
