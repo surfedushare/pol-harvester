@@ -4,17 +4,30 @@ services:
   loadbalancer:
     image: traefik:v2.0
     command:
+      - --entryPoints.web.address=:80
+      - --entryPoints.websecure.address=:443
+
       - --providers.docker=true
       - --providers.docker.exposedByDefault=false
       - --providers.docker.network=pol-harvester_webnet
       - --providers.docker.swarmMode=true
-      - --entryPoints.web.address=:80
-      - --entryPoints.websecure.address=:443
-      - --certificatesResolvers.default.acme.email=edu-beheer@surfnet.nl
+
+      - --certificatesResolvers.default.acme.email=${ACME_EMAIL}
       - --certificatesResolvers.default.acme.storage=acme.json
       - --certificatesResolvers.default.acme.httpChallenge.entryPoint=web
       - --certificatesresolvers.default.acme.tlschallenge=true
-      - --log.level=DEBUG
+
+      - --accesslog=true
+      - --accesslog.format=json
+      - --accesslog.fields.defaultmode=keep
+      - --accesslog.fields.headers.defaultmode=keep
+      - --accesslog.fields.names.ClientAddr=redact
+      - --accesslog.fields.names.ClientHost=redact
+      - --accesslog.fields.names.ClientPort=redact
+      - --accesslog.fields.names.ClientUsername=redact
+      - --accesslog.fields.headers.names.Referer=redact
+      - --accesslog.fields.headers.names.User-Agent=redact
+
     ports:
       - target: 80
         published: 80
@@ -43,7 +56,7 @@ services:
       labels:
         - "treafik.enable=true"
         # global redirect to https
-        - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
+        - "traefik.http.routers.http-catchall.rule=HostRegexp(`{host:.+}`)"
         - "traefik.http.routers.http-catchall.entrypoints=web"
         - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
 
@@ -161,16 +174,39 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=pol-harvester_webnet"
-        - "traefik.http.routers.websecure.rule=Host(`elastic.search-prod.surfcatalog.nl`)"
-        - "traefik.http.routers.websecure.entrypoints=websecure"
-        - "traefik.http.routers.websecure.tls=true"
-        - "traefik.http.routers.websecure.tls.certresolver=default"
         - "traefik.http.services.elastic.loadbalancer.server.port=9200"
-        - "traefik.http.middlewares.elastic.ipwhitelist.sourcerange=145.90.230.0/23,145.101.60.0/23,2001:0610:0450:50::/60,2001:610:3:2151::/60,145.100.190.134"
-
-
+        - "traefik.http.routers.elastic.rule=Host(`${ELASTIC_HOSTNAME}`)"
+        - "traefik.http.routers.elastic.entrypoints=websecure"
+        - "traefik.http.routers.elastic.tls=true"
+        - "traefik.http.routers.elastic.tls.certresolver=default"
+        - "traefik.http.middlewares.elastic.ipwhitelist.sourcerange=${ELASTIC_IP_WHITELIST}"
     ports:
       - 9200:9200
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.8.3
+    environment:
+      SERVER_NAME: kibana.search-prod.surfcatalog.nl
+      ELASTICSEARCH_HOSTS: "${ELASTIC_SEARCH_URL}"
+      ELASTICSEARCH_USERNAME: "${ELASTIC_KIBANA_USERNAME}"
+      ELASTICSEARCH_PASSWORD: "${ELASTIC_KIBANA_PASSWORD}"
+    networks:
+      - webnet
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=pol-harvester_webnet"
+        - "traefik.http.services.elastic.loadbalancer.server.port=5601"
+        - "traefik.http.routers.elastic.rule=Host(`${KIBANA_HOSTNAME}`)"
+        - "traefik.http.routers.elastic.entrypoints=websecure"
+        - "traefik.http.routers.elastic.tls=true"
+        - "traefik.http.routers.elastic.tls.certresolver=default"
+        - "traefik.http.middlewares.elastic.ipwhitelist.sourcerange=${KIBANA_IP_WHITELIST}"
+      restart_policy:
+        condition: on-failure
+        delay: 60s
+        max_attempts: 0
+        window: 0s
 
 volumes:
   postgres-data:
