@@ -17,6 +17,8 @@ To start you'll need to first setup a local environment on a host machine with:
 
 ```bash
 conda env create -f environment.yml
+docker build . -t pol-harvester_harvester
+git rev-parse HEAD > harvester/.commit
 ```
 
 Then copy the ``.env.development`` file to ``.env`` and update the variable values to fit your system.

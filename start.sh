@@ -4,7 +4,7 @@
 # This script starts a Docker Swarm that is needed to run the project.
 # It makes available an API on localhost:8000, which nginx can expose.
 # You can run harvest commands through the tasks server. For example:
-#     docker exec -it $(docker ps -qf label=nl.surfpol.tasks) ./entrypoint.sh ./manage.py freeze_edurep -f <freeze-name> -c <collection-name> -i <input-file>
+#     docker exec -it $(docker ps -qf label=nl.surfpol.tasks) ./entrypoint.sh ./manage.py freeze_edurep -f <freeze-name>
 
 
 # Set the environment variables and activates the Conda environment
