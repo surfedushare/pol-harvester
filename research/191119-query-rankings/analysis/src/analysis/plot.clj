@@ -6,11 +6,11 @@
 (first data)
 
 (def plot
-  (let [field-names [:field-title
-                     :field-title-plain
-                     :field-text
-                     :field-text-plain
-                     :field-keywords]]
+  (let [field-names ["Titel (geanalyseerd)"
+                     "Titel"
+                     "Tekst (geanalyseerd)"
+                     "Tekst"
+                     "Sleutelwoorden"]]
 
     {:$schema "https://vega.github.io/schema/vega/v5.json"
      :signals [{:name "cellSize" :value 30}

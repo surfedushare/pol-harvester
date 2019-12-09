@@ -67,7 +67,19 @@
                    (assoc :query query)
                    (assoc :score score)))))))
 
+(defn rename-fields
+  [m]
+  (set/rename-keys m
+    {:field-title "Titel (geanalyseerd)"
+     :field-title-plain "Titel"
+     :field-text "Tekst (geanalyseerd)"
+     :field-text-plain "Tekst"
+     :field-keywords "Sleutelwoorden"}))
+
 (def data
   (->> files
        (map import-file)
-       (mapcat tidy-data)))
+       (mapcat tidy-data)
+       (map rename-fields)))
+
+(first data)
