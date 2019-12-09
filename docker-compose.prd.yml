@@ -17,16 +17,14 @@ services:
       - --certificatesResolvers.default.acme.httpChallenge.entryPoint=web
       - --certificatesresolvers.default.acme.tlschallenge=true
 
-      - --accesslog=true
-      - --accesslog.format=json
-      - --accesslog.fields.defaultmode=keep
-      - --accesslog.fields.headers.defaultmode=keep
-      - --accesslog.fields.names.ClientAddr=redact
-      - --accesslog.fields.names.ClientHost=redact
-      - --accesslog.fields.names.ClientPort=redact
-      - --accesslog.fields.names.ClientUsername=redact
-      - --accesslog.fields.headers.names.Referer=redact
-      - --accesslog.fields.headers.names.User-Agent=redact
+      - --accesslog=false
+      #- --accesslog.format=json
+      #- --accesslog.fields.defaultmode=keep
+      #- --accesslog.fields.names.ClientAddr=redact
+      #- --accesslog.fields.names.ClientHost=redact
+      #- --accesslog.fields.names.ClientPort=redact
+      #- --accesslog.fields.names.ClientUsername=redact
+      #- --accesslog.fields.headers.defaultmode=drop
 
     ports:
       - target: 80
