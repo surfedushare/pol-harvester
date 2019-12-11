@@ -66,7 +66,7 @@ class ElasticIndex(models.Model):
     def promote_to_latest(self):
         latest_alias = "latest-" + self.language
         if self.client.indices.exists_alias(name=latest_alias):
-            self.client.indices.delete_alias(index="_all")
+            self.client.indices.delete_alias(index="_all", name=latest_alias)
         self.client.indices.put_alias(index=self.remote_name, name=latest_alias)
 
     def clean(self):
