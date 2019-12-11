@@ -114,7 +114,7 @@ class Document(DocumentPostgres, DocumentBase):
             'external_id': self.properties['external_id'],
             'disciplines': self.properties['disciplines'],
             'educational_levels': self.properties['educational_levels'],
-            'author': self.properties.get('author', []),
+            'author': self.properties['author'],
             'description': self.properties['description'],
             'publisher_date': self.properties['publisher_date'],
             'copyright': self.properties['copyright'],
