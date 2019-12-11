@@ -67,8 +67,7 @@ def get_index_config(lang):
                     },
                     'id': {'type': 'text'},
                     'external_id': {
-                        'type': 'text',
-                        'index': 'not_analyzed'
+                        'type': 'keyword'
                     },
                     'arrangement_collection_name': {
                         'type': 'keyword'
