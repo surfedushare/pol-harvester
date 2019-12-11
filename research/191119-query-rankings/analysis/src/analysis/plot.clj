@@ -214,8 +214,8 @@
 (def summary-plot
   {:data {:values sub-data}
 
-   :width 500
-   :height 400
+   :width 1000
+   :height 800
 
    :transform [{:flatten [:values]
                 :as [:score]}
@@ -229,10 +229,14 @@
    :encoding {:x {:field :title
                   :type :ordinal
                   :title "Gebruikte data"
-                  :sort "-y"}
+                  :sort "-y"
+                  :axis {:titleFontSize 20
+                         :labelFontSize 16}}
               :y {:field :mean
                   :type :quantitative
-                  :title "Gemiddelde nDCG"}}})
+                  :title "Gemiddelde nDCG"
+                  :axis {:titleFontSize 20
+                         :labelFontSize 16}}}})
 
 (oz/view! summary-plot)
 
