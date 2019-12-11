@@ -113,7 +113,7 @@ class Document(DocumentPostgres, DocumentBase):
             'url': self.properties['url'],
             'external_id': self.properties['external_id'],
             'disciplines': self.properties['disciplines'],
-            'educational_level': self.properties['educational_level'],
+            'educational_levels': self.properties['educational_levels'],
             'author': self.properties['author'],
             'description': self.properties['description'],
             'publisher_date': self.properties['publisher_date'],
