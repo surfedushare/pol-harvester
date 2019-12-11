@@ -2,9 +2,6 @@
   (:require [oz.core :as oz]
             [analysis.import :refer [data]]
             [cheshire.core :as json]))
-
-(first data)
-
 (def plot
   (let [field-names ["Titel (geanalyseerd)"
                      "Titel"
@@ -17,7 +14,7 @@
                {:name "valueWidth" :value 400}]
 
      :data [{:name "rawData"
-             :values data}
+             :values (filter #(= (:metric %) "dcg") data)}
 
             {:name "aggrData"
              :source "rawData"
@@ -131,6 +128,119 @@
 
 (oz/view! plot :mode :vega)
 
+(defn has-kvs?
+  [m subset]
+  (let [create-predicate (fn [[k v]] (fn [x] (v (get x k))))
+        pred (apply every-pred (map create-predicate subset))]
+    (pred m)))
+
+(has-kvs? (first data) {"Titel" zero?})
+
+(def sub-data
+  (let [dcg-data (filter #(= (:metric %) "dcg") data)
+        preds {"Alleen titel" #(or (has-kvs? % {"Titel (geanalyseerd)" pos?
+                                                "Tekst (geanalyseerd)" zero?
+                                                "Tekst" zero?
+                                                "Sleutelwoorden" zero?})
+                                   (has-kvs? % {"Titel" pos?
+                                                "Tekst (geanalyseerd)" zero?
+                                                "Tekst" zero?
+                                                "Sleutelwoorden" zero?}))
+
+               "Alleen tekst" #(or (has-kvs? % {"Titel" zero?
+                                                "Titel (geanalyseerd)" zero?
+                                                "Tekst (geanalyseerd)" pos?
+                                                "Sleutelwoorden" zero?})
+                                   (has-kvs? % {"Titel" zero?
+                                                "Titel (geanalyseerd)" zero?
+                                                "Tekst" pos?
+                                                "Sleutelwoorden" zero?}))
+
+               "Alleen sleutelwoorden" #(has-kvs? % {"Titel (geanalyseerd)" zero?
+                                                     "Titel" zero?
+                                                     "Tekst (geanalyseerd)" zero?
+                                                     "Tekst" zero?
+                                                     "Sleutelwoorden" pos?})
+
+               "Titel en tekst" #(or (has-kvs? % {"Titel (geanalyseerd)" pos?
+                                                  "Tekst (geanalyseerd)" pos?
+                                                  "Sleutelwoorden" zero?})
+                                     (has-kvs? % {"Titel" pos?
+                                                  "Tekst" pos?
+                                                  "Sleutelwoorden" zero?})
+                                     (has-kvs? % {"Titel (geanalyseerd)" pos?
+                                                  "Tekst" pos?
+                                                  "Sleutelwoorden" zero?})
+                                     (has-kvs? % {"Titel" pos?
+                                                  "Tekst (geanalyseerd)" pos?
+                                                  "Sleutelwoorden" zero?}))
+
+               "Titel en sleutelwoorden" #(or (has-kvs? % {"Titel (geanalyseerd)" pos?
+                                                           "Tekst (geanalyseerd)" zero?
+                                                           "Tekst" zero?
+                                                           "Sleutelwoorden" pos?})
+                                              (has-kvs? % {"Titel" pos?
+                                                           "Tekst (geanalyseerd)" zero?
+                                                           "Tekst" zero?
+                                                           "Sleutelwoorden" pos?}))
+
+               "Tekst en sleutelwoorden" #(or (has-kvs? % {"Titel (geanalyseerd)" zero?
+                                                           "Titel" zero?
+                                                           "Tekst (geanalyseerd)" pos?
+                                                           "Sleutelwoorden" pos?})
+                                              (has-kvs? % {"Titel (geanalyseerd)" zero?
+                                                           "Titel" zero?
+                                                           "Tekst" pos?
+                                                           "Sleutelwoorden" pos?}))
+
+               "Titel, tekst en sleutelwoorden" #(or (has-kvs? % {"Titel (geanalyseerd)" pos?
+                                                                  "Tekst (geanalyseerd)" pos?
+                                                                  "Sleutelwoorden" pos?})
+                                                     (has-kvs? % {"Titel" pos?
+                                                                  "Tekst" pos?
+                                                                  "Sleutelwoorden" pos?})
+                                                     (has-kvs? % {"Titel (geanalyseerd)" pos?
+                                                                  "Tekst" pos?
+                                                                  "Sleutelwoorden" pos?})
+                                                     (has-kvs? % {"Titel" pos?
+                                                                  "Tekst (geanalyseerd)" pos?
+                                                                  "Sleutelwoorden" pos?}))}]
+
+    (for [[title pred] preds]
+      {:title title :values (->> dcg-data
+                                 (filter pred)
+                                 (map :score))})))
+
+(def summary-plot
+  {:data {:values sub-data}
+
+   :width 500
+   :height 400
+
+   :transform [{:flatten [:values]
+                :as [:score]}
+
+               {:aggregate [{:op :mean
+                             :field :score
+                             :as :mean}]
+                :groupby [:title]}]
+
+   :mark :bar
+   :encoding {:x {:field :title
+                  :type :ordinal
+                  :title "Gebruikte data"
+                  :sort "-y"}
+              :y {:field :mean
+                  :type :quantitative
+                  :title "Gemiddelde nDCG"}}})
+
+(oz/view! summary-plot)
+
 (comment
-  (copy-plot plot)
+  (defn copy-plot
+    [plot]
+    (json/generate-stream plot
+      (clojure.java.io/writer "/Users/jelmer/Desktop/plot.json")))
+
+  (copy-plot summary-plot)
   nil)
