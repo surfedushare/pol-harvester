@@ -17,11 +17,13 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('-f', '--freeze', type=str, required=True)
         parser.add_argument('-r', '--recreate', action="store_true")
+        parser.add_argument('-p', '--promote', action="store_true")
 
     def handle(self, *args, **options):
 
         freeze = Freeze.objects.get(name=options["freeze"])
         recreate = options["recreate"]
+        promote = options["promote"]
         arrangements = Arrangement.objects.filter(freeze=freeze).prefetch_related("documents")
         print(f"Creating freeze { freeze.name } index recreate:{recreate} and arrangement count:{len(arrangements)}")
 
@@ -49,4 +51,7 @@ class Command(BaseCommand):
             index.clean()
             index.push(docs, recreate=recreate)
             index.save()
+            if promote:
+                print(f"Promoting index { index.remote_name } to latest")
+                index.promote_to_latest()
             log.info(f'{lang} errors:{index.error_count}')
