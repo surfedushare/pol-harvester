@@ -14,10 +14,6 @@ log = logging.getLogger(__name__)
 
 class OutputCommand(BaseCommand):
 
-    def add_arguments(self, parser):
-        parser.add_argument('-i', '--input', type=str, required=True)
-        parser.add_argument('-o', '--output', type=str, required=True)
-
     @staticmethod
     def _serialize_resource(resource=None):
         if resource is None:
