@@ -19,7 +19,6 @@ class Command(OutputCommand):
     def add_arguments(self, parser):
         parser.add_argument('references', nargs='*', type=str)
         parser.add_argument('-f', '--freeze', type=str, required=True)
-        parser.add_argument('-c', '--collection', type=str)
         parser.add_argument('--hbovpk', action="store_true")
 
     def compare_transcripts_by_references(self, references, freeze):
@@ -62,8 +61,12 @@ class Command(OutputCommand):
 
         if not is_hbovpk:
             wer_values = [int(value*100) for value in wers.values() if value <= 1]
-            print(len(wer_values))
-            print(np.mean(wer_values))
+            print("Video's analysed:", len(wer_values))
+            print("Mean WER:", np.mean(wer_values))
+            print("********************")
+            print("DUMPING DATA TO JSON")
+            print("********************")
+            print(json.dumps(wers, indent=4))
             fig, ax = plt.subplots()
             analysis_directory = os.path.join(datagrowth_settings.DATAGROWTH_DATA_DIR, freeze.name)
             os.makedirs(analysis_directory, exist_ok=True)
