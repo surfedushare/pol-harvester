@@ -148,11 +148,12 @@ class Command(OutputCommand):
                     "video": self._serialize_resource(video_resource),
                     "kaldi": self._serialize_resource(kaldi_resource)
                 }
-                seed["has_video"] = tika_resource.has_video() if tika_resource is not None else False
+                has_video = tika_resource.has_video() if tika_resource is not None else False
 
                 documents = []
                 documents += self.get_documents(file_resource, tika_resource, seed, pipeline)
-                documents += self.get_documents_from_transcription(kaldi_resource, seed, pipeline)
+                if has_video:
+                    documents += self.get_documents_from_transcription(kaldi_resource, seed, pipeline)
 
                 if not len(documents):
                     skipped += 1
