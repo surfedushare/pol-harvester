@@ -105,7 +105,7 @@ class OutputCommand(BaseCommand):
             "publisher_date": meta.get("publisher_date", None),
             "disciplines": meta.get("disciplines", []),
             "educational_levels": meta.get("educational_levels", []),
-            "lowest_educational_level": self.get_lowest_educational_level(meta.get("educational_levels", [])),
+            "lowest_educational_level": self.get_lowest_educational_level(meta.get("lom_educational_levels", [])),
             "suggest": title,
             "pipeline": pipeline
         }
