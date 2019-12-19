@@ -17,3 +17,14 @@ PLAIN_TEXT_MIME_TYPES = [
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     "vnd.openxmlformats-officedocument.presentationml.presentation"
 ]
+
+
+HIGHER_EDUCATION_LEVELS = {
+    "Volwasseneneducatie": 1,
+    "Praktijkonderwijs": 1,
+    "Beroepsonderwijs en Volwasseneneducatie": 1,
+    "Middenkaderopleiding": 1,
+    "MBO": 1,
+    "HBO": 2,
+    "WO": 3
+}

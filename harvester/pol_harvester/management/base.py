@@ -7,6 +7,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from pol_harvester.utils.language import get_language_from_snippet
+from pol_harvester.constants import HIGHER_EDUCATION_LEVELS
 
 
 log = logging.getLogger(__name__)
@@ -46,6 +47,26 @@ class OutputCommand(BaseCommand):
             file_type = settings.EXTENSION_TO_FILE_TYPE.get(extension.lower(), "unknown")
         return file_type
 
+    @staticmethod
+    def get_lowest_educational_level(educational_levels):
+        current_numeric_level = 3 if len(educational_levels) else -1
+        for education_level in educational_levels:
+            for higher_education_level, numeric_level in HIGHER_EDUCATION_LEVELS.items():
+                if not education_level.startswith(higher_education_level):
+                    continue
+                # One of the seed's education levels matches a higher education level.
+                # We re-assign current level and stop processing this education level,
+                # as it shouldn't match multiple higher education levels
+                current_numeric_level = min(current_numeric_level, numeric_level)
+                break
+            else:
+                # No higher education level found inside current education level.
+                # Dealing with an "other" means a lower education level than we're interested in.
+                # So this seed has the lowest possible level. We're done processing this seed.
+                current_numeric_level = 0
+                break
+        return current_numeric_level
+
     def _create_document(self, text, meta, title=None, url=None, mime_type=None, file_type=None, pipeline=None,
                          hash_postfix=None):
 
@@ -84,6 +105,7 @@ class OutputCommand(BaseCommand):
             "publisher_date": meta.get("publisher_date", None),
             "disciplines": meta.get("disciplines", []),
             "educational_levels": meta.get("educational_levels", []),
+            "lowest_educational_level": self.get_lowest_educational_level(meta.get("educational_levels", [])),
             "suggest": title,
             "pipeline": pipeline
         }
