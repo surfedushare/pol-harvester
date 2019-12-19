@@ -17,8 +17,8 @@ RUN npm install && npm run build
 
 FROM python:3.6-stretch
 
-RUN apt-get update && apt-get install -y less vim ffmpeg time
-
+RUN apt-get update && apt-get install -y less vim ffmpeg \
+    time dialog sox subversion build-essential zlib1g-dev automake autoconf libtool libatlas3-base
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
