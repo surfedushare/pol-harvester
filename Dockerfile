@@ -17,7 +17,7 @@ RUN npm install && npm run build
 
 FROM python:3.6-stretch
 
-RUN apt-get update && apt-get install -y less vim ffmpeg
+RUN apt-get update && apt-get install -y less vim ffmpeg time
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
