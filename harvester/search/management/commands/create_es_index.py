@@ -29,7 +29,11 @@ class Command(BaseCommand):
 
         lang_doc = []
         for arrangement in arrangements:
-            for dictionary in (doc.to_search() for doc in arrangement.documents.all()):
+            dictionaries = (
+                doc.to_search() for doc in arrangement.documents.all()
+                if doc.properties.get("lowest_educational_level", -1) > 1
+            )
+            for dictionary in dictionaries:
                 lang_doc.append((dictionary["language"], dictionary,))
 
         lang_doc_dict = freeze.get_documents_by_language(as_search=True)
