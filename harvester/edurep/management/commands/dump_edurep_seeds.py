@@ -47,7 +47,6 @@ class Command(BaseCommand):
             query_seeds = get_edurep_query_seeds(query)
             for seed in query_seeds:
                 seed["collection"] = harvest.source.collection_name
-            print('Amount of extracted results by API query for "{}": {}'.format(query, len(query_seeds)))
             seeds += query_seeds
 
         # Dump seeds to specified file
