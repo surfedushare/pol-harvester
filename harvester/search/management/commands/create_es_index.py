@@ -27,16 +27,10 @@ class Command(BaseCommand):
         arrangements = Arrangement.objects.filter(freeze=freeze).prefetch_related("documents")
         print(f"Creating freeze { freeze.name } index recreate:{recreate} and arrangement count:{len(arrangements)}")
 
-        lang_doc = []
-        for arrangement in arrangements:
-            dictionaries = (
-                doc.to_search() for doc in arrangement.documents.all()
-                if doc.properties.get("lowest_educational_level", -1) > 1
-            )
-            for dictionary in dictionaries:
-                lang_doc.append((dictionary["language"], dictionary,))
-
-        lang_doc_dict = freeze.get_documents_by_language(as_search=True)
+        lang_doc_dict = freeze.get_documents_by_language(
+            as_search=True,  # Elastic Search format
+            minimal_educational_level=1  # MBO and up
+        )
         for lang in lang_doc_dict.keys():
             log.info(f'{lang}:{len(lang_doc_dict[lang])}')
 

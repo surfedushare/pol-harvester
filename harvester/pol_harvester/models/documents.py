@@ -26,9 +26,11 @@ class Freeze(DocumentCollectionMixin, CollectionBase):
     def get_elastic_indices(self):
         return ",".join([index.remote_name for index in self.indices.all()])
 
-    def get_documents_by_language(self, as_search=False):
+    def get_documents_by_language(self, as_search=False, minimal_educational_level=-1):
         by_language = defaultdict(list)
         for doc in self.documents.all():
+            if doc.properties.get("lowest_educational_level", -1) < minimal_educational_level:
+                continue
             language = doc.get_language()
             by_language[language].append(doc if not as_search else doc.to_search())
         return by_language
