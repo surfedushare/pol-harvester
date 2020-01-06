@@ -5,9 +5,9 @@ from django.apps import apps
 
 from datagrowth.configuration import create_config
 from datagrowth.processors import ExtractProcessor
-from datagrowth.exceptions import DGResourceException, DGHttpError40X
+from datagrowth.exceptions import DGResourceDoesNotExist
 
-from pol_harvester.models import HttpTikaResource, YouTubeDLResource, KaldiNLResource, KaldiAspireResource
+from pol_harvester.models import HttpTikaResource, YouTubeDLResource
 from pol_harvester.utils.language import get_kaldi_model_from_snippet
 from edurep.models import EdurepSearch, EdurepFile
 
@@ -79,19 +79,20 @@ def get_edurep_query_seeds(query):
 
 def get_edurep_basic_resources(url):
     """
-    Convenience function to return a file resource and Tika resource based on a URL
+    Convenience function to return a file resource and Tika resource based on a URL.
 
     Notice that this code checks resource.id to see if a resource really comes from the database.
-    In future version of Datagrowth fetch_only will raise when nothing exists in the database.
 
     :param url: URL to search file and Tika resources for
     :return: file_resource, tika_resource
     """
-    file_resource = EdurepFile(config={"fetch_only": True}).get(url)
-    if not file_resource.id:
+    try:
+        file_resource = EdurepFile(config={"cache_only": True}).get(url)
+    except DGResourceDoesNotExist:
         return None, None
-    tika_resource = HttpTikaResource(config={"fetch_only": True}).post(file=file_resource.body)
-    if not tika_resource.id:
+    try:
+        tika_resource = HttpTikaResource(config={"cache_only": True}).post(file=file_resource.body)
+    except DGResourceDoesNotExist:
         return file_resource, None
     return file_resource, tika_resource
 
@@ -102,8 +103,9 @@ def get_edurep_resources(url, language_hint):
     if file_resource is None or not file_resource.success or tika_resource is None or not tika_resource.success:
         return file_resource, tika_resource, None, None
     # Getting the video download
-    video_resource = YouTubeDLResource(config={"fetch_only": True}).run(url)
-    if not video_resource.id:
+    try:
+        video_resource = YouTubeDLResource(config={"cache_only": True}).run(url)
+    except DGResourceDoesNotExist:
         return file_resource, tika_resource, None, None
     _, file_paths = video_resource.content
     if not video_resource.success or not len(file_paths):
@@ -114,7 +116,8 @@ def get_edurep_resources(url, language_hint):
     if kaldi_model is None:
         return file_resource, tika_resource, video_resource, None
     Kaldi = apps.get_model(kaldi_model)
-    kaldi_resource = Kaldi(config={"fetch_only": True}).run(file_path)
-    if not kaldi_resource.id:
+    try:
+        kaldi_resource = Kaldi(config={"cache_only": True}).run(file_path)
+    except DGResourceDoesNotExist:
         return file_resource, tika_resource, video_resource, None
     return file_resource, tika_resource, video_resource, kaldi_resource
