@@ -1,7 +1,7 @@
 name: surf-harvester
 channels:
-  - conda-forge
   - defaults
+  - conda-forge
 dependencies:
   - python=3.6
   - nb_conda
