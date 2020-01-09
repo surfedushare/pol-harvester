@@ -79,6 +79,7 @@ class Command(OutputCommand):
             text += "\n".join(texts)
         return [self._create_document(
             text,
+            url=metadata.get("package_url"),
             meta=metadata,
             pipeline=pipeline,
             hash_postfix=""  # updating URL to create unique hash instead, keeps legacy ids intact
