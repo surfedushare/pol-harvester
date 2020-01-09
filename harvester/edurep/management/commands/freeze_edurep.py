@@ -60,17 +60,29 @@ class Command(OutputCommand):
                 continue
             if current_file and line:
                 texts_by_file[current_file].append(line)
-        documents = {}
+        # We temporarily disable creating multiple documents for a package
+        # When there is a design to display courses in the portal we can re-enable this
+        # Until that time concatenating all documents in a package to a single learning material
+        # documents = {}
+        # for file, texts in texts_by_file.items():
+        #     doc = self._create_document(
+        #         "\n".join(texts),
+        #         url="{}/{}".format(metadata.get("package_url"), file),
+        #         meta=metadata,
+        #         pipeline=pipeline,
+        #         hash_postfix=""  # updating URL to create unique hash instead, keeps legacy ids intact
+        #     )
+        #     documents[doc["id"]] = doc
+        # return list(documents.values())
+        text = ""
         for file, texts in texts_by_file.items():
-            doc = self._create_document(
-                "\n".join(texts),
-                url="{}/{}".format(metadata.get("package_url"), file),
-                meta=metadata,
-                pipeline=pipeline,
-                hash_postfix=""  # updating URL to create unique hash instead, keeps legacy ids intact
-            )
-            documents[doc["id"]] = doc
-        return list(documents.values())
+            text += "\n".join(texts)
+        return [self._create_document(
+            text,
+            meta=metadata,
+            pipeline=pipeline,
+            hash_postfix=""  # updating URL to create unique hash instead, keeps legacy ids intact
+        )]
 
     def get_documents(self, file_resource, tika_resource, metadata, pipeline):
         if tika_resource is None or not tika_resource.success:
