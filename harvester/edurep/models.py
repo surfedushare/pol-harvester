@@ -33,9 +33,9 @@ class EdurepSearch(HttpResource):
 
 class EdurepOAIPMH(HttpResource):
 
-    # TODO: add UTC datetime validation for second (optional) argument
+    # TODO: add UTC datetime validation (no millis) for (optional) "from" argument
 
-    URI_TEMPLATE = "http://oai.edurep.kennisnet.nl:8001/edurep/oai?setSpec={}&from={}"
+    URI_TEMPLATE = "http://oai.edurep.kennisnet.nl:8001/edurep/oai?from={}"
     PARAMETERS = {
         "verb": "ListRecords",
         "metadataPrefix": "lom"
