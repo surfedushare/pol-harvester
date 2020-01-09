@@ -65,7 +65,7 @@ class EdurepDataExtraction(object):
     @classmethod
     def get_copyright(clscls, soup, el):
         node = el.find('czp:copyrightandotherrestrictions')
-        return node.find('czp:value').find('czp:langstring').text
+        return node.find('czp:value').find('czp:langstring').text if node else None
 
     @classmethod
     def get_author(cls, soup, el):
