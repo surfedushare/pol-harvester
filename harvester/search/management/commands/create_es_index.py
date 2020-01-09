@@ -49,7 +49,7 @@ class Command(BaseCommand):
             index.clean()
             index.push(docs, recreate=recreate)
             index.save()
-            if promote:
+            if promote or recreate:
                 print(f"Promoting index { index.remote_name } to latest")
                 index.promote_to_latest()
             log.info(f'{lang} errors:{index.error_count}')
