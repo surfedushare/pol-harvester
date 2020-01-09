@@ -59,7 +59,7 @@ class EdurepOAIPMH(HttpResource):
         if not next_request:
             return
         url = URLObject(next_request.get("url"))
-        url = url.set_query_params(self.next_parameters())
+        url = url.without_query().set_query_params(**self.next_parameters())
         next_request["url"] = str(url)
         return next_request
 
