@@ -31,6 +31,21 @@ class EdurepSearch(HttpResource):
         verbose_name_plural = "Edurep searches"
 
 
+class EdurepOAIPMH(HttpResource):
+
+    # TODO: add UTC datetime validation for second (optional) argument
+
+    URI_TEMPLATE = "http://oai.edurep.kennisnet.nl:8001/edurep/oai?setSpec={}&from={}"
+    PARAMETERS = {
+        "verb": "ListRecords",
+        "metadataPrefix": "lom"
+    }
+
+    class Meta:
+        verbose_name = "Edurep OAIPMH harvest"
+        verbose_name_plural = "Edurep OAIPMH harvests"
+
+
 class EdurepFile(HttpFileResource):
     pass
 

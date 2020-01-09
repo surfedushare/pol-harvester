@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from datagrowth.admin import HttpResourceAdmin
-from edurep.models import EdurepSearch, EdurepFile, EdurepSource
+from edurep.models import EdurepSearch, EdurepFile, EdurepSource, EdurepOAIPMH
 
 
 class EdurepSourceAdmin(admin.ModelAdmin):
@@ -18,3 +18,4 @@ class EdurepHarvestAdminInline(admin.TabularInline):
 admin.site.register(EdurepSearch, HttpResourceAdmin)
 admin.site.register(EdurepFile, HttpResourceAdmin)
 admin.site.register(EdurepSource, EdurepSourceAdmin)
+admin.site.register(EdurepOAIPMH, HttpResourceAdmin)
