@@ -1,6 +1,7 @@
 from django.db.utils import OperationalError
 
-from datagrowth.resources import KaldiNLResource as KaldiNL, KaldiAspireResource as KaldiEN
+from .nl import KaldiNLResource as KaldiNL
+from .aspire import KaldiAspireResource as KaldiEN
 
 
 class KaldiNLResource(KaldiNL):
