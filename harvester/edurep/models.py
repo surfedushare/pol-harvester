@@ -1,3 +1,5 @@
+from urlobject import URLObject
+
 from django.db import models
 from datagrowth.resources import HttpResource, HttpFileResource
 
@@ -34,12 +36,32 @@ class EdurepSearch(HttpResource):
 class EdurepOAIPMH(HttpResource):
 
     # TODO: add UTC datetime validation (no millis) for (optional) "from" argument
+    # TODO: do something with 200 errors
+    # TODO: how is the setSpec implemented? I'm getting errors from using it as a parameter
 
     URI_TEMPLATE = "http://oai.edurep.kennisnet.nl:8001/edurep/oai?from={}"
     PARAMETERS = {
         "verb": "ListRecords",
         "metadataPrefix": "lom"
     }
+
+    def next_parameters(self):
+        content_type, soup = self.content
+        resumption_token = soup.find("resumptiontoken")
+        if not resumption_token:
+            return {}
+        return {
+            "resumptionToken": resumption_token.text
+        }
+
+    def create_next_request(self):
+        next_request = super().create_next_request()
+        if not next_request:
+            return
+        url = URLObject(next_request.get("url"))
+        url.set_query_params(self.next_parameters())
+        next_request["url"] = str(url)
+        return next_request
 
     class Meta:
         verbose_name = "Edurep OAIPMH harvest"
