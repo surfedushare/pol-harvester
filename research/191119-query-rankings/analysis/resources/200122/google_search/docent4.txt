@@ -1,0 +1,41 @@
+onderwijsinnovatie
+------------------
+https://surfpol.nl/content/documents/92547/
+https://surfpol.nl/content/documents/88818/
+https://surfpol.nl/content/documents/68869/
+[4, 0, 0]
+4.0
+
+
+reflecteren studenten
+---------------------
+https://surfpol.nl/content/documents/90820/
+https://surfpol.nl/content/documents/57381/
+https://surfpol.nl/content/documents/61459/
+https://surfpol.nl/content/documents/90817/
+https://surfpol.nl/content/documents/88897/
+https://surfpol.nl/content/documents/88707/
+https://surfpol.nl/content/documents/93051/
+https://surfpol.nl/content/documents/89027/
+https://surfpol.nl/content/documents/58918/
+https://surfpol.nl/content/documents/89198/
+[0, 0, 0, 0, 3, 0, 0, 3, 0, 0]
+2.2920296742201796
+
+
+toetsing
+--------
+https://surfpol.nl/content/documents/70571/
+https://surfpol.nl/content/documents/56493/
+https://surfpol.nl/content/documents/61554/
+https://surfpol.nl/content/documents/55528/
+https://surfpol.nl/content/documents/54615/
+https://surfpol.nl/content/documents/67840/
+https://surfpol.nl/content/documents/88327/
+https://surfpol.nl/content/documents/58653/
+https://surfpol.nl/content/documents/58110/
+https://surfpol.nl/content/documents/55206/
+[0, 0, 0, 0, 0, 0, 5, 0, 0, 0]
+1.7810359355401109
+
+

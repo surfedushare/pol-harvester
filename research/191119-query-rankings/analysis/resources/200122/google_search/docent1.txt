@@ -1,0 +1,109 @@
+dopamine
+--------
+https://surfpol.nl/content/documents/87656/
+https://surfpol.nl/content/documents/69317/
+https://surfpol.nl/content/documents/70522/
+https://surfpol.nl/content/documents/68909/
+https://surfpol.nl/content/documents/69142/
+https://surfpol.nl/content/documents/95046/
+https://surfpol.nl/content/documents/95390/
+https://surfpol.nl/content/documents/95894/
+[4, 0, 0, 0, 0, 0, 0, 0]
+4.0
+
+
+dna
+---
+https://surfpol.nl/content/documents/64576/
+https://surfpol.nl/content/documents/58856/
+https://surfpol.nl/content/documents/68639/
+https://surfpol.nl/content/documents/70510/
+https://surfpol.nl/content/documents/95584/
+https://surfpol.nl/content/documents/58863/
+https://surfpol.nl/content/documents/58854/
+https://surfpol.nl/content/documents/58849/
+https://surfpol.nl/content/documents/92225/
+https://surfpol.nl/content/documents/92221/
+[0, 0, 0, 0, 0, 0, 4, 0, 0, 0]
+1.4248287484320887
+
+
+furosemide
+----------
+https://surfpol.nl/content/documents/69286/
+https://surfpol.nl/content/documents/87637/
+https://surfpol.nl/content/documents/95802/
+[5, 0, 0]
+5.0
+
+
+longkanker
+----------
+WARNING: no Google search results for 'longkanker'
+[]
+0
+
+
+amoxicilline
+------------
+https://surfpol.nl/content/documents/95894/
+[5]
+5.0
+
+
+daibetes mellitus
+-----------------
+https://surfpol.nl/content/documents/64624/
+https://surfpol.nl/content/documents/64623/
+https://surfpol.nl/content/documents/68650/
+https://surfpol.nl/content/documents/69281/
+https://surfpol.nl/content/documents/87439/
+https://surfpol.nl/content/documents/70571/
+https://surfpol.nl/content/documents/95736/
+https://surfpol.nl/content/documents/69162/
+https://surfpol.nl/content/documents/70548/
+https://surfpol.nl/content/documents/87435/
+[5, 5, 3, 0, 0, 0, 3, 3, 0, 0]
+13.961410822038438
+
+
+diabetes mellitus
+-----------------
+https://surfpol.nl/content/documents/64624/
+https://surfpol.nl/content/documents/64623/
+https://surfpol.nl/content/documents/68650/
+https://surfpol.nl/content/documents/69281/
+https://surfpol.nl/content/documents/87439/
+https://surfpol.nl/content/documents/95736/
+https://surfpol.nl/content/documents/70571/
+https://surfpol.nl/content/documents/69162/
+https://surfpol.nl/content/documents/70548/
+https://surfpol.nl/content/documents/70455/
+[5, 5, 3, 0, 0, 3, 0, 3, 0, 0]
+14.053347682417996
+
+
+calcium antagonist
+------------------
+https://surfpol.nl/content/documents/68982/
+https://surfpol.nl/content/documents/69114/
+[5, 0]
+5.0
+
+
+hartfalen
+---------
+https://surfpol.nl/content/documents/70413/
+https://surfpol.nl/content/documents/87637/
+https://surfpol.nl/content/documents/68708/
+https://surfpol.nl/content/documents/69355/
+https://surfpol.nl/content/documents/68716/
+https://surfpol.nl/content/documents/69153/
+https://surfpol.nl/content/documents/95200/
+https://surfpol.nl/content/documents/69286/
+https://surfpol.nl/content/documents/67831/
+https://surfpol.nl/content/documents/70598/
+[0, 0, 5, 3, 0, 0, 3, 3, 0, 0]
+6.723270329181354
+
+

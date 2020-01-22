@@ -1,0 +1,39 @@
+de adolecent
+------------
+WARNING: no Google search results for 'de adolecent'
+[]
+0
+
+
+instructie
+----------
+https://surfpol.nl/content/documents/61353/
+https://surfpol.nl/content/documents/70150/
+https://surfpol.nl/content/documents/57262/
+https://surfpol.nl/content/documents/70072/
+https://surfpol.nl/content/documents/61296/
+https://surfpol.nl/content/documents/88137/
+https://surfpol.nl/content/documents/69536/
+https://surfpol.nl/content/documents/69968/
+https://surfpol.nl/content/documents/70299/
+https://surfpol.nl/content/documents/57227/
+[0, 0, 0, 0, 3, 4, 0, 0, 0, 0]
+2.839440903158346
+
+
+beroepsonderwijs
+----------------
+https://surfpol.nl/content/documents/69884/
+https://surfpol.nl/content/documents/88707/
+https://surfpol.nl/content/documents/70317/
+https://surfpol.nl/content/documents/69452/
+https://surfpol.nl/content/documents/89990/
+https://surfpol.nl/content/documents/89027/
+https://surfpol.nl/content/documents/89242/
+https://surfpol.nl/content/documents/89724/
+https://surfpol.nl/content/documents/89191/
+https://surfpol.nl/content/documents/90162/
+[0, 5, 0, 0, 0, 0, 4, 0, 4, 0]
+7.686688255575004
+
+

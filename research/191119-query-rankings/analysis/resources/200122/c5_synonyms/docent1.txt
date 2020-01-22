@@ -1,0 +1,270 @@
+dopamine
+--------
+Result ids:
+-  512bfd8ac16a3551f6933b22120ad49c625d0a3b
+-  84da224fd41346d3498070e2ae36ba7bf1d49651
+-  24d49c1b54b477aa74a833b3c257cad6117b4bad
+-  dd4b4c1312863ed21db2f152f4ea756a7c10cfd7
+-  e9dc843c19a128548c8e94f630b0fd7b4d16caaf
+-  86eaf0a68257172f6424267f6420807d0e460f16
+-  59673dbe1c8fa4afcc0cfc4a0613585f3ef48069
+-  3162410e10ef586e66062ed9cf120ff7366e6cf5
+-  97a7817c082806628e7ea23863460747afa8cf8e
+-  4db215658398aee9491302008207700c9597b98f
+
+Ratings of results: [4, 3, 4, 0, 0, 0, 0, 0, 0, 0]
+DCG: 9.523719014285831
+********
+Applied enrichments: []
+Result ids:
+-  512bfd8ac16a3551f6933b22120ad49c625d0a3b
+-  84da224fd41346d3498070e2ae36ba7bf1d49651
+-  24d49c1b54b477aa74a833b3c257cad6117b4bad
+-  dd4b4c1312863ed21db2f152f4ea756a7c10cfd7
+-  e9dc843c19a128548c8e94f630b0fd7b4d16caaf
+-  86eaf0a68257172f6424267f6420807d0e460f16
+-  59673dbe1c8fa4afcc0cfc4a0613585f3ef48069
+-  3162410e10ef586e66062ed9cf120ff7366e6cf5
+-  97a7817c082806628e7ea23863460747afa8cf8e
+-  4db215658398aee9491302008207700c9597b98f
+
+Ratings of results: [4, 3, 4, 0, 0, 0, 0, 0, 0, 0]
+DCG: 9.523719014285831
+
+
+dna
+---
+Result ids:
+-  7f8026136cfe0e7b90badc1c14529a9539ada6b6
+-  f2fb5ae4845bc20333e95782635ab912aa2598b8
+-  9df2b822d24fd2d79c8b61b3b71b31c4f0e087f9
+-  ffa7f1ca2ffa4e1c29574e56b544788db551eba7
+-  733cf446aaa7d835cb5b1147e58cf877cd4aadae
+-  0679aa2633e3fa5a30ccac6a13a1ff9bf36ba70d
+-  fe3a0f41110de77afecd3caa7ac9ef9b90fc26fe
+-  8f6fbb0085e23cdc85a0ab693037900c101007f7
+-  7dcf0d1675dd78a510f0aa570b0a3ae3f92c6608
+-  81ba325af476037a4ccf8435f5d6e28e1af435fd
+
+Ratings of results: [4, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+DCG: 4.0
+***
+Applied enrichments: ['dnz', 'dnz', 'desoxyribonucleïnezuur', 'desoxyribonucleïnezuur']
+Result ids:
+-  7f8026136cfe0e7b90badc1c14529a9539ada6b6
+-  f2fb5ae4845bc20333e95782635ab912aa2598b8
+-  9df2b822d24fd2d79c8b61b3b71b31c4f0e087f9
+-  ffa7f1ca2ffa4e1c29574e56b544788db551eba7
+-  733cf446aaa7d835cb5b1147e58cf877cd4aadae
+-  0679aa2633e3fa5a30ccac6a13a1ff9bf36ba70d
+-  fe3a0f41110de77afecd3caa7ac9ef9b90fc26fe
+-  8f6fbb0085e23cdc85a0ab693037900c101007f7
+-  7dcf0d1675dd78a510f0aa570b0a3ae3f92c6608
+-  81ba325af476037a4ccf8435f5d6e28e1af435fd
+
+Ratings of results: [4, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+DCG: 4.0
+
+
+furosemide
+----------
+Result ids:
+-  8dbec8cfb7b65af07136cb9bf9a9b4310bc21505
+-  1579619ec9ccd4ce2998d2c4bca61b5d47094c1d
+-  2009a92fc356559a8ee5a5a9b9c0279dbdb741c3
+-  97a7817c082806628e7ea23863460747afa8cf8e
+-  4db215658398aee9491302008207700c9597b98f
+-  257e38e843bdadaa7e2a1eba4c09c478949c9c0d
+-  e0d6cee3c5e118bf5b2e2df50b1ef19a18b00351
+
+Ratings of results: [5, 3, 0, 0, 0, 0, 0]
+DCG: 8.0
+**********
+Applied enrichments: []
+Result ids:
+-  8dbec8cfb7b65af07136cb9bf9a9b4310bc21505
+-  1579619ec9ccd4ce2998d2c4bca61b5d47094c1d
+-  2009a92fc356559a8ee5a5a9b9c0279dbdb741c3
+-  97a7817c082806628e7ea23863460747afa8cf8e
+-  4db215658398aee9491302008207700c9597b98f
+-  257e38e843bdadaa7e2a1eba4c09c478949c9c0d
+-  e0d6cee3c5e118bf5b2e2df50b1ef19a18b00351
+
+Ratings of results: [5, 3, 0, 0, 0, 0, 0]
+DCG: 8.0
+
+
+longkanker
+----------
+Result ids:
+-  81df5c90cd5af205e43d035a9d8cbbb367a3cbaa
+
+Ratings of results: [3]
+DCG: 3.0
+**********
+Applied enrichments: []
+Result ids:
+-  81df5c90cd5af205e43d035a9d8cbbb367a3cbaa
+
+Ratings of results: [3]
+DCG: 3.0
+
+
+amoxicilline
+------------
+Result ids:
+-  97a7817c082806628e7ea23863460747afa8cf8e
+-  4db215658398aee9491302008207700c9597b98f
+-  257e38e843bdadaa7e2a1eba4c09c478949c9c0d
+-  e0d6cee3c5e118bf5b2e2df50b1ef19a18b00351
+
+Ratings of results: [5, 0, 0, 0]
+DCG: 5.0
+************
+Applied enrichments: []
+Result ids:
+-  97a7817c082806628e7ea23863460747afa8cf8e
+-  4db215658398aee9491302008207700c9597b98f
+-  257e38e843bdadaa7e2a1eba4c09c478949c9c0d
+-  e0d6cee3c5e118bf5b2e2df50b1ef19a18b00351
+
+Ratings of results: [5, 0, 0, 0]
+DCG: 5.0
+
+
+daibetes mellitus
+-----------------
+Result ids:
+-  c22cf0516374be008541c3e1a9896ba2591e867a
+-  741c4e2edb9ee8d0500180c85db09fea1d127783
+-  4648d182d9da6b38aac69f6b567df746bb33c682
+-  df6e5ad4d098c3c2f0102b09e4da5751dabffd7d
+-  272c0a3130863e6344ed2408bc95a7f5d394ecdc
+-  6a1fcdea285000d4773cce1582846a2d8c95593c
+-  a064ee8773de64b8b89cb130665393f3ac5b8a30
+-  baab0c95f79c3ef978ef573d1b38d0c2ad22193d
+-  0438370239eb277bc5654ffc0df0d5e928af908d
+-  7fb406ee31375ac93fcbfabac8945f6d2dce5d30
+
+Ratings of results: [5, 5, 5, 5, 3, 3, 3, 0, 0, 0]
+DCG: 19.175858425105158
+*****************
+Applied enrichments: []
+Result ids:
+-  c22cf0516374be008541c3e1a9896ba2591e867a
+-  741c4e2edb9ee8d0500180c85db09fea1d127783
+-  4648d182d9da6b38aac69f6b567df746bb33c682
+-  df6e5ad4d098c3c2f0102b09e4da5751dabffd7d
+-  272c0a3130863e6344ed2408bc95a7f5d394ecdc
+-  6a1fcdea285000d4773cce1582846a2d8c95593c
+-  a064ee8773de64b8b89cb130665393f3ac5b8a30
+-  baab0c95f79c3ef978ef573d1b38d0c2ad22193d
+-  0438370239eb277bc5654ffc0df0d5e928af908d
+-  7fb406ee31375ac93fcbfabac8945f6d2dce5d30
+
+Ratings of results: [5, 5, 5, 5, 3, 3, 3, 0, 0, 0]
+DCG: 19.175858425105158
+
+
+diabetes mellitus
+-----------------
+Result ids:
+-  c22cf0516374be008541c3e1a9896ba2591e867a
+-  4648d182d9da6b38aac69f6b567df746bb33c682
+-  df6e5ad4d098c3c2f0102b09e4da5751dabffd7d
+-  741c4e2edb9ee8d0500180c85db09fea1d127783
+-  272c0a3130863e6344ed2408bc95a7f5d394ecdc
+-  6a1fcdea285000d4773cce1582846a2d8c95593c
+-  a064ee8773de64b8b89cb130665393f3ac5b8a30
+-  7fb406ee31375ac93fcbfabac8945f6d2dce5d30
+-  baab0c95f79c3ef978ef573d1b38d0c2ad22193d
+-  ec5a4501dbe76fc9bb6dfdecbc98e67f28e707b6
+
+Ratings of results: [5, 5, 5, 5, 3, 3, 3, 0, 0, 0]
+DCG: 19.175858425105158
+*****************
+Applied enrichments: ['diabetes mellitus', 'diabetes', 'suikerziekte', 'suikerziekte']
+Result ids:
+-  c22cf0516374be008541c3e1a9896ba2591e867a
+-  4648d182d9da6b38aac69f6b567df746bb33c682
+-  df6e5ad4d098c3c2f0102b09e4da5751dabffd7d
+-  741c4e2edb9ee8d0500180c85db09fea1d127783
+-  272c0a3130863e6344ed2408bc95a7f5d394ecdc
+-  6a1fcdea285000d4773cce1582846a2d8c95593c
+-  ec5a4501dbe76fc9bb6dfdecbc98e67f28e707b6
+-  a064ee8773de64b8b89cb130665393f3ac5b8a30
+-  7fb406ee31375ac93fcbfabac8945f6d2dce5d30
+-  57ccbf0c575242c2c15dbf298eb45dc029922cb1
+
+Ratings of results: [5, 5, 5, 5, 3, 3, 0, 3, 0, 0]
+DCG: 19.10723686378109
+
+
+calcium antagonist
+------------------
+Result ids:
+-  f150ef5ce18a864466d24d5953f5e7f913c4dd0c
+-  42312b61013ab19052683fd6ea3e293dad0d2a13
+-  fd3f3a8e24616c4034c6c3a4a3cb2c5959fb5089
+-  d0885656f6e45e485b27039ec365ec16bcd7e5d5
+-  d4be9a7ffd599c036b032b86c54410728e504da8
+-  028afbe7330e25aa87692416b6642b3277b868e2
+-  468f0a0af29822c300d77b30f50cd31472d22f85
+-  45c03753b6167a22085169e1bc1680d94b4f9cdb
+-  85cd06897faec679554c6108c75890999effd526
+-  e37cc75ca339d8acafecaf206077b5b87ea3d9f0
+
+Ratings of results: [5, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+DCG: 5.0
+******************
+Applied enrichments: ['atomic number 20', 'Ca', 'calcium', 'adversary', 'baddie', 'villain', 'opponent']
+Result ids:
+-  f150ef5ce18a864466d24d5953f5e7f913c4dd0c
+-  468f0a0af29822c300d77b30f50cd31472d22f85
+-  491c990f6b020e4f7470d02c13b67971967ae484
+-  028afbe7330e25aa87692416b6642b3277b868e2
+-  45c03753b6167a22085169e1bc1680d94b4f9cdb
+-  96f29c1030b49e6925f365386aad1684bc1ae808
+-  839b004ceaef46245841d0c84fc9878d08f1d5ca
+-  895d70d396e2252fa5845070beaf74cfcbdc0aa0
+-  9f0732f6d882ead7039b48dd324151d586fdddef
+-  611adfd98687ebe99dd3a887545eec72cd4ffc44
+
+Ratings of results: [5, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+DCG: 5.0
+
+
+hartfalen
+---------
+Result ids:
+-  22e4625dc3e2a90d19fc52f798ae3b96b8f65dce
+-  1579619ec9ccd4ce2998d2c4bca61b5d47094c1d
+-  2009a92fc356559a8ee5a5a9b9c0279dbdb741c3
+-  8a255c1061d8e56f2288193d9ce566da9988c6d7
+-  a0e6e22b4d9658161f27e00d5db40e3b6e37fd27
+-  3378d76ae9c111454bc56eb7d99e1b31e86ab342
+-  42312b61013ab19052683fd6ea3e293dad0d2a13
+-  0995ac84d13f58c560388fcc589b41193183bea3
+-  63b99dd44cdb17c5db5aadd519b211aefc07d9de
+-  8dbec8cfb7b65af07136cb9bf9a9b4310bc21505
+
+Ratings of results: [3, 3, 0, 5, 3, 0, 0, 0, 3, 3]
+DCG: 11.64151429156931
+*********
+Applied enrichments: []
+Result ids:
+-  22e4625dc3e2a90d19fc52f798ae3b96b8f65dce
+-  1579619ec9ccd4ce2998d2c4bca61b5d47094c1d
+-  2009a92fc356559a8ee5a5a9b9c0279dbdb741c3
+-  8a255c1061d8e56f2288193d9ce566da9988c6d7
+-  a0e6e22b4d9658161f27e00d5db40e3b6e37fd27
+-  3378d76ae9c111454bc56eb7d99e1b31e86ab342
+-  42312b61013ab19052683fd6ea3e293dad0d2a13
+-  0995ac84d13f58c560388fcc589b41193183bea3
+-  63b99dd44cdb17c5db5aadd519b211aefc07d9de
+-  8dbec8cfb7b65af07136cb9bf9a9b4310bc21505
+
+Ratings of results: [3, 3, 0, 5, 3, 0, 0, 0, 3, 3]
+DCG: 11.64151429156931
+
+

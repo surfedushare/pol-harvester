@@ -1,0 +1,94 @@
+onderwijsinnovatie
+------------------
+Result ids:
+-  90c2362a6ea7071e0e7d2dcb1b8f63df98950d15
+-  68fdb7e3a4f8ca416264e19c3a7f75dbd5896088
+-  ef4752d1d9495a693b751b89d0fbe751c7d977e5
+-  a2d5dd973217a6ef3c79284970b7861b520643c4
+-  ca4d31ac3b027e9ef30f7d7ccec0aa2f18432bf5
+-  b1a0e9f8afb3e1eab850fd8e7113bfa66d17ccc0
+
+Ratings of results: [3, 5, 3, 4, 0, 4]
+DCG: 13.44020048965254
+******************
+Applied enrichments: []
+Result ids:
+-  90c2362a6ea7071e0e7d2dcb1b8f63df98950d15
+-  68fdb7e3a4f8ca416264e19c3a7f75dbd5896088
+-  ef4752d1d9495a693b751b89d0fbe751c7d977e5
+-  a2d5dd973217a6ef3c79284970b7861b520643c4
+-  ca4d31ac3b027e9ef30f7d7ccec0aa2f18432bf5
+-  b1a0e9f8afb3e1eab850fd8e7113bfa66d17ccc0
+
+Ratings of results: [3, 5, 3, 4, 0, 4]
+DCG: 13.44020048965254
+
+
+reflecteren studenten
+---------------------
+Result ids:
+-  4862425bb1dd77ad25541c16920e5fcb18563ed3
+-  b23ee5700dde381ff5ceac3a31c6bd4450918641
+-  6939f1be6c9e79ff89a1a9a34032c967f9c3dbd6
+-  178b6c6e7a39aa6a52cb43995c494d3be9e2cbc6
+-  82b87fd1afec5c3aae47697ea358d00b38f6ca13
+-  cff7f6add32d5bfe067d53317f1af7c25f49f9ec
+-  10beae02aba74d7752e6eb25f5fcf6bf85fe54f1
+-  d97afd44a79e611f1ad4f3529c1fb8bf4625129d
+-  60e90f54e952471d9f4d8ab0716917f4a4203a35
+-  332a81adedecf85b7ee69bcc5ae20ee6c3eb5e40
+
+Ratings of results: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+DCG: 0.0
+*********************
+Applied enrichments: ['belangstelling', 'terugkaatsen', 'spiegelen', 'candideren', 'weerkaatsen', 'weerspiegelen', 'spiegelen']
+Result ids:
+-  8266f14cd68078deb03eaadf2d351ca62a6b46d5
+-  bc7e2e0c1df4cd82d05349a7ae2c112fb63516d1
+-  4862425bb1dd77ad25541c16920e5fcb18563ed3
+-  b23ee5700dde381ff5ceac3a31c6bd4450918641
+-  6939f1be6c9e79ff89a1a9a34032c967f9c3dbd6
+-  1c79e05a3d17d26b899222b74358957e73775e56
+-  178b6c6e7a39aa6a52cb43995c494d3be9e2cbc6
+-  82b87fd1afec5c3aae47697ea358d00b38f6ca13
+-  cff7f6add32d5bfe067d53317f1af7c25f49f9ec
+-  10beae02aba74d7752e6eb25f5fcf6bf85fe54f1
+
+Ratings of results: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+DCG: 0.0
+
+
+toetsing
+--------
+Result ids:
+-  1b29adf4db56cfd8592d17aa3dafda9e5e42c844
+-  135aee6843bf948a227cabf06cdb9548f5ae1078
+-  51706bd45993b7e2eba0df2ca0cdc04f46582ae5
+-  0cc6a106cafa26e5e827f0de366d131ef15f2ae2
+-  0d7068d39431ad6aae3eb571f4ef43b4584086a6
+-  12b475723c1f2fc3ff13de9c2ced17d0de2c6aaf
+-  0feec2026797b64d2761142d5e22551464f5cdbf
+-  04910d180d62cddf9eccfe32df94666530766be9
+-  588003bf33de35723c41b7771d0c587e79f740c4
+-  b1f6235b770ba5abc5a84abbd03576fe3944c536
+
+Ratings of results: [4, 3, 0, 0, 0, 0, 0, 0, 0, 0]
+DCG: 7.0
+********
+Applied enrichments: ['proef', 'controle', 'beoordeling', 'beproeving', 'proef', 'beproeving', 'toets', 'keuring', 'test']
+Result ids:
+-  0b7131e24e88794f1cfac1f91e79acf57319ad34
+-  53defac245f86b5b84f294362542bd4018d1635f
+-  08053e4715f131b0e65b4afe3ce0d6a8cc8896c9
+-  36aa28f91462ea94c5b7f0e92aa5fb65b6ffb200
+-  ee35876aaa58f41bb6f7f1f07c2b21cd3dd1e273
+-  135aee6843bf948a227cabf06cdb9548f5ae1078
+-  51706bd45993b7e2eba0df2ca0cdc04f46582ae5
+-  96bc2d37db866aef3b80dd84d753a8cb6637af07
+-  1b29adf4db56cfd8592d17aa3dafda9e5e42c844
+-  d8ada7cddc3496a05e742dea402e5a24e97d1e7b
+
+Ratings of results: [0, 0, 0, 0, 0, 3, 0, 0, 4, 0]
+DCG: 2.42241792884654
+
+

@@ -1,0 +1,226 @@
+dna replicatie
+--------------
+Result ids:
+-  733cf446aaa7d835cb5b1147e58cf877cd4aadae
+-  7f8026136cfe0e7b90badc1c14529a9539ada6b6
+-  028afbe7330e25aa87692416b6642b3277b868e2
+-  fe3a0f41110de77afecd3caa7ac9ef9b90fc26fe
+-  8f6fbb0085e23cdc85a0ab693037900c101007f7
+-  7dcf0d1675dd78a510f0aa570b0a3ae3f92c6608
+-  28874c7c8dedb42ffda445b02b2fa047f8336b0a
+-  f2fb5ae4845bc20333e95782635ab912aa2598b8
+-  9df2b822d24fd2d79c8b61b3b71b31c4f0e087f9
+-  ffa7f1ca2ffa4e1c29574e56b544788db551eba7
+
+Ratings of results: [5, 5, 3, 0, 0, 0, 0, 0, 0, 0]
+DCG: 11.892789260714373
+**************
+Applied enrichments: ['dnz', 'dnz', 'desoxyribonucleïnezuur', 'desoxyribonucleïnezuur']
+Result ids:
+-  7f8026136cfe0e7b90badc1c14529a9539ada6b6
+-  733cf446aaa7d835cb5b1147e58cf877cd4aadae
+-  fe3a0f41110de77afecd3caa7ac9ef9b90fc26fe
+-  8f6fbb0085e23cdc85a0ab693037900c101007f7
+-  7dcf0d1675dd78a510f0aa570b0a3ae3f92c6608
+-  28874c7c8dedb42ffda445b02b2fa047f8336b0a
+-  f2fb5ae4845bc20333e95782635ab912aa2598b8
+-  9df2b822d24fd2d79c8b61b3b71b31c4f0e087f9
+-  ffa7f1ca2ffa4e1c29574e56b544788db551eba7
+-  0679aa2633e3fa5a30ccac6a13a1ff9bf36ba70d
+
+Ratings of results: [5, 5, 0, 0, 0, 0, 0, 0, 0, 0]
+DCG: 10.0
+
+
+crispr cas
+----------
+Result ids:
+-  ebf9a2f665f1e81ee796a873b4512b32949c218b
+-  da612ded156a491f863c7cd454fc1ad4982512f0
+-  0679aa2633e3fa5a30ccac6a13a1ff9bf36ba70d
+-  f4c1107a38fa5c00f2a3ad3348e83b7f4f368faa
+-  8b50091b54e9d14649dc5459385df17ebe4903bd
+-  aac9f4e846981f333097f9914141211eee102bff
+-  782b8e9620043830edbd5199d2434dc6e67076d6
+-  4bd7f78a7ae2f04a0272d89f524a3b2bad6ec5e4
+-  2f76194b2d672186278fdd009218d49a9ddf5c46
+-  feff16091a2b56d80e0392a5e2abc92df5ae8899
+
+Ratings of results: [3, 0, 4, 0, 0, 0, 0, 0, 0, 0]
+DCG: 5.52371901428583
+**********
+Applied enrichments: ['srsr', 'crispr', 'combat armor suit']
+Result ids:
+-  ebf9a2f665f1e81ee796a873b4512b32949c218b
+-  0679aa2633e3fa5a30ccac6a13a1ff9bf36ba70d
+-  da612ded156a491f863c7cd454fc1ad4982512f0
+-  f9da5b787dadb55ca71d0cdbc5e9be5605299ae0
+-  2f45c656526ee4313694da039f4d7986246ff1d4
+-  f4c1107a38fa5c00f2a3ad3348e83b7f4f368faa
+-  8b50091b54e9d14649dc5459385df17ebe4903bd
+-  aac9f4e846981f333097f9914141211eee102bff
+-  782b8e9620043830edbd5199d2434dc6e67076d6
+-  4bd7f78a7ae2f04a0272d89f524a3b2bad6ec5e4
+
+Ratings of results: [3, 4, 0, 0, 0, 0, 0, 0, 0, 0]
+DCG: 7.0
+
+
+fotosynthese
+------------
+Result ids:
+-  0b6e71c2ef9e9f2420bacccba38b7503f86b8139
+-  0c2dadb561e6c4243e56abac7b2353f1f0c5b3e8
+-  c5b849b1ea6e52ecd7639ad15bfe36f8b016feb7
+-  429e1fabc02488215fd5a96ba212f5cda9d3031b
+-  20a414812ccb7daceafc9fa2f18964c7e4c68c27
+-  8f21246ad6529046a1e1ce7b7c65bcb472f0136a
+-  7a625a5b279e40e952ec8a9fa34a554f933211e0
+-  af7a5114a4d536cd5b2e18c5dc4a08365d6232cf
+-  42844de71a7a7e572067a85d677d16dcd445e5b5
+-  31b42e960db20cfe783bc5da9a3b802315c6ad9c
+
+Ratings of results: [3, 3, 0, 0, 0, 3, 0, 0, 0, 0]
+DCG: 7.160558421703625
+************
+Applied enrichments: []
+Result ids:
+-  0b6e71c2ef9e9f2420bacccba38b7503f86b8139
+-  0c2dadb561e6c4243e56abac7b2353f1f0c5b3e8
+-  c5b849b1ea6e52ecd7639ad15bfe36f8b016feb7
+-  429e1fabc02488215fd5a96ba212f5cda9d3031b
+-  20a414812ccb7daceafc9fa2f18964c7e4c68c27
+-  8f21246ad6529046a1e1ce7b7c65bcb472f0136a
+-  7a625a5b279e40e952ec8a9fa34a554f933211e0
+-  af7a5114a4d536cd5b2e18c5dc4a08365d6232cf
+-  42844de71a7a7e572067a85d677d16dcd445e5b5
+-  31b42e960db20cfe783bc5da9a3b802315c6ad9c
+
+Ratings of results: [3, 3, 0, 0, 0, 3, 0, 0, 0, 0]
+DCG: 7.160558421703625
+
+
+osmose
+------
+Result ids:
+-  19e867cce52582ffac3db9439625f1349ede9b1b
+-  1b25dd74aab66c64463d895b81fab6747760cc81
+-  fbbf59afaa16f35cdda802b489585eb5dd50e280
+-  31b42e960db20cfe783bc5da9a3b802315c6ad9c
+
+Ratings of results: [3, 4, 3, 0]
+DCG: 8.892789260714373
+******
+Applied enrichments: []
+Result ids:
+-  19e867cce52582ffac3db9439625f1349ede9b1b
+-  1b25dd74aab66c64463d895b81fab6747760cc81
+-  fbbf59afaa16f35cdda802b489585eb5dd50e280
+-  31b42e960db20cfe783bc5da9a3b802315c6ad9c
+
+Ratings of results: [3, 4, 3, 0]
+DCG: 8.892789260714373
+
+
+restrictie enzym
+----------------
+Result ids:
+-  f3b94aa1b7506006b714c11bed6240f66782be1b
+-  1875b9572c2390107b14d5dc82895066ba4cea13
+-  aba8ad04f3cbf2ff9aa5791148b45a2ff747521b
+-  6621538801cbfedcec29d0dec1038d1c25e3eb30
+-  a9bdcdba49f5ae49fbfa1acd1af0cd4c689e58fc
+-  9c8aa8fa59a7c8c5c2e1d89fd82960e09fa61b89
+-  2784d0af6a2c3eb94a81da94c374c60fb0b411fc
+-  b8cd5f8261a3ea4599173b09040ef81adb81c601
+-  42312b61013ab19052683fd6ea3e293dad0d2a13
+-  76fdce0fd7961299748167968ef3b2cfa6fedfa3
+
+Ratings of results: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+DCG: 0.0
+****************
+Applied enrichments: ['reserve', 'beperking', 'voorbehoud', 'voorbehoud']
+Result ids:
+-  60014b9470d521c7030ca81f774d0f9d0e436eed
+-  028afbe7330e25aa87692416b6642b3277b868e2
+-  a3b3a920341175b371e0373aa68493a05f4ce076
+-  f3b94aa1b7506006b714c11bed6240f66782be1b
+-  1875b9572c2390107b14d5dc82895066ba4cea13
+-  e9c4f415df8bb4b5d4fb5849576944da37db2e92
+-  4bce9d78609beac427849bbc5a715d90de855bee
+-  aba8ad04f3cbf2ff9aa5791148b45a2ff747521b
+-  6621538801cbfedcec29d0dec1038d1c25e3eb30
+-  a9bdcdba49f5ae49fbfa1acd1af0cd4c689e58fc
+
+Ratings of results: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+DCG: 0.0
+
+
+pcr reactie
+-----------
+Result ids:
+-  9d725ef243a6acd7c2a96adf0f38d64822ffc6ab
+-  8b7d4a93f96e1f546f9e0a9f5929fda7565258ad
+-  8b7d4a93f96e1f546f9e0a9f5929fda7565258ad
+-  3b7391a60142464f54760a995b27861544567d3e
+-  0f44135578a514a6bc022a11a650140c781d1b8d
+-  2df3bf815b46bcdf90a7afdd32c13d9389e18287
+-  e12ff0786dad66702b81336433d86e18b26f68a3
+-  83dbccf955ef9802880cacb26c264d64faa4a0ba
+-  c91d645d42cb2bc5c9d37769804ae826adba7695
+-  44cc6db3754c64c0a4ccd2122251d91e22614568
+
+Ratings of results: [0, 5, 5, 0, 0, 0, 0, 0, 0, 0]
+DCG: 8.154648767857287
+***********
+Applied enrichments: ['polymerase chain reaction', 'repercussie', 'gevolg', 'terugslag', 'respons', 'antwoord', 'weerslag', 'terugslag']
+Result ids:
+-  8b7d4a93f96e1f546f9e0a9f5929fda7565258ad
+-  9d725ef243a6acd7c2a96adf0f38d64822ffc6ab
+-  10beae02aba74d7752e6eb25f5fcf6bf85fe54f1
+-  8adfe1ccbdf9ebd63f507cfbbb5f265b346397a9
+-  8b7d4a93f96e1f546f9e0a9f5929fda7565258ad
+-  b86383038959b718a1753f1f74d335b9daaf8f81
+-  bc05e2b8f292ddb79e089eef469d1359d7de28e9
+-  b25b3606c4f2ca2ff0baa9b13b900140d754fb62
+-  8a1d475fd347196612a1db53f4569103380c2cee
+-  14c054c9e1218cdf1d5bb1300b5814222f0d4c41
+
+Ratings of results: [5, 0, 0, 0, 5, 0, 0, 0, 0, 0]
+DCG: 7.153382790366965
+
+
+sequencing
+----------
+Result ids:
+-  8d85282dbba7fca016b5e0011e3c340ca7d3508a
+-  64de5975bc69b5db60d3c3283dc7cf2808536bb8
+-  7549f66cb5e75b8fdab62c9e1254d12bafc453d9
+-  330d36593b97ec9864b9557f8a0a4b3c400d4a06
+-  39662f8a6a3ac31e208c5ee96f1e23f050a1eca8
+-  b4a823af57effc61a3006f7a21270101427e3dd1
+-  71770d032cab35208552f09e86bab8aa3b6a4e1e
+-  7ea101d7b5bd3afe2ccd00fe7b8abd933030080a
+-  1ee13943f8651d81bb18579800d0a056c8d2a6bf
+-  d49c400fb9c808c4047dc9e37a8eae774b1fda87
+
+Ratings of results: [4, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+DCG: 4.0
+**********
+Applied enrichments: []
+Result ids:
+-  8d85282dbba7fca016b5e0011e3c340ca7d3508a
+-  64de5975bc69b5db60d3c3283dc7cf2808536bb8
+-  7549f66cb5e75b8fdab62c9e1254d12bafc453d9
+-  330d36593b97ec9864b9557f8a0a4b3c400d4a06
+-  39662f8a6a3ac31e208c5ee96f1e23f050a1eca8
+-  b4a823af57effc61a3006f7a21270101427e3dd1
+-  71770d032cab35208552f09e86bab8aa3b6a4e1e
+-  7ea101d7b5bd3afe2ccd00fe7b8abd933030080a
+-  1ee13943f8651d81bb18579800d0a056c8d2a6bf
+-  d49c400fb9c808c4047dc9e37a8eae774b1fda87
+
+Ratings of results: [4, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+DCG: 4.0
+
+

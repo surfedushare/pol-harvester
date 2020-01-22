@@ -1,0 +1,72 @@
+dna replicatie
+--------------
+https://surfpol.nl/content/documents/58856/
+https://surfpol.nl/content/documents/58854/
+https://surfpol.nl/content/documents/58857/
+https://surfpol.nl/content/documents/95255/
+https://surfpol.nl/content/documents/70519/
+https://surfpol.nl/content/documents/64478/
+https://surfpol.nl/content/documents/64476/
+https://surfpol.nl/content/documents/64557/
+https://surfpol.nl/content/documents/64477/
+https://surfpol.nl/content/documents/64583/
+[0, 5, 0, 3, 0, 0, 0, 0, 0, 0]
+6.5
+
+
+crispr cas
+----------
+WARNING: no Google search results for 'crispr cas'
+[]
+0
+
+
+fotosynthese
+------------
+https://surfpol.nl/content/documents/90182/
+https://surfpol.nl/content/documents/91655/
+https://surfpol.nl/content/documents/54441/
+https://surfpol.nl/content/documents/91397/
+https://surfpol.nl/content/documents/57252/
+https://surfpol.nl/content/documents/94345/
+[3, 3, 0, 0, 3, 0]
+7.29202967422018
+
+
+osmose
+------
+https://surfpol.nl/content/documents/70518/
+[0]
+0.0
+
+
+restrictie enzym
+----------------
+WARNING: no Google search results for 'restrictie enzym'
+[]
+0
+
+
+pcr reactie
+-----------
+WARNING: no Google search results for 'pcr reactie'
+[]
+0
+
+
+sequencing
+----------
+https://surfpol.nl/content/documents/96954/
+https://surfpol.nl/content/documents/64416/
+https://surfpol.nl/content/documents/64476/
+https://surfpol.nl/content/documents/96792/
+https://surfpol.nl/content/documents/87531/
+https://surfpol.nl/content/documents/87530/
+https://surfpol.nl/content/documents/96702/
+https://surfpol.nl/content/documents/57955/
+https://surfpol.nl/content/documents/64478/
+https://surfpol.nl/content/documents/64477/
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+0.0
+
+

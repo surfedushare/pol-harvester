@@ -1,0 +1,166 @@
+mutant
+------
+Result ids:
+-  cef5d806fe6cf31c77ac1beefbfe999c024e139b
+-  bcca9926c11448e7c7a933da135d4eaaff25a027
+-  a329d8328109c884b83a372e3c7ef6889d8c7a5c
+-  416218c8e4ba406507afb591b51df9ebe5a0264b
+-  479470a914e54250e244e7665eb64177ebe13735
+-  b46085dd10f88c58c3bece1d325a0c1d2a9a6f18
+
+Ratings of results: [0, 0, 5, 0, 0, 4]
+DCG: 4.7020599967954535
+******
+Applied enrichments: ['mutation', 'sport', 'variation', 'mutex']
+Result ids:
+-  416218c8e4ba406507afb591b51df9ebe5a0264b
+-  a329d8328109c884b83a372e3c7ef6889d8c7a5c
+-  c9a79362ced347370d827e69fe4ca313b4bb571b
+-  2248ebfbad4d1fd91b241b608d2f480da9dbf250
+-  dec9cf6dec24c2887583c4952863b9355196698e
+-  cef5d806fe6cf31c77ac1beefbfe999c024e139b
+-  b46085dd10f88c58c3bece1d325a0c1d2a9a6f18
+-  23d052d1e8a55ccd625caa953f818c956aba196d
+-  6155fc2319e640c59a74ef93b42e5c7fe8bff04f
+-  bcca9926c11448e7c7a933da135d4eaaff25a027
+
+Ratings of results: [0, 5, 0, 3, 0, 0, 4, 0, 0, 0]
+DCG: 7.9248287484320885
+
+
+pcr machine
+-----------
+Result ids:
+-  8b7d4a93f96e1f546f9e0a9f5929fda7565258ad
+-  8b7d4a93f96e1f546f9e0a9f5929fda7565258ad
+-  40d1ba4f71f49147cbab8c781835cc05f2b95d78
+-  448a7d34ddd7e4a29d7189f457aa211aadae84dc
+-  3b7391a60142464f54760a995b27861544567d3e
+-  62ac8c592d86339cd0ed13999a9027bc772eb30e
+-  e5e179e948c1405554db4b6d988564928ffc5270
+-  edc04e983da57f10fafe7775179f0e9c592af41a
+-  0f44135578a514a6bc022a11a650140c781d1b8d
+-  0d131c0d67349e4ddd9e0ff0009480e03330ca13
+
+Ratings of results: [4, 4, 0, 0, 0, 0, 0, 0, 0, 0]
+DCG: 8.0
+***********
+Applied enrichments: ['polymerase chain reaction', 'car', 'political machine', 'simple machine', 'puppet', 'facsimile', 'machinery', 'machinery', 'apparatus', 'engine', 'organization', 'machine', 'machine']
+Result ids:
+-  40d1ba4f71f49147cbab8c781835cc05f2b95d78
+-  448a7d34ddd7e4a29d7189f457aa211aadae84dc
+-  8b7d4a93f96e1f546f9e0a9f5929fda7565258ad
+-  e5e179e948c1405554db4b6d988564928ffc5270
+-  dfbae9fe2715303e9e2b16d3ff2793cb6315f5bd
+-  edc04e983da57f10fafe7775179f0e9c592af41a
+-  105139bdcee8d45caced00a5a0d16731d7a05c40
+-  8b7d4a93f96e1f546f9e0a9f5929fda7565258ad
+-  0d131c0d67349e4ddd9e0ff0009480e03330ca13
+-  4792e37812a78038ae5d9db3ce0c31511d65dbe0
+
+Ratings of results: [0, 0, 4, 0, 0, 0, 0, 4, 0, 0]
+DCG: 3.857052347619163
+
+
+cellulose
+---------
+Result ids:
+-  f2dec6e093b2ecb98355f3ec155f0facfc25bc64
+-  1875b9572c2390107b14d5dc82895066ba4cea13
+-  49f23aa22ce11d0746f9f2fd560807689ccf176f
+-  b71bbc59053f55976e995386e571aa1973d28dca
+-  bdcdb4383049c40f0623367deac89f8c77ee3007
+-  ebaf5dcd5c36a339d5b196b0113cbe5033faa9a4
+-  744f4b313ba89011866b9dec48acc49f2651bd5b
+-  a38a7e18a9c710761d0dc4eee0e3699e32c83d10
+-  38e8c068383bcb06b5097c1850f73a0be771add4
+-  8bd5d220a3f3b229545553b2d446938cec07299a
+
+Ratings of results: [5, 3, 4, 3, 0, 0, 0, 0, 0, 0]
+DCG: 12.023719014285831
+*********
+Applied enrichments: ['e460', 'cellulose']
+Result ids:
+-  f2dec6e093b2ecb98355f3ec155f0facfc25bc64
+-  b71bbc59053f55976e995386e571aa1973d28dca
+-  1875b9572c2390107b14d5dc82895066ba4cea13
+-  49f23aa22ce11d0746f9f2fd560807689ccf176f
+-  bdcdb4383049c40f0623367deac89f8c77ee3007
+-  ebaf5dcd5c36a339d5b196b0113cbe5033faa9a4
+-  744f4b313ba89011866b9dec48acc49f2651bd5b
+-  a38a7e18a9c710761d0dc4eee0e3699e32c83d10
+-  38e8c068383bcb06b5097c1850f73a0be771add4
+-  8bd5d220a3f3b229545553b2d446938cec07299a
+
+Ratings of results: [5, 3, 3, 4, 0, 0, 0, 0, 0, 0]
+DCG: 11.892789260714373
+
+
+lab safety
+----------
+Result ids:
+-  338e38597181193a4bccef33e711d3c77a7ab9b5
+-  360953fe4c4891703fbee78642c5d77bf3bba4a3
+-  2324e0e6bd6e98e5fc4ae233be72dafa1ca92a4e
+-  338e38597181193a4bccef33e711d3c77a7ab9b5
+-  0dcffc595308a793ff90410429783126ae934279
+-  2324e0e6bd6e98e5fc4ae233be72dafa1ca92a4e
+-  fb26877e09e2128553c21a1f757bb825017da4ec
+-  535e7d2bbb56b66b32b0a2ef14ad8dbbe7f71c79
+-  535e7d2bbb56b66b32b0a2ef14ad8dbbe7f71c79
+-  0dcffc595308a793ff90410429783126ae934279
+
+Ratings of results: [4, 0, 4, 4, 0, 4, 0, 0, 0, 0]
+DCG: 10.071130243223998
+**********
+Applied enrichments: ['research lab', 'science laboratory', 'research laboratory', 'laboratory', 'science lab', 'laboratory', 'labrador retriever', 'laboratory', 'lab', 'condom', 'guard', 'refuge', 'base hit', 'security', 'safety catch']
+Result ids:
+-  0dcffc595308a793ff90410429783126ae934279
+-  338e38597181193a4bccef33e711d3c77a7ab9b5
+-  2324e0e6bd6e98e5fc4ae233be72dafa1ca92a4e
+-  afcdc98a5a1077f2f3eadb0fd609e7a74018c15a
+-  6cf9db0377284d7f87269f28e2846cac477f7fce
+-  fb26877e09e2128553c21a1f757bb825017da4ec
+-  b0d02c2107764973d6ccb78721c5af6411fc8f49
+-  d45e6ab433fe577eac8593dbbfb5dfed781d3924
+-  338e38597181193a4bccef33e711d3c77a7ab9b5
+-  5b4a6fdd72960bf7dc73a388fa782ce387ad0766
+
+Ratings of results: [0, 4, 4, 0, 0, 0, 0, 0, 4, 0]
+DCG: 7.785578521428745
+
+
+scientific writing
+------------------
+Result ids:
+-  beaaad3afa4d466e7e9b4e56ef9360564d908ace
+-  30a48b8d074a99a3d958c1d459e8fef8ac4405e3
+-  504bb7bfbcc75e76608bc1c9a5b72fb59c8496e5
+-  c80c883f828814030f0ac33080e8d8cede16b2ee
+-  dc31f36b8a98754e353c436586043d1df3cb98dd
+-  bc4c19ed56c6bf598a16ed2bd56f0a8273e835d5
+-  50a9cf1b9afe45a6129d302d4763d649b6e53de1
+-  6b8d50261113bf58de75bfddb1f2caf92bd0be19
+-  3f1334d5ad738df124b8101ed9ca7bcd0a9bd6af
+-  6b8d50261113bf58de75bfddb1f2caf92bd0be19
+
+Ratings of results: [5, 5, 3, 5, 4, 4, 0, 0, 0, 0]
+DCG: 17.66290672194611
+******************
+Applied enrichments: ['penning', 'composition', 'committal to writing', 'authorship', 'written material', 'piece of writing', 'writing']
+Result ids:
+-  beaaad3afa4d466e7e9b4e56ef9360564d908ace
+-  30a48b8d074a99a3d958c1d459e8fef8ac4405e3
+-  504bb7bfbcc75e76608bc1c9a5b72fb59c8496e5
+-  c80c883f828814030f0ac33080e8d8cede16b2ee
+-  6b8d50261113bf58de75bfddb1f2caf92bd0be19
+-  6b8d50261113bf58de75bfddb1f2caf92bd0be19
+-  7c27816e8995e903c059710711f5c308a5a1dcf2
+-  dc31f36b8a98754e353c436586043d1df3cb98dd
+-  6e0b0ac5f48447b07169c120dbdac3cd0a2a1250
+-  19b753caab3f3a23b807e1a615d12d03b8570a9f
+
+Ratings of results: [5, 5, 3, 5, 0, 0, 0, 4, 0, 0]
+DCG: 15.726122594047707
+
+
