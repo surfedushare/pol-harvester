@@ -51,8 +51,8 @@ class EdurepSource(models.Model):
 
 class EdurepHarvest(models.Model):
 
-    source = models.ForeignKey(EdurepSource)
-    freeze = models.ForeignKey(Freeze)
+    source = models.ForeignKey(EdurepSource, on_delete=models.SET_NULL, null=True, blank=True)
+    freeze = models.ForeignKey(Freeze, on_delete=models.SET_NULL, null=True, blank=True)
 
     scheduled_after = models.DateTimeField(null=True, blank=True)
     completed_at = models.DateTimeField(null=True, blank=True)

@@ -50,6 +50,6 @@ urlpatterns = [
     url(r'^content/sitemap.xml', sitemap, {'sitemaps': {"beta": DocumentSitemap("beta")}},
         name='django.contrib.sitemaps.views.sitemap'),
     url(r'^content/documents/(?P<pk>\d+)/$', views.document_html_view, name="content-document-html"),
-    url(r'^api/v1/', include(api_urlpatterns, namespace="api-v1")),
+    url(r'^api/v1/', include((api_urlpatterns, 'api-v1'), namespace="api-v1")),
     url(r'^api/v1/auth/token/?$', csrf_exempt(rest_views.obtain_auth_token)),
 ]

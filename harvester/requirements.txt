@@ -1,10 +1,10 @@
 uwsgi==2.0.18
-whitenoise==4.0
+whitenoise==5.0.1
 psycopg2-binary==2.8.3
 
-django==1.11.23
-djangorestframework==3.9.1
-django-cors-headers==2.4.0
+django==3.0.2
+djangorestframework==3.11.0
+django-cors-headers==3.2.1
 django-basicauth==0.5.2
 requests==2.20.0
 jsonschema==2.6.0
@@ -16,7 +16,6 @@ lxml==4.2.4
 beautifulsoup4==4.6.3
 Pillow==6.2.1
 git+https://github.com/saffsd/langid.py.git
-gitpython==2.1.11
 elasticsearch==6.3.1
 scikit-learn==0.21.3
 mwparserfromhell==0.5.4

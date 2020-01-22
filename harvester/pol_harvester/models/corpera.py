@@ -24,4 +24,4 @@ class Corpus(DocumentCollectionMixin, CollectionBase):
 class Article(DocumentBase, DocumentPostgres):
 
     # We link the Corpus through the collection property to document_set to leverage the Datagrowth package
-    collection = models.ForeignKey("Corpus", blank=True, null=True, related_name="document_set")
+    collection = models.ForeignKey("Corpus", on_delete=models.SET_NULL, blank=True, null=True, related_name="document_set")
