@@ -11,14 +11,14 @@ https://surfpol.nl/content/documents/96911/
 https://surfpol.nl/content/documents/56676/
 https://surfpol.nl/content/documents/64416/
 [5, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-5.0
+DCG: 5.0
 
 
 pcr machine
 -----------
 https://surfpol.nl/content/documents/96888/
 [0]
-0.0
+DCG: 0.0
 
 
 cellulose
@@ -31,14 +31,14 @@ https://surfpol.nl/content/documents/55466/
 https://surfpol.nl/content/documents/95980/
 https://surfpol.nl/content/documents/64687/
 [5, 4, 3, 0, 0, 0, 0]
-10.892789260714373
+DCG: 10.892789260714373
 
 
 lab safety
 ----------
 WARNING: no Google search results for 'lab safety'
 []
-0
+DCG: 0
 
 
 scientific writing
@@ -51,6 +51,4 @@ https://surfpol.nl/content/documents/64377/
 https://surfpol.nl/content/documents/64333/
 https://surfpol.nl/content/documents/58069/
 [5, 5, 3, 5, 4, 4, 0]
-17.66290672194611
-
-
+DCG: 17.66290672194611

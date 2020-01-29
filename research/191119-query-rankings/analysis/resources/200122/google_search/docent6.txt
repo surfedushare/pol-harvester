@@ -4,7 +4,7 @@ https://surfpol.nl/content/documents/56200/
 https://surfpol.nl/content/documents/93238/
 https://surfpol.nl/content/documents/55508/
 [3, 3, 3]
-7.892789260714372
+DCG: 7.892789260714372
 
 
 mindmappen
@@ -13,7 +13,7 @@ https://surfpol.nl/content/documents/70266/
 https://surfpol.nl/content/documents/60351/
 https://surfpol.nl/content/documents/88502/
 [0, 0, 0]
-0.0
+DCG: 0.0
 
 
 onderzoek aanpak
@@ -29,21 +29,21 @@ https://surfpol.nl/content/documents/55880/
 https://surfpol.nl/content/documents/88374/
 https://surfpol.nl/content/documents/88359/
 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-0.0
+DCG: 0.0
 
 
 onderzoeksruimte veld
 ---------------------
 WARNING: no Google search results for 'onderzoeksruimte veld'
 []
-0
+DCG: 0
 
 
 onderzoeksaanpak visualiseren
 -----------------------------
 https://surfpol.nl/content/documents/55636/
 [3]
-3.0
+DCG: 3.0
 
 
 datavisualisatie
@@ -51,7 +51,7 @@ datavisualisatie
 https://surfpol.nl/content/documents/68921/
 https://surfpol.nl/content/documents/62525/
 [5, 3]
-8.0
+DCG: 8.0
 
 
 begrijpend lezen
@@ -67,6 +67,4 @@ https://surfpol.nl/content/documents/69763/
 https://surfpol.nl/content/documents/70122/
 https://surfpol.nl/content/documents/69616/
 [4, 3, 3, 5, 0, 4, 0, 0, 0, 0]
-12.94020048965254
-
-
+DCG: 12.94020048965254

@@ -1,0 +1,3 @@
+filters zijn: HBO & copyright informatie
+
+niet genormaliseerd (dus dgc, niet ndcg)

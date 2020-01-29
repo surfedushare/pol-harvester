@@ -1,0 +1,8 @@
+Bijgevoegd een JSON met een lijst met daarin lijsten.
+Waarde 1: pad van de video
+Waarde 2: duur van transcriberen op 1 core met 1 GB
+Waarde 3: duur van de video
+
+Dit is voor 94 random videos in het Engels. Ook wel te doen om dit uit te rekenen voor alle videos. Je kunt dan op de server de YoutubeDL tabel lezen en de bestanden door een tool halen die duur extraheert.
+
+Duur van transcriberen is gedaan met een tijdelijke migratie, dat leek me voor nu even de snelste oplossing. Op zich interessant om dit permanent in te bouwen in Datagrowth voor alle Shell resources. Dan kunnen we het over langere tijdsperioden monitoren.

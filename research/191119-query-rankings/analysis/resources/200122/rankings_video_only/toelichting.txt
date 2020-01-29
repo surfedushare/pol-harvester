@@ -1,0 +1,12 @@
+Even denken hoor
+
+
+4:39
+We proberen hier te onderzoeken in hoeverre het toevoegen van de transcripten bijdragen aan het vinden van de gewenste zoekresultaten. Dus eigenlijk moet het volgens mij als volgt. FIlter de query rankings zo dat er alleen de gerankte video’s in zitten. Maak vervolgens twee indices: één waarbij het transcript wel aan alle video’s toegevoegd wordt en één waarbij dat niet het geval is. Tussen die twee indices willen de we de dcg scores vergelijken
+
+fako  4:40 PM
+Ok, als proxy: het weglaten van “text_plain” en “text” als velden om te zoeken
+4:41
+Dus dan zou simpelweg runnen van het standaard command voldoende zijn
+4:41
+(mits connect met de beta index) (edited) 

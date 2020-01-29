@@ -4,7 +4,7 @@ https://surfpol.nl/content/documents/92547/
 https://surfpol.nl/content/documents/88818/
 https://surfpol.nl/content/documents/68869/
 [4, 0, 0]
-4.0
+DCG: 4.0
 
 
 reflecteren studenten
@@ -20,7 +20,7 @@ https://surfpol.nl/content/documents/89027/
 https://surfpol.nl/content/documents/58918/
 https://surfpol.nl/content/documents/89198/
 [0, 0, 0, 0, 3, 0, 0, 3, 0, 0]
-2.2920296742201796
+DCG: 2.2920296742201796
 
 
 toetsing
@@ -36,6 +36,4 @@ https://surfpol.nl/content/documents/58653/
 https://surfpol.nl/content/documents/58110/
 https://surfpol.nl/content/documents/55206/
 [0, 0, 0, 0, 0, 0, 5, 0, 0, 0]
-1.7810359355401109
-
-
+DCG: 1.7810359355401109

@@ -1,0 +1,242 @@
+{
+  "results": [
+    {
+      "docent": 1,
+      "query_string": "dopamine",
+      "dcg-score": 1.4248287484320887,
+      "dcg-array": [0, 0, 0, 0, 0, 0, 4, 0, 0, 0],
+      "result-count": 70
+    },
+	{
+      "docent": 1,
+      "query_string": "dna",
+      "dcg-score": 0.0,
+      "dcg-array": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "result-count": 4979
+    },
+    {
+      "docent": 1,
+      "query_string": "furosemide",
+      "dcg-score": 5.0,
+      "dcg-array": [5, 0, 0],
+      "result-count": 3
+    },
+    {
+      "docent": 1,
+      "query_string": "longkanker",
+      "dcg-score": 0.0,
+      "dcg-array": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "result-count": 68
+    },
+    {
+      "docent": 1,
+      "query_string": "amoxicilline",
+      "dcg-score": 0.0,
+      "dcg-array": [0, 0, 0, 0, 0, 0],
+      "result-count": 6
+    },
+    {
+      "docent": 1,
+      "query_string": "daibetes mellitus",
+      "dcg-score": 0,
+      "dcg-array": [],
+      "result-count": 0
+    },
+    {
+      "docent": 1,
+      "query_string": "diabetes mellitus",
+      "dcg-score": 0.0,
+      "dcg-array": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "result-count": 200
+    },
+    {
+      "docent": 1,
+      "query_string": "calcium antagonist",
+      "dcg-score": 0,
+      "dcg-array": [],
+      "result-count": 0
+    },
+    {
+      "docent": 1,
+      "query_string": "hartfalen",
+      "dcg-score": 3.1533827903669653,
+      "dcg-array": [0, 0, 0, 0, 5, 0, 0, 3, 0, 0],
+      "result-count": 65
+    },
+    {
+      "docent": 3,
+      "query_string": "de adolecent",
+      "dcg-score": 0,
+      "dcg-array": [],
+      "result-count": 0
+    },
+    {
+      "docent": 3,
+      "query_string": "instructie",
+      "dcg-score": 0.0,
+      "dcg-array": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "result-count": 1934
+    },
+    {
+      "docent": 3,
+      "query_string": "beroepsonderwijs",
+      "dcg-score": 0.0,
+      "dcg-array": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "result-count": 56792
+    },
+    {
+      "docent": 4,
+      "query_string": "onderwijsinnovatie",
+      "dcg-score": 0.0,
+      "dcg-array": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "result-count": 54
+    },
+    {
+      "docent": 4,
+      "query_string": "reflecteren studenten",
+      "dcg-score": 0.0,
+      "dcg-array": [0],
+      "result-count": 1
+    },
+    {
+      "docent": 4,
+      "query_string": "toetsing",
+      "dcg-score": 0.0,
+      "dcg-array": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "result-count": 1094
+    },
+    {
+      "docent": 5,
+      "query_string": "dna replicatie",
+      "dcg-score": 0.0,
+      "dcg-array": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "result-count": 41
+    },
+    {
+      "docent": 5,
+      "query_string": "crispr cas",
+      "dcg-score": 0.0,
+      "dcg-array": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "result-count": 105
+    },
+    {
+      "docent": 5,
+      "query_string": "fotosynthese",
+      "dcg-score": 0.0,
+      "dcg-array": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "result-count": 1222
+    },
+    {
+      "docent": 5,
+      "query_string": "osmose",
+      "dcg-score": 0.0,
+      "dcg-array": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "result-count": 362
+    },
+    {
+      "docent": 5,
+      "query_string": "restrictie enzym",
+      "dcg-score": 0.0,
+      "dcg-array": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "result-count": 3
+    },
+    {
+      "docent": 5,
+      "query_string": "pcr reactie",
+      "dcg-score": 0,
+      "dcg-array": [],
+      "result-count": 0
+    },
+    {
+      "docent": 5,
+      "query_string": "sequencing",
+      "dcg-score": 0.0,
+      "dcg-array": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "result-count": 915
+    },
+    {
+      "docent": 6,
+      "query_string": "scannend lezen",
+      "dcg-score": 0.0,
+      "dcg-array": [0],
+      "result-count": 1
+    },
+    {
+      "docent": 6,
+      "query_string": "mindmappen",
+      "dcg-score": 4.0,
+      "dcg-array": [4, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "result-count": 24
+    },
+    {
+      "docent": 6,
+      "query_string": "onderzoek aanpak",
+      "dcg-score": 0.0,
+      "dcg-array": [0, 0, 0],
+      "result-count": 3
+    },
+    {
+      "docent": 6,
+      "query_string": "onderzoeksruimte veld",
+      "dcg-score": 0,
+      "dcg-array": [],
+      "result-count": 0
+    },
+    {
+      "docent": 6,
+      "query_string": "onderzoeksaanpak visualiseren",
+      "dcg-score": 0,
+      "dcg-array": [],
+      "result-count": 0
+    },
+    {
+      "docent": 6,
+      "query_string": "datavisualisatie",
+      "dcg-score": 2.5,
+      "dcg-array": [0, 0, 0, 5, 0, 0, 0, 0, 0, 0],
+      "result-count": 12
+    },
+    {
+      "docent": 6,
+      "query_string": "begrijpend lezen",
+      "dcg-score": 1.5773243839286437,
+      "dcg-array": [0, 0, 0, 0, 0, 0, 0, 0, 5, 0],
+      "result-count": 3240
+    },
+    {
+      "docent": 7,
+      "query_string": "mutant",
+      "dcg-score": 0.0,
+      "dcg-array": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "result-count": 757
+    },
+    {
+      "docent": 7,
+      "query_string": "pcr machine",
+      "dcg-score": 4.0,
+      "dcg-array": [4, 0, 0, 0],
+      "result-count": 4
+    },
+    {
+      "docent": 7,
+      "query_string": "cellulose",
+      "dcg-score": 0.0,
+      "dcg-array": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "result-count": 648
+    },
+    {
+      "docent": 7,
+      "query_string": "lab safety",
+      "dcg-score": 0,
+      "dcg-array": [],
+      "result-count": 0
+    },
+    {
+      "docent": 7,
+      "query_string": "scientific writing",
+      "dcg-score": 17.593583280019505,
+      "dcg-array": [5, 5, 3, 4, 5, 4, 0, 0],
+      "result-count": 8
+    },
+  ]
+}

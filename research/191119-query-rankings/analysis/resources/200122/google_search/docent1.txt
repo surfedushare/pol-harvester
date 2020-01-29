@@ -9,7 +9,7 @@ https://surfpol.nl/content/documents/95046/
 https://surfpol.nl/content/documents/95390/
 https://surfpol.nl/content/documents/95894/
 [4, 0, 0, 0, 0, 0, 0, 0]
-4.0
+DCG: 4.0
 
 
 dna
@@ -25,7 +25,7 @@ https://surfpol.nl/content/documents/58849/
 https://surfpol.nl/content/documents/92225/
 https://surfpol.nl/content/documents/92221/
 [0, 0, 0, 0, 0, 0, 4, 0, 0, 0]
-1.4248287484320887
+DCG: 1.4248287484320887
 
 
 furosemide
@@ -34,21 +34,21 @@ https://surfpol.nl/content/documents/69286/
 https://surfpol.nl/content/documents/87637/
 https://surfpol.nl/content/documents/95802/
 [5, 0, 0]
-5.0
+DCG: 5.0
 
 
 longkanker
 ----------
 WARNING: no Google search results for 'longkanker'
 []
-0
+DCG: 0
 
 
 amoxicilline
 ------------
 https://surfpol.nl/content/documents/95894/
 [5]
-5.0
+DCG: 5.0
 
 
 daibetes mellitus
@@ -64,7 +64,7 @@ https://surfpol.nl/content/documents/69162/
 https://surfpol.nl/content/documents/70548/
 https://surfpol.nl/content/documents/87435/
 [5, 5, 3, 0, 0, 0, 3, 3, 0, 0]
-13.961410822038438
+DCG: 13.961410822038438
 
 
 diabetes mellitus
@@ -80,7 +80,7 @@ https://surfpol.nl/content/documents/69162/
 https://surfpol.nl/content/documents/70548/
 https://surfpol.nl/content/documents/70455/
 [5, 5, 3, 0, 0, 3, 0, 3, 0, 0]
-14.053347682417996
+DCG: 14.053347682417996
 
 
 calcium antagonist
@@ -88,7 +88,7 @@ calcium antagonist
 https://surfpol.nl/content/documents/68982/
 https://surfpol.nl/content/documents/69114/
 [5, 0]
-5.0
+DCG: 5.0
 
 
 hartfalen
@@ -104,6 +104,4 @@ https://surfpol.nl/content/documents/69286/
 https://surfpol.nl/content/documents/67831/
 https://surfpol.nl/content/documents/70598/
 [0, 0, 5, 3, 0, 0, 3, 3, 0, 0]
-6.723270329181354
-
-
+DCG: 6.723270329181354

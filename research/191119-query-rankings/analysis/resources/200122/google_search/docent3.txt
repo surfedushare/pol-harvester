@@ -2,7 +2,7 @@ de adolecent
 ------------
 WARNING: no Google search results for 'de adolecent'
 []
-0
+DCG: 0
 
 
 instructie
@@ -18,7 +18,7 @@ https://surfpol.nl/content/documents/69968/
 https://surfpol.nl/content/documents/70299/
 https://surfpol.nl/content/documents/57227/
 [0, 0, 0, 0, 3, 4, 0, 0, 0, 0]
-2.839440903158346
+DCG: 2.839440903158346
 
 
 beroepsonderwijs
@@ -34,6 +34,4 @@ https://surfpol.nl/content/documents/89724/
 https://surfpol.nl/content/documents/89191/
 https://surfpol.nl/content/documents/90162/
 [0, 5, 0, 0, 0, 0, 4, 0, 4, 0]
-7.686688255575004
-
-
+DCG: 7.686688255575004

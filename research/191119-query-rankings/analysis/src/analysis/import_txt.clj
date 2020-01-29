@@ -1,24 +1,24 @@
 (ns analysis.import-txt
   (:require [clojure.java.io :as io]))
 
+(comment
+  (cognitect.rebl/ui)
+  nil)
+
 (defn get-files
   [dir-name]
-  (let [contents (->> (str "resources/200122/" dir-name)
-                      io/file
-                      file-seq
-                      (filter #(.isFile %))
-                      (map slurp))]
-    (for [c contents]
-      {:type (keyword dir-name) :text c})))
-
-(def prf-files (get-files "prf"))
+  (let [files (->> (str "resources/200122/" dir-name)
+                   io/file
+                   file-seq
+                   (filter #(.isFile %)))]
+    (for [file files]
+      {:type (keyword dir-name) :text (slurp file) :teacher (subs (.getName file) 0 7)})))
 
 (defn parse-dcgs
   [text]
   (->> (re-seq #"DCG: ([\d.]+)" text)
        (map second)
-       (map #(Double/parseDouble %))
-       (partition 2)))
+       (map #(Double/parseDouble %))))
 
 (defn parse-queries
   [text]
@@ -26,16 +26,24 @@
        (map second)))
 
 (defn parse-text
-  [text]
+  [partition? text]
   (let [queries (parse-queries text)
-        dcgs (parse-dcgs text)
+        dcgs (if partition?
+               (partition 2 (parse-dcgs text))
+               (parse-dcgs text))
         combined (partition 2 (interleave queries dcgs))]
-    (for [[query [control prf]] combined]
-      {:query query :control control :prf prf})))
+    (for [[query ct] combined]
+      (if partition?
+        {:query query :control (first ct) :treatment (second ct)}
+        {:query query :treatment ct}))))
 
 (defn parse-file
-  [{:keys [type text]}]
-  (for [m (parse-text text)]
-    (assoc m :type type)))
+  [partition? {:keys [type text teacher]}]
+  (for [m (parse-text partition? text)]
+    (-> m
+        (assoc :type type)
+        (assoc :teacher teacher))))
 
-(mapcat parse-file prf-files)
+(def data (->> ["prf" "c5_synonyms" "google_search"]
+               (mapcat get-files)
+               (mapcat (partial parse-file true))))
