@@ -44,6 +44,9 @@
         (assoc :type type)
         (assoc :teacher teacher))))
 
-(def data (->> ["prf" "c5_synonyms" "google_search"]
-               (mapcat get-files)
-               (mapcat (partial parse-file true))))
+(def data (concat (->> ["prf" "c5_synonyms"]
+                       (mapcat get-files)
+                       (mapcat (partial parse-file true)))
+                  (->> ["google_search"]
+                       (mapcat get-files)
+                       (mapcat (partial parse-file false)))))
