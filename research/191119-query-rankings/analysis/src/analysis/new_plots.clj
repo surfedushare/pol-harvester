@@ -227,8 +227,19 @@
 
 (oz/view! summary-plot)
 
+; -- Edurep comparison
 
+(def edurep-files
+  (let [file? #(.isFile %)
+        json? #(str/ends-with? (.getName %) ".json")
+        files (-> "resources/200122/edurep_comparison"
+                  io/file
+                  file-seq)]
+    (->> files
+         (filter file?)
+         (filter json?))))
 
+; TODO: add edurep comparison
 
 (comment
   (defn copy-plot
