@@ -76,10 +76,12 @@
      :field-text-plain "Tekst"
      :field-keywords "Sleutelwoorden"}))
 
-(def data
+(defn get-data
+  [files]
   (->> files
        (map import-file)
        (mapcat tidy-data)
        (map rename-fields)))
 
-(first data)
+(def data
+  (get-data files))
