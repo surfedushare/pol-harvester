@@ -4,7 +4,8 @@
             [analysis.import-txt :refer [data]]
             [cheshire.core :as json]
             [clojure.java.io :as io]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [clojure.set :as set]))
 
 (def usable-experiment-data
   (let [copy-key (fn [m k nk]
@@ -29,7 +30,7 @@
          (map update-label))))
 
 (def experiment-plot
-  {:data {:values usable-experiment-data}
+  {:data {:values (filter (comp #{"PRF" "Controle" "ConceptNet"} :type) usable-experiment-data)}
 
    :mark "bar"
 
@@ -239,6 +240,59 @@
          (filter file?)
          (filter json?))))
 
+(def edurep-data
+  (->> edurep-files
+       (map (fn [f] [(.getName f)
+                     (-> f
+                         slurp
+                         (json/parse-string true))]))))
+
+(defn clean-edurep-data
+  [[filename {:keys [results]}]]
+  (let [type (case filename
+               "edurep_with_filters.json" "EduRep (with filters)"
+               "edurep_without_filters.json" "EduRep (without filters)")
+        clean-teacher (fn [{:keys [docent] :as m}] (-> m
+                                                       (assoc :teacher (str "docent" docent))
+                                                       (dissoc :docent)))
+        dissoc-stuff (fn [m] (dissoc m :result-count :dcg-array))
+        add-type (fn [m] (assoc m :type type))
+        rename-ks (fn [m] (set/rename-keys m {:query_string :query
+                                              :dcg-score :value}))]
+    (->> results
+         (map clean-teacher)
+         (map dissoc-stuff)
+         (map add-type)
+         (map rename-ks))))
+
+(def usable-edurep-data
+  (let [base (mapcat clean-edurep-data edurep-data)
+        google-data (filter (comp #{"Google" "Controle"} :type) usable-experiment-data)]
+    (concat base google-data)))
+
+(def different-search-engines-plot
+  {:data {:values usable-edurep-data}
+
+   :mark "bar"
+
+   :width 600
+   :height 700
+
+   :encoding {:x {:field :type
+                  :type :ordinal
+                  :sort "-y"
+                  :title "Experiment"
+                  :axis {:titleFontSize 20
+                         :labelFontSize 16}}
+              :y {:aggregate :mean
+                  :field :value
+                  :type :quantitative
+                  :title "Gemiddelde DCG"
+                  :axis {:titleFontSize 20
+                         :labelFontSize 16}}}})
+
+(oz/view! different-search-engines-plot)
+
 ; TODO: add edurep comparison
 
 (comment
@@ -247,5 +301,5 @@
     (json/generate-stream plot
       (io/writer "/Users/jelmer/Desktop/plot.json")))
 
-  (copy-plot summary-plot)
+  (copy-plot different-search-engines-plot)
   nil)
