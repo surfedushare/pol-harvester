@@ -37,9 +37,8 @@ class EdurepOAIPMH(HttpResource):
 
     # TODO: add UTC datetime validation (no millis) for (optional) "from" argument
     # TODO: do something with 200 errors
-    # TODO: how is the setSpec implemented? I'm getting errors from using it as a parameter
 
-    URI_TEMPLATE = "http://oai.edurep.kennisnet.nl:8001/edurep/oai?from={}"
+    URI_TEMPLATE = "http://oai.edurep.kennisnet.nl:8001/edurep/oai?set={}&from={}"
     PARAMETERS = {
         "verb": "ListRecords",
         "metadataPrefix": "lom"
@@ -51,6 +50,7 @@ class EdurepOAIPMH(HttpResource):
         if not resumption_token:
             return {}
         return {
+            "verb": "ListRecords",
             "resumptionToken": resumption_token.text
         }
 
