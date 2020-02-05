@@ -32,7 +32,7 @@ class Command(BaseCommand):
         current_time = now()
         for harvest in tqdm(harvest_queryset, total=harvest_queryset.count()):
             set_specification = harvest.source.collection_name
-            success, error = send(set_specification, harvest.latest_update_at, config=send_config, method="get")
+            success, error = send(set_specification, f"{harvest.latest_update_at:%Y-%m-%d}", config=send_config, method="get")
             harvest.latest_update_at = current_time
             harvest.save()
             out.info('Amount of failed OAI-PMH calls for "{}": {}'.format(set_specification, len(error)))
@@ -103,7 +103,11 @@ class Command(BaseCommand):
         seeds = []
         for harvest in tqdm(harvest_queryset, total=harvest_queryset.count()):
             set_specification = harvest.source.collection_name
-            query_seeds = get_edurep_oaipmh_seeds(set_specification, latest_update_at, include_deleted=False)
+            query_seeds = get_edurep_oaipmh_seeds(
+                set_specification,
+                latest_update_at,
+                include_deleted=False
+            )
             out.info(f'Amount of extracted results by OAI-PMH for "{set_specification}": {query_seeds}')
             seeds += query_seeds
         out.info("")
