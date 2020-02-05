@@ -75,9 +75,13 @@ class EdurepFile(HttpFileResource):
 class EdurepSource(models.Model):
 
     name = models.CharField(max_length=50)
-    query = models.CharField(max_length=255)
+    query = models.CharField(max_length=255, null=True, blank=True)
     freezes = models.ManyToManyField(Freeze, through="EdurepHarvest")
-    collection_name = models.CharField(max_length=255)
+    collection_name = models.CharField(
+        max_length=255,
+        help_text="This name will be given to the collection holding all documents for this source. "
+                  "When dealing with OAI-PMH this value will be the setSpec value"
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
