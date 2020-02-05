@@ -1,6 +1,6 @@
 from urlobject import URLObject
-from datetime import datetime
 
+from django.utils.timezone import datetime
 from django.db import models
 from datagrowth.resources import HttpResource, HttpFileResource
 

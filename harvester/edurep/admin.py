@@ -10,7 +10,7 @@ class EdurepSourceAdmin(admin.ModelAdmin):
 
 class EdurepHarvestAdminInline(admin.TabularInline):
     model = EdurepSource.freezes.through
-    fields = ("source", "completed_at", "scheduled_after", "stage",)
+    fields = ("source", "completed_at", "latest_update_at", "stage",)
     readonly_fields = ("completed_at",)
     extra = 0
 
