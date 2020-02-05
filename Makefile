@@ -13,5 +13,8 @@ export-swarm:
 import-db:
 	cat $(backup) | docker exec -i $(shell docker ps -qf label=nl.surfpol.db) psql -h localhost -U postgres pol
 
+run-bash:
+	docker exec -it $(shell docker ps -qf label=nl.surfpol.harvester | head -n1) /usr/src/app/entrypoint.sh bash
+
 start-postgres:
 	psql -h localhost -U postgres -d postgres
