@@ -15,21 +15,24 @@ class EdurepDataExtraction(object):
     def get_api_external_id(cls, soup, el):
         return el.find('srw:recordidentifier').text
 
-    def get_api_record_state(self, soup, el):
+    @classmethod
+    def get_api_record_state(cls, soup, el):
         return "active"
 
     #############################
     # OAI-PMH only
     #############################
 
-    def get_oaipmh_records(self, soup):
+    @classmethod
+    def get_oaipmh_records(cls, soup):
         return soup.find_all('record')
 
     @classmethod
     def get_oaipmh_external_id(cls, soup, el):
         return el.find('identifier').text
 
-    def get_oaipmh_record_state(self, soup, el):
+    @classmethod
+    def get_oaipmh_record_state(cls, soup, el):
         header = el.find('header')
         return header.get("status", "active")
 
