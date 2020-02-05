@@ -4,7 +4,6 @@ from tqdm import tqdm
 from collections import defaultdict
 
 from django.core.management.base import BaseCommand
-from django.utils.timezone import now
 
 from datagrowth.configuration import create_config
 from datagrowth.resources.shell.tasks import run_serie
@@ -14,7 +13,7 @@ from pol_harvester.constants import HarvestStages
 from pol_harvester.utils.language import get_kaldi_model_from_snippet
 from pol_harvester.utils.logging import log_header
 from edurep.models import EdurepHarvest
-from edurep.utils import get_edurep_query_seeds, get_edurep_basic_resources
+from edurep.utils import get_edurep_oaipmh_seeds, get_edurep_basic_resources
 
 
 out = logging.getLogger("freeze")
@@ -102,8 +101,7 @@ class Command(BaseCommand):
 
         harvest_queryset = EdurepHarvest.objects.filter(
             freeze__name=freeze_name,
-            stage=HarvestStages.BASIC,
-            scheduled_after__lt=now()
+            stage=HarvestStages.BASIC
         )
         if not harvest_queryset.exists():
             raise EdurepHarvest.DoesNotExist(
@@ -120,8 +118,8 @@ class Command(BaseCommand):
         print("Extracting data from sources ...")
         seeds = []
         for harvest in tqdm(harvest_queryset, total=harvest_queryset.count()):
-            query = harvest.source.query
-            query_seeds = get_edurep_query_seeds(query)
+            set_specification = harvest.source.collection_name
+            query_seeds = get_edurep_oaipmh_seeds(set_specification, include_deleted=False)
             seeds += query_seeds
         out.info("Files considered for processing: {}".format(len(seeds)))
 
