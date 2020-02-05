@@ -39,6 +39,8 @@ class EdurepOAIPMH(HttpResource):
     # TODO: add UTC datetime validation (no millis) for (optional) "from" argument
     # TODO: do something with 200 errors
 
+    set_specification = models.CharField(max_length=255, blank=True, null=False)
+
     URI_TEMPLATE = "http://oai.edurep.kennisnet.nl:8001/edurep/oai?set={}&from={}"
     PARAMETERS = {
         "verb": "ListRecords",
@@ -63,6 +65,11 @@ class EdurepOAIPMH(HttpResource):
         url = url.without_query().set_query_params(**self.next_parameters())
         next_request["url"] = str(url)
         return next_request
+
+    def clean(self):
+        variables = self.variables()
+        if not self.set_specification and len(variables["url"]):
+            self.set_specification = variables["url"][0]
 
     class Meta:
         verbose_name = "Edurep OAIPMH harvest"
