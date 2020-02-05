@@ -11,7 +11,7 @@ from datagrowth.configuration import create_config
 from pol_harvester.constants import HarvestStages
 from pol_harvester.utils.logging import log_header
 from edurep.models import EdurepHarvest, EdurepFile
-from edurep.utils import get_edurep_query_seeds
+from edurep.utils import get_edurep_oaipmh_seeds
 
 
 out = logging.getLogger("freeze")
@@ -26,15 +26,19 @@ class Command(BaseCommand):
 
     def fetch_edurep_data(self, harvest_queryset):
         send_config = create_config("http_resource", {
-            "resource": "edurep.EdurepSearch",
+            "resource": "edurep.EdurepOAIPMH",
             "continuation_limit": 1000,
         })
+        current_time = now()
         for harvest in tqdm(harvest_queryset, total=harvest_queryset.count()):
-            query = harvest.source.query
-            success, error = send(query, config=send_config, method="get")
-            out.info('Amount of failed Edurep API queries for "{}": {}'.format(query, len(error)))
-            out.info('Amount of successful Edurep API queries for "{}": {}'.format(query, len(success)))
+            set_specification = harvest.source.collection_name
+            success, error = send(set_specification, harvest.latest_update_at, config=send_config, method="get")
+            harvest.latest_update_at = current_time
+            harvest.save()
+            out.info('Amount of failed OAI-PMH calls for "{}": {}'.format(set_specification, len(error)))
+            out.info('Amount of successful OAI-PMH calls for "{}": {}'.format(set_specification, len(success)))
             out.info('')
+        return current_time
 
     def download_seed_files(self, seeds):
         download_config = create_config("http_resource", {
@@ -81,8 +85,7 @@ class Command(BaseCommand):
 
         harvest_queryset = EdurepHarvest.objects.filter(
             freeze__name=freeze_name,
-            stage=HarvestStages.NEW,
-            scheduled_after__lt=now()
+            stage=HarvestStages.NEW
         )
         if not harvest_queryset.exists():
             raise EdurepHarvest.DoesNotExist(
@@ -93,15 +96,15 @@ class Command(BaseCommand):
 
         # First step is to call the Edurep API and get the Edurep meta data about materials
         print("Fetching data for sources ...")
-        self.fetch_edurep_data(harvest_queryset)
+        latest_update_at = self.fetch_edurep_data(harvest_queryset)
 
         # From the Edurep API metadata we generate "seeds" that are the starting point for our own data structure
         print("Extracting data from sources ...")
         seeds = []
         for harvest in tqdm(harvest_queryset, total=harvest_queryset.count()):
-            query = harvest.source.query
-            query_seeds = get_edurep_query_seeds(query)
-            out.info('Amount of extracted results by API query for "{}": {}'.format(query, len(query_seeds)))
+            set_specification = harvest.source.collection_name
+            query_seeds = get_edurep_oaipmh_seeds(set_specification, latest_update_at, include_deleted=False)
+            out.info(f'Amount of extracted results by OAI-PMH for "{set_specification}": {query_seeds}')
             seeds += query_seeds
         out.info("")
 

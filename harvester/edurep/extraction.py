@@ -3,6 +3,40 @@ from html import unescape
 
 class EdurepDataExtraction(object):
 
+    #############################
+    # API ONLY
+    #############################
+
+    @classmethod
+    def get_api_records(cls, soup):
+        return soup.find_all('srw:record')
+
+    @classmethod
+    def get_api_external_id(cls, soup, el):
+        return el.find('srw:recordidentifier').text
+
+    def get_api_record_state(self, soup, el):
+        return "active"
+
+    #############################
+    # OAI-PMH only
+    #############################
+
+    def get_oaipmh_records(self, soup):
+        return soup.find_all('record')
+
+    @classmethod
+    def get_oaipmh_external_id(cls, soup, el):
+        return el.find('identifier').text
+
+    def get_oaipmh_record_state(self, soup, el):
+        header = el.find('header')
+        return header.get("status", "active")
+
+    #############################
+    # GENERIC
+    #############################
+
     @staticmethod
     def find_all_classification_blocks(element, classification_type, output_type):
         assert output_type in ["czp:entry", "czp:id"]
@@ -14,14 +48,6 @@ class EdurepDataExtraction(object):
                 continue
             blocks += classification_element.find_all(output_type)
         return blocks
-
-    @classmethod
-    def get_records(cls, soup):
-        return soup.find_all('srw:record')
-
-    @classmethod
-    def get_external_id(cls, soup, el):
-        return el.find('srw:recordidentifier').text
 
     @classmethod
     def get_url(cls, soup, el):
