@@ -3,7 +3,6 @@ version: '3.7'
 services:
   harvester:
     build: .
-    image: pol-harvester_harvester
     command: uwsgi --ini /usr/src/app/uwsgi.ini --py-autoreload=3 --honour-stdin
     volumes:
       - ./harvester:/usr/src/app
@@ -26,7 +25,7 @@ services:
       - ELASTIC_SEARCH_HOST=${ELASTIC_SEARCH_HOST}
 
   tasks:
-    image: pol-harvester_harvester
+    build: .
     command: celery -A pol_harvester worker --loglevel=info
     volumes:
       - ./harvester:/usr/src/app
