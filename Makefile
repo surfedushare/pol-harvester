@@ -18,3 +18,6 @@ run-bash:
 
 start-postgres:
 	psql -h localhost -U postgres -d postgres
+
+run-seeds-harvest:
+	cd harvester && python -u manage.py harvest_edurep_seeds -f delta -d | tee ../test.log

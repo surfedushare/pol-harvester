@@ -1,9 +1,11 @@
 import os
 import hashlib
+import json
 from urllib.parse import urlparse
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.utils import timezone
 
 from pol_harvester.utils.language import get_language_from_snippet
 from pol_harvester.constants import HIGHER_EDUCATION_LEVELS
@@ -20,11 +22,28 @@ class HarvesterCommand(BaseCommand):
     def warning(self, message):
         self.stderr.write(self.style.WARNING(message))
 
-    def info(self, message):
-        self.stdout.write(message)
+    def info(self, message, object=None, log=False):
+        if object is not None:
+            message += json.dumps(object, indent=4)
+        if not log:
+            self.stdout.write(message)
+        else:
+            self.stderr.write(message)
 
     def success(self, message):
         self.stdout.write(self.style.SUCCESS(message))
+
+    def header(self, header, options=None):
+        self.info("")
+        self.info("")
+        self.info(header)
+        self.info("-" * len(header))
+        if options:
+            self.info("Options: ", options)
+        self.info("Commit: {}".format(settings.GIT_COMMIT))
+        now = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.info("Time: {}".format(now))
+        self.info("")
 
 
 class OutputCommand(HarvesterCommand):
