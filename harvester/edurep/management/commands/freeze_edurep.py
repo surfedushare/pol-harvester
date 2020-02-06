@@ -5,13 +5,15 @@ from zipfile import BadZipFile
 
 from django.utils.timezone import now
 from django.core.exceptions import ValidationError
+from django.db.models import Count
 
+from datagrowth.utils import ibatch
 from pol_harvester.models import Freeze, Collection, Arrangement
 from pol_harvester.constants import HarvestStages
 from pol_harvester.management.base import OutputCommand
 from pol_harvester.utils.logging import log_header
 from edurep.models import EdurepHarvest
-from edurep.utils import get_edurep_query_seeds, get_edurep_resources
+from edurep.utils import get_edurep_oaipmh_seeds, get_edurep_resources
 from ims.models import CommonCartridge
 
 
@@ -101,6 +103,62 @@ class Command(OutputCommand):
         out.warning(f"No output at all for HttpTikaResource: {tika_resource.id}")
         return []
 
+    def handle_upsert_seeds(self, collection, seeds):
+        skipped = 0
+        dumped = 0
+        documents_count = 0
+        print(f"Upserting for {collection.name} ...")
+        for seed in tqdm(seeds):
+            file_resource, tika_resource, video_resource, kaldi_resource = \
+                get_edurep_resources(seed["url"], seed.get("title", None))
+            pipeline = {
+                "file": self._serialize_resource(file_resource),
+                "tika": self._serialize_resource(tika_resource),
+                "video": self._serialize_resource(video_resource),
+                "kaldi": self._serialize_resource(kaldi_resource)
+            }
+            has_video = tika_resource.has_video() if tika_resource is not None else False
+
+            documents = []
+            documents += self.get_documents(file_resource, tika_resource, seed, pipeline)
+            if has_video:
+                documents += self.get_documents_from_transcription(kaldi_resource, seed, pipeline)
+
+            if not len(documents):
+                skipped += 1
+                continue
+            dumped += 1
+
+            arrangement, created = Arrangement.objects.get_or_create(
+                meta__reference_id=self.get_hash_from_url(seed["url"]),
+                freeze=collection.freeze,
+                collection=collection,
+                defaults={"referee": "id"}
+            )
+            arrangement.meta.update({
+                "url": seed["url"],
+                "keywords": seed.get("keywords", [])
+            })
+            arrangement.save()
+            if len(documents):
+                arrangement.update(documents, "id", validate=False, collection=collection)
+                documents_count += len(documents)
+
+        return skipped, dumped, documents_count
+
+    def handle_deletion_seeds(self, collection, deletion_seeds):
+        print(f"Deleting for {collection.name} ...")
+        document_delete_total = 0
+        for seeds in ibatch(deletion_seeds, 32, progress_bar=True):
+            ids = [seed["id"] for seed in seeds]
+            delete_count, delete_info = collection.documents.filter(collection=collection, id__in=ids).delete()
+            document_delete_total += delete_count
+        arrangement_delete_count, arrangement_delete_info = Arrangement.objects \
+            .annotate(num_docs=Count('document_set')) \
+            .filter(collection=collection, num_docs=0) \
+            .delete()
+        return arrangement_delete_count, document_delete_total
+
     def handle(self, *args, **options):
 
         freeze_name = options["freeze"]
@@ -126,17 +184,23 @@ class Command(OutputCommand):
 
         print("Extracting data from sources ...")
         seeds_by_collection = defaultdict(list)
-        total_seeds = 0
         for harvest in tqdm(harvest_queryset, total=harvest_queryset.count()):
-            query = harvest.source.query
-            query_seeds = get_edurep_query_seeds(query)
-            total_seeds += len(query_seeds)
-            seeds_by_collection[harvest.source.collection_name] += query_seeds
-        out.info(f"Files considered for processing: {total_seeds}")
+            set_specification = harvest.source.collection_name
+            upserts = []
+            deletes = []
+            for seed in get_edurep_oaipmh_seeds(set_specification, harvest.latest_update_at):
+                if seed.get("status", "active") == "active":
+                    upserts.append(seed)
+                else:
+                    deletes.append(seed)
+            seeds_by_collection[harvest.source.collection_name] += (upserts, deletes,)
+        out.info(f"Files considered for processing, upserts:{len(upserts)} deletes:{len(deletes)}")
 
         for collection_name, seeds in seeds_by_collection.items():
+            # Unpacking seeds
+            upserts, deletes = seeds
 
-            # Get or create the collection this seed belongs to
+            # Get or create the collection these seeds belong to
             collection, created = Collection.objects.get_or_create(name=collection_name, freeze=freeze)
             collection.referee = "id"
             collection.save()
@@ -145,54 +209,17 @@ class Command(OutputCommand):
             else:
                 out.info("Adding to collection " + collection_name)
 
-            skipped = 0
-            dumped = 0
-            documents_count = 0
-            print(f"Dumping {collection.name} ...")
-            for seed in tqdm(seeds):
-                url = seed["url"]
-                if seed["mime_type"] == "application/x-Wikiwijs-Arrangement":
-                    url += "?p=imscp"
-                file_resource, tika_resource, video_resource, kaldi_resource = \
-                    get_edurep_resources(seed["url"], seed.get("title", None))
-                pipeline = {
-                    "file": self._serialize_resource(file_resource),
-                    "tika": self._serialize_resource(tika_resource),
-                    "video": self._serialize_resource(video_resource),
-                    "kaldi": self._serialize_resource(kaldi_resource)
-                }
-                has_video = tika_resource.has_video() if tika_resource is not None else False
-
-                documents = []
-                documents += self.get_documents(file_resource, tika_resource, seed, pipeline)
-                if has_video:
-                    documents += self.get_documents_from_transcription(kaldi_resource, seed, pipeline)
-
-                if not len(documents):
-                    skipped += 1
-                    continue
-                dumped += 1
-
-                arrangement = Arrangement.objects.create(
-                    freeze=freeze,
-                    collection=collection,
-                    schema={},
-                    referee="id",
-                    meta={
-                        "reference_id": self.get_hash_from_url(seed["url"]),
-                        "url": seed["url"],
-                        "keywords": seed.get("keywords", [])
-                    }
-                )
-                if len(documents):
-                    arrangement.add(documents, collection=collection)
-                    documents_count += len(documents)
+            skipped, dumped, documents_count = self.handle_upsert_seeds(collection, upserts)
+            deleted_arrangements, deleted_documents = self.handle_deletion_seeds(collection, deletes)
 
             out.info(f"Skipped URL's for {collection.name} during dump: {skipped}")
             out.info(f"Dumped Arrangements for {collection.name}: {dumped}")
             out.info(f"Dumped Documents for {collection.name}: {documents_count}")
+            out.info(f"Deleted Arrangements for {collection.name}: {deleted_arrangements}")
+            out.info(f"Deleted Documents for {collection.name}: {deleted_documents}")
 
         # Finish the freeze and harvest
         for harvest in harvest_queryset:
             harvest.stage = HarvestStages.COMPLETE
+            harvest.completed_at = now()
             harvest.save()
