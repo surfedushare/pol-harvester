@@ -67,6 +67,7 @@ class EdurepOAIPMH(HttpResource):
         return next_request
 
     def clean(self):
+        super().clean()
         variables = self.variables()
         if not self.set_specification and len(variables["url"]):
             self.set_specification = variables["url"][0]
