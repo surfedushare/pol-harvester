@@ -21,3 +21,6 @@ start-postgres:
 
 run-seeds-harvest:
 	cd harvester && python -u manage.py harvest_edurep_seeds -f delta -d | tee ../test.log
+
+backup-seeds:
+	cd harvester && python -u manage.py dump_resource edurep.EdurepOAIPMH
