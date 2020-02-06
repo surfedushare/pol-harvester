@@ -119,8 +119,8 @@ class Command(BaseCommand):
         seeds = []
         for harvest in tqdm(harvest_queryset, total=harvest_queryset.count()):
             set_specification = harvest.source.collection_name
-            query_seeds = get_edurep_oaipmh_seeds(set_specification, include_deleted=False)
-            seeds += query_seeds
+            harvest_seeds = get_edurep_oaipmh_seeds(set_specification, harvest.latest_update_at, include_deleted=False)
+            seeds += harvest_seeds
         out.info("Files considered for processing: {}".format(len(seeds)))
 
         print("Preparing video seeds ...")
