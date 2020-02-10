@@ -8,11 +8,9 @@ from edurep.utils import get_edurep_oaipmh_seeds, EDUREP_EXTRACTION_OBJECTIVE
 
 class TestGetEdurepOAIPMHSeeds(TestCase):
 
-    fixtures = ["surf-oaipmh-1970-01-01"]
+    fixtures = ["surf-oaipmh-1970-01-01", "surf-oaipmh-2020-01-01"]
 
     def extract_seed_types(self, seeds):
-        # for seed in seeds:
-        #     print(seed["url"])
         normal = next(
             (seed for seed in seeds
              if seed["state"] != "deleted" and "maken.wikiwijs.nl" not in seed["url"])
