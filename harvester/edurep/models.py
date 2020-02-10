@@ -1,6 +1,6 @@
 from urlobject import URLObject
 
-from django.utils.timezone import datetime
+from django.utils.timezone import datetime, make_aware
 from django.db import models
 from datagrowth.resources import HttpResource, HttpFileResource
 
@@ -104,7 +104,9 @@ class EdurepHarvest(models.Model):
     source = models.ForeignKey(EdurepSource)
     freeze = models.ForeignKey(Freeze)
 
-    latest_update_at = models.DateTimeField(null=True, blank=True, default=datetime(year=1970, month=1, day=1))
+    latest_update_at = models.DateTimeField(
+        null=True, blank=True, default=make_aware(datetime(year=1970, month=1, day=1))
+    )
     completed_at = models.DateTimeField(null=True, blank=True)
     stage = models.CharField(max_length=50, choices=HARVEST_STAGE_CHOICES, default=HarvestStages.NEW)
 
