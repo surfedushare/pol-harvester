@@ -50,7 +50,7 @@ class EdurepOAIPMH(HttpResource):
     def next_parameters(self):
         content_type, soup = self.content
         resumption_token = soup.find("resumptiontoken")
-        if not resumption_token:
+        if not resumption_token or not resumption_token.text:
             return {}
         return {
             "verb": "ListRecords",
