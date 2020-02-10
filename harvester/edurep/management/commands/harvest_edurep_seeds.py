@@ -1,4 +1,3 @@
-from tqdm import tqdm
 from collections import defaultdict
 
 from django.utils.timezone import now
@@ -13,6 +12,7 @@ from edurep.models import EdurepHarvest
 class Command(HarvesterCommand):
 
     def add_arguments(self, parser):
+        super().add_arguments(parser)
         parser.add_argument('-f', '--freeze', type=str, required=True)
         parser.add_argument('-d', '--dummy', action="store_true", default=False)
 
@@ -41,7 +41,7 @@ class Command(HarvesterCommand):
         current_time = now()
         successes = defaultdict(int)
         fails = defaultdict(int)
-        for harvest in tqdm(harvest_queryset, total=harvest_queryset.count()):
+        for harvest in self.progress(harvest_queryset, total=harvest_queryset.count()):
             set_specification = harvest.source.collection_name
             scc, err = send(set_specification, f"{harvest.latest_update_at:%Y-%m-%d}", config=send_config, method="get")
             successes[set_specification] += len(scc)
@@ -51,3 +51,6 @@ class Command(HarvesterCommand):
                 harvest.save()
         self.info('Failed OAI-PMH calls: ', fails)
         self.info('Successful OAI-PMH calls: ', successes)
+        success_count = sum(successes.values())
+        fail_count = sum(fails.values())
+        return f'OAI-PMH: {success_count}/{success_count+fail_count}'

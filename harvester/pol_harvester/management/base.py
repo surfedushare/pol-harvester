@@ -2,6 +2,8 @@ import os
 import hashlib
 import json
 from urllib.parse import urlparse
+from copy import copy
+from tqdm import tqdm
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -15,6 +17,15 @@ class HarvesterCommand(BaseCommand):
     """
     This class adds some syntax sugar to make output of all commands similar
     """
+
+    show_progress = True
+
+    def add_arguments(self, parser):
+        parser.add_argument('-n', '--no-progress', action="store_true")
+
+    def execute(self, *args, **options):
+        self.show_progress = not options.get("no_progress", False)
+        super().execute(*args, **options)
 
     def error(self, message):
         self.stderr.write(self.style.ERROR(message))
@@ -39,11 +50,19 @@ class HarvesterCommand(BaseCommand):
         self.info(header)
         self.info("-" * len(header))
         if options:
-            self.info("Options: ", options)
+            opts = copy(options)
+            opts.pop("stdout", None)
+            opts.pop("stderr", None)
+            self.info("Options: ", opts)
         self.info("Commit: {}".format(settings.GIT_COMMIT))
         now = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
         self.info("Time: {}".format(now))
         self.info("")
+
+    def progress(self, iterator, total=None):
+        if not self.show_progress:
+            return iterator
+        return tqdm(iterator, total=total)
 
 
 class OutputCommand(HarvesterCommand):
