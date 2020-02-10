@@ -72,7 +72,8 @@ def get_edurep_query_seeds(query):
 
 
 def get_edurep_oaipmh_seeds(set_specification, latest_update, include_deleted=True):
-    queryset = EdurepOAIPMH.objects.filter(set_specification=set_specification, created_at__gte=latest_update)
+    queryset = EdurepOAIPMH.objects\
+        .filter(set_specification=set_specification, created_at__gte=latest_update, status=200)
 
     oaipmh_objective = {
         "@": EdurepDataExtraction.get_oaipmh_records,
@@ -86,7 +87,7 @@ def get_edurep_oaipmh_seeds(set_specification, latest_update, include_deleted=Tr
     prc = ExtractProcessor(config=extract_config)
 
     results = []
-    for harvest in queryset.filter(status=200):
+    for harvest in queryset:
         try:
             results += list(prc.extract_from_resource(harvest))
         except ValueError as exc:
@@ -98,7 +99,7 @@ def get_edurep_oaipmh_seeds(set_specification, latest_update, include_deleted=Tr
             seed["package_url"] = seed["url"]
             seed["url"] += "?p=imscp"
     return results if include_deleted else \
-        [result for result in results if result.get("status", "active") == "active"]
+        [result for result in results if result.get("state", "active") == "active"]
 
 
 def get_edurep_basic_resources(url):
