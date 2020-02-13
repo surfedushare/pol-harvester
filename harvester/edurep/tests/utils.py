@@ -48,20 +48,20 @@ class TestGetEdurepOAIPMHSeeds(TestCase):
 
     def test_get_complete_set(self):
         seeds = get_edurep_oaipmh_seeds("surf", make_aware(datetime(year=1970, month=1, day=1)))
-        self.assertEqual(len(seeds), 599)
+        self.assertEqual(len(seeds), 10)
         self.check_seed_integrity(seeds)
 
     def test_get_partial_set(self):
         seeds = get_edurep_oaipmh_seeds("surf", make_aware(datetime(year=2020, month=1, day=1)))
-        self.assertEqual(len(seeds), 199)
+        self.assertEqual(len(seeds), 6)
         self.check_seed_integrity(seeds)
 
     def test_get_complete_set_without_deletes(self):
         seeds = get_edurep_oaipmh_seeds("surf", make_aware(datetime(year=1970, month=1, day=1)), include_deleted=False)
-        self.assertEqual(len(seeds), 597)
+        self.assertEqual(len(seeds), 7)
         self.check_seed_integrity(seeds, include_deleted=False)
 
     def test_get_partial_set_without_deletes(self):
         seeds = get_edurep_oaipmh_seeds("surf", make_aware(datetime(year=2020, month=1, day=1)), include_deleted=False)
-        self.assertEqual(len(seeds), 198)
+        self.assertEqual(len(seeds), 4)
         self.check_seed_integrity(seeds, include_deleted=False)
