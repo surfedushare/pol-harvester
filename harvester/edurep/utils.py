@@ -92,14 +92,18 @@ def get_edurep_oaipmh_seeds(set_specification, latest_update, include_deleted=Tr
             results += list(prc.extract_from_resource(harvest))
         except ValueError as exc:
             err.warning("Invalid XML:", exc, harvest.uri)
-    for seed in results:
+    uniques = {}
+    for seed in sorted(results, key=lambda rsl: rsl["publisher_date"] or ""):
         # We adjust url's of seeds if the source files are not at the URL
         # We should improve data extraction to always get source files
         if seed["mime_type"] == "application/x-Wikiwijs-Arrangement" and seed.get("url", None):
             seed["package_url"] = seed["url"]
             seed["url"] += "?p=imscp"
-    return results if include_deleted else \
-        [result for result in results if result.get("state", "active") == "active"]
+        # We deduplicate based on the external_id a UID by Edurep
+        uniques[seed["external_id"]] = seed
+
+    return uniques.values() if include_deleted else \
+        [result for result in uniques.values() if result.get("state", "active") == "active"]
 
 
 def get_edurep_basic_resources(url):
