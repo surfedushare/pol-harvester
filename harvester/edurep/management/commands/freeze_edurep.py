@@ -1,5 +1,3 @@
-import logging
-from tqdm import tqdm
 from collections import defaultdict
 from zipfile import BadZipFile
 
@@ -11,18 +9,15 @@ from datagrowth.utils import ibatch
 from pol_harvester.models import Freeze, Collection, Arrangement
 from pol_harvester.constants import HarvestStages
 from pol_harvester.management.base import OutputCommand
-from pol_harvester.utils.logging import log_header
 from edurep.models import EdurepHarvest
 from edurep.utils import get_edurep_oaipmh_seeds, get_edurep_resources
 from ims.models import CommonCartridge
 
 
-out = logging.getLogger("freeze")
-
-
 class Command(OutputCommand):
 
     def add_arguments(self, parser):
+        super().add_arguments(parser)
         parser.add_argument('-f', '--freeze', type=str, required=True)
 
     def get_documents_from_transcription(self, transcription_resource, metadata, pipeline):
@@ -43,7 +38,7 @@ class Command(OutputCommand):
         try:
             cc.clean()
         except (ValidationError, BadZipFile):
-            out.warning("Invalid or missing common cartridge for: {}".format(cc.id))
+            self.warning(f"Invalid or missing common cartridge for: {cc.id}")
             return []
         # Extract texts per file in the Common Cartridge
         files = set()
@@ -100,15 +95,15 @@ class Command(OutputCommand):
             if not text:
                 return []
             return [self._create_document(text, meta=metadata, pipeline=pipeline)]
-        out.warning(f"No output at all for HttpTikaResource: {tika_resource.id}")
+        self.warning(f"No output at all for HttpTikaResource: {tika_resource.id}")
         return []
 
     def handle_upsert_seeds(self, collection, seeds):
         skipped = 0
         dumped = 0
         documents_count = 0
-        print(f"Upserting for {collection.name} ...")
-        for seed in tqdm(seeds):
+        self.info(f"Upserting for {collection.name} ...")
+        for seed in self.progress(seeds):
             file_resource, tika_resource, video_resource, kaldi_resource = \
                 get_edurep_resources(seed["url"], seed.get("title", None))
             pipeline = {
@@ -147,7 +142,7 @@ class Command(OutputCommand):
         return skipped, dumped, documents_count
 
     def handle_deletion_seeds(self, collection, deletion_seeds):
-        print(f"Deleting for {collection.name} ...")
+        self.info(f"Deleting for {collection.name} ...")
         document_delete_total = 0
         for seeds in ibatch(deletion_seeds, 32, progress_bar=True):
             ids = [seed["id"] for seed in seeds]
@@ -166,9 +161,9 @@ class Command(OutputCommand):
         freeze.referee = "id"
         freeze.save()
         if created:
-            out.info("Created freeze " + freeze_name)
+            self.info("Created freeze " + freeze_name)
         else:
-            out.info("Adding to freeze " + freeze_name)
+            self.info("Adding to freeze " + freeze_name)
 
         harvest_queryset = EdurepHarvest.objects.filter(
             freeze__name=freeze_name,
@@ -180,11 +175,11 @@ class Command(OutputCommand):
                 f"There are no scheduled and VIDEO EdurepHarvest objects for '{freeze_name}'"
             )
 
-        log_header(out, "FREEZE EDUREP", options)
+        self.header("FREEZE EDUREP", options)
 
-        print("Extracting data from sources ...")
+        self.info("Extracting data from sources ...")
         seeds_by_collection = defaultdict(list)
-        for harvest in tqdm(harvest_queryset, total=harvest_queryset.count()):
+        for harvest in self.progress(harvest_queryset, total=harvest_queryset.count()):
             set_specification = harvest.source.collection_name
             upserts = []
             deletes = []
@@ -194,7 +189,7 @@ class Command(OutputCommand):
                 else:
                     deletes.append(seed)
             seeds_by_collection[harvest.source.collection_name] += (upserts, deletes,)
-        out.info(f"Files considered for processing, upserts:{len(upserts)} deletes:{len(deletes)}")
+        self.info(f"Files considered for processing, upserts:{len(upserts)} deletes:{len(deletes)}")
 
         for collection_name, seeds in seeds_by_collection.items():
             # Unpacking seeds
@@ -205,18 +200,18 @@ class Command(OutputCommand):
             collection.referee = "id"
             collection.save()
             if created:
-                out.info("Created collection " + collection_name)
+                self.info("Created collection " + collection_name)
             else:
-                out.info("Adding to collection " + collection_name)
+                self.info("Adding to collection " + collection_name)
 
             skipped, dumped, documents_count = self.handle_upsert_seeds(collection, upserts)
             deleted_arrangements, deleted_documents = self.handle_deletion_seeds(collection, deletes)
 
-            out.info(f"Skipped URL's for {collection.name} during dump: {skipped}")
-            out.info(f"Dumped Arrangements for {collection.name}: {dumped}")
-            out.info(f"Dumped Documents for {collection.name}: {documents_count}")
-            out.info(f"Deleted Arrangements for {collection.name}: {deleted_arrangements}")
-            out.info(f"Deleted Documents for {collection.name}: {deleted_documents}")
+            self.info(f"Skipped URL's for {collection.name} during dump: {skipped}")
+            self.info(f"Dumped Arrangements for {collection.name}: {dumped}")
+            self.info(f"Dumped Documents for {collection.name}: {documents_count}")
+            self.info(f"Deleted Arrangements for {collection.name}: {deleted_arrangements}")
+            self.info(f"Deleted Documents for {collection.name}: {deleted_documents}")
 
         # Finish the freeze and harvest
         for harvest in harvest_queryset:
