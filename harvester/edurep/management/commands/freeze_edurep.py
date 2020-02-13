@@ -144,7 +144,7 @@ class Command(OutputCommand):
     def handle_deletion_seeds(self, collection, deletion_seeds):
         self.info(f"Deleting for {collection.name} ...")
         document_delete_total = 0
-        for seeds in ibatch(deletion_seeds, 32, progress_bar=True):
+        for seeds in ibatch(deletion_seeds, 32, progress_bar=self.show_progress):
             ids = [seed["id"] for seed in seeds]
             delete_count, delete_info = collection.documents.filter(collection=collection, id__in=ids).delete()
             document_delete_total += delete_count
@@ -157,18 +157,11 @@ class Command(OutputCommand):
     def handle(self, *args, **options):
 
         freeze_name = options["freeze"]
-        freeze, created = Freeze.objects.get_or_create(name=freeze_name)
-        freeze.referee = "id"
-        freeze.save()
-        if created:
-            self.info("Created freeze " + freeze_name)
-        else:
-            self.info("Adding to freeze " + freeze_name)
+        freeze = Freeze.objects.get(name=freeze_name)
 
         harvest_queryset = EdurepHarvest.objects.filter(
             freeze__name=freeze_name,
-            stage=HarvestStages.VIDEO,
-            scheduled_after__lt=now()
+            stage=HarvestStages.VIDEO
         )
         if not harvest_queryset.exists():
             raise EdurepHarvest.DoesNotExist(
@@ -184,7 +177,7 @@ class Command(OutputCommand):
             upserts = []
             deletes = []
             for seed in get_edurep_oaipmh_seeds(set_specification, harvest.latest_update_at):
-                if seed.get("status", "active") == "active":
+                if seed.get("state", "active") == "active":
                     upserts.append(seed)
                 else:
                     deletes.append(seed)
