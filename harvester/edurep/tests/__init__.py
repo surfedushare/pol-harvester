@@ -1,3 +1,3 @@
-from .commands.harvest_edurep_seeds import TestSeedHarvestNoHistory
-from .commands.harvest_edurep_basic import TestBasicHarvestNoHistory
+from .commands.harvest_edurep_seeds import TestSeedHarvest
+from .commands.harvest_edurep_basic import TestBasicHarvest
 from .utils import TestGetEdurepOAIPMHSeeds

@@ -21,7 +21,7 @@ DUMMY_SEEDS = [
 ]
 
 
-class TestBasicHarvestNoHistory(TestCase):
+class TestBasicHarvest(TestCase):
 
     fixtures = ["freezes", "surf-oaipmh-1970-01-01", "edurep-files"]
 

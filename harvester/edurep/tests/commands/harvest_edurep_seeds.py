@@ -11,7 +11,7 @@ from pol_harvester.constants import HarvestStages
 from edurep.models import EdurepHarvest
 
 
-class TestSeedHarvestNoHistory(TestCase):
+class TestSeedHarvest(TestCase):
 
     fixtures = ["freezes", "surf-oaipmh-1970-01-01"]
 
