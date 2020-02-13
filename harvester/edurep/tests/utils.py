@@ -19,12 +19,12 @@ class TestGetEdurepOAIPMHSeeds(TestCase):
             (seed for seed in seeds if seed["state"] == "deleted"), None
         )
         imscp = next(
-            (seed for seed in seeds if seed["url"] and "maken.wikiwijs.nl" in seed["url"])
+            (seed for seed in seeds if seed["url"] and "maken.wikiwijs.nl" in seed["url"]), None
         )
         return {
             "normal": normal,
             "deleted": deleted,
-            "imscp": imscp
+            #"imscp": imscp
         }
 
     def check_seed_integrity(self, seeds, include_deleted=True):
