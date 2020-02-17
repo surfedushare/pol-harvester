@@ -13,7 +13,7 @@ class EdurepDataExtraction(object):
 
     @classmethod
     def get_api_external_id(cls, soup, el):
-        return el.find('srw:recordidentifier').text
+        return el.find('srw:recordidentifier').text.strip()
 
     @classmethod
     def get_api_record_state(cls, soup, el):
@@ -29,7 +29,7 @@ class EdurepDataExtraction(object):
 
     @classmethod
     def get_oaipmh_external_id(cls, soup, el):
-        return el.find('identifier').text
+        return el.find('identifier').text.strip()
 
     @classmethod
     def get_oaipmh_record_state(cls, soup, el):
@@ -55,7 +55,7 @@ class EdurepDataExtraction(object):
     @classmethod
     def get_url(cls, soup, el):
         node = el.find('czp:location')
-        return node.text if node else None
+        return node.text.strip() if node else None
 
     @classmethod
     def get_title(cls, soup, el):
@@ -63,18 +63,18 @@ class EdurepDataExtraction(object):
         if node is None:
             return
         translation = node.find('czp:langstring')
-        return unescape(translation.text) if translation else None
+        return unescape(translation.text.strip()) if translation else None
 
     @classmethod
     def get_language(cls, soup, el):
         node = el.find('czp:language')
-        return node.text if node else None
+        return node.text.strip() if node else None
 
     @classmethod
     def get_keywords(cls, soup, el):
         nodes = el.find_all('czp:keyword')
         return [
-            unescape(node.find('czp:langstring').text)
+            unescape(node.find('czp:langstring').text.strip())
             for node in nodes
         ]
 
@@ -89,12 +89,12 @@ class EdurepDataExtraction(object):
     @classmethod
     def get_mime_type(cls, soup, el):
         node = el.find('czp:format')
-        return node.text if node else None
+        return node.text.strip() if node else None
 
     @classmethod
     def get_copyright(clscls, soup, el):
         node = el.find('czp:copyrightandotherrestrictions')
-        return node.find('czp:value').find('czp:langstring').text if node else None
+        return node.find('czp:value').find('czp:langstring').text.strip() if node else None
 
     @classmethod
     def get_author(cls, soup, el):
@@ -106,7 +106,7 @@ class EdurepDataExtraction(object):
             return []
         nodes = contribution.find_all('czp:vcard')
         return [
-            unescape(node.text)
+            unescape(node.text.strip())
             for node in nodes
         ]
 
@@ -121,7 +121,7 @@ class EdurepDataExtraction(object):
         datetime = contribution.find('czp:datetime')
         if not datetime:
             return
-        return datetime.text
+        return datetime.text.strip()
 
     @classmethod
     def get_lom_educational_levels(cls, soup, el):
@@ -132,7 +132,7 @@ class EdurepDataExtraction(object):
         if not contexts:
             return []
         educational_levels = [
-            edu.find('czp:value').find('czp:langstring').text
+            edu.find('czp:value').find('czp:langstring').text.strip()
             for edu in contexts
         ]
         return list(set(educational_levels))
@@ -140,19 +140,19 @@ class EdurepDataExtraction(object):
     @classmethod
     def get_educational_levels(cls, soup, el):
         blocks = cls.find_all_classification_blocks(el, "educational level", "czp:id")
-        return list(set([block.text for block in blocks]))
+        return list(set([block.text.strip() for block in blocks]))
 
     @classmethod
     def get_humanized_educational_levels(cls, soup, el):
         blocks = cls.find_all_classification_blocks(el, "educational level", "czp:entry")
-        return list(set([block.find('czp:langstring').text for block in blocks]))
+        return list(set([block.find('czp:langstring').text.strip() for block in blocks]))
 
     @classmethod
     def get_disciplines(cls, soup, el):
         blocks = cls.find_all_classification_blocks(el, "discipline", "czp:id")
-        return list(set([block.text for block in blocks]))
+        return list(set([block.text.strip() for block in blocks]))
 
     @classmethod
     def get_humanized_disciplines(cls, soup, el):
         blocks = cls.find_all_classification_blocks(el, "discipline", "czp:entry")
-        return list(set([block.find('czp:langstring').text for block in blocks]))
+        return list(set([block.find('czp:langstring').text.strip() for block in blocks]))
