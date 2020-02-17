@@ -102,7 +102,7 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
                 count += 1
                 updated.add(source.identifier)
             Document.objects.bulk_update(
-                updates,
+                sources.values(),
                 ["properties"],
                 batch_size=datagrowth_settings.DATAGROWTH_MAX_BATCH_SIZE
             )
