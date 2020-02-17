@@ -1,13 +1,10 @@
 import os
-import logging
-from tqdm import tqdm
 from collections import defaultdict
-
-from django.core.management.base import BaseCommand
 
 from datagrowth.configuration import create_config
 from datagrowth.resources.shell.tasks import run_serie
 
+from pol_harvester.management.base import HarvesterCommand
 from pol_harvester.models import YouTubeDLResource
 from pol_harvester.constants import HarvestStages
 from pol_harvester.utils.language import get_kaldi_model_from_snippet
@@ -16,10 +13,7 @@ from edurep.models import EdurepHarvest
 from edurep.utils import get_edurep_oaipmh_seeds, get_edurep_basic_resources
 
 
-out = logging.getLogger("freeze")
-
-
-class Command(BaseCommand):
+class Command(HarvesterCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('-f', '--freeze', type=str, required=True)
@@ -32,7 +26,7 @@ class Command(BaseCommand):
 
     def filter_video_seeds(self, seeds):
         video_seeds = {}
-        for seed in tqdm(seeds):
+        for seed in self.progress(seeds):
             file_resource, tika_resource = get_edurep_basic_resources(seed["url"])
             if tika_resource is not None and tika_resource.has_video():
                 video_seeds[seed["url"]] = seed
@@ -43,7 +37,7 @@ class Command(BaseCommand):
             "resource": "pol_harvester.YouTubeDLResource"
         })
         return run_serie(  # TODO: make this parallel
-            tqdm([
+            self.progress([
                 [seed["url"]] for seed in video_seeds
             ]),
             [
@@ -82,7 +76,7 @@ class Command(BaseCommand):
                 "resource": kaldi_model
             })
             sccs, errs = run_serie(
-                tqdm([
+                self.progress([
                     [path] for path in paths
                 ]),
                 [
@@ -108,36 +102,36 @@ class Command(BaseCommand):
                 f"There are no scheduled and BASIC EdurepHarvest objects for '{freeze_name}'"
             )
 
-        log_header(out, "HARVEST EDUREP VIDEO", options)
+        self.header("HARVEST EDUREP VIDEO", options)
 
         if is_dummy:
-            out.info("Skipping command because dummy mode was specified")
+            self.info("Skipping command because dummy mode was specified")
             self.finish(harvest_queryset)
             return
 
-        print("Extracting data from sources ...")
+        self.info("Extracting data from sources ...")
         seeds = []
-        for harvest in tqdm(harvest_queryset, total=harvest_queryset.count()):
+        for harvest in self.progress(harvest_queryset, total=harvest_queryset.count()):
             set_specification = harvest.source.collection_name
             harvest_seeds = get_edurep_oaipmh_seeds(set_specification, harvest.latest_update_at, include_deleted=False)
             seeds += harvest_seeds
-        out.info("Files considered for processing: {}".format(len(seeds)))
+        self.info("Files considered for processing: {}".format(len(seeds)))
 
-        print("Preparing video seeds ...")
+        self.info("Preparing video seeds ...")
         video_seeds = self.filter_video_seeds(seeds)
-        out.info("Total videos: {}".format(len(video_seeds)))
+        self.info("Total videos: {}".format(len(video_seeds)))
 
-        print("Downloading videos ...")
+        self.info("Downloading videos ...")
         download_scc, download_err = self.download_seed_videos(video_seeds.values())
-        out.info("Errors while downloading audio from videos: {}".format(len(download_err)))
-        out.info("Audio downloaded successfully: {}".format(len(download_scc)))
+        self.info("Errors while downloading audio from videos: {}".format(len(download_err)))
+        self.info("Audio downloaded successfully: {}".format(len(download_scc)))
 
-        print("Transcribing videos ...")
+        self.info("Transcribing videos ...")
         no_paths_count, invalid_paths_count, no_language_count, success_count, error_count = \
             self.transcribe_video_resources(download_scc, video_seeds)
-        out.info("Skipped video content due to missing audio file: {}".format(no_paths_count + invalid_paths_count))
-        out.info("Skipped video content due to unknown language: {}".format(no_language_count))
-        out.info("Errors while transcribing videos: {}".format(error_count))
-        out.info("Videos transcribed successfully: {}".format(success_count))
+        self.info("Skipped video content due to missing audio file: {}".format(no_paths_count + invalid_paths_count))
+        self.info("Skipped video content due to unknown language: {}".format(no_language_count))
+        self.info("Errors while transcribing videos: {}".format(error_count))
+        self.info("Videos transcribed successfully: {}".format(success_count))
 
         self.finish(harvest_queryset)
