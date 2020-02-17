@@ -96,7 +96,7 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
             # if multiple objects with an identifier of "by" exist.
             updated = set()
             hashed = {update[by]: update for update in updates}
-            sources = {source[by]: source for source in collection.documents.filter(identifier__in=hashed.keys())}
+            sources = {source[by]: source for source in collection.documents.filter(identity__in=hashed.keys())}
             for source in sources:
                 source.update(hashed[source.identifier], validate=validate)
                 count += 1
@@ -107,7 +107,7 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
                 batch_size=datagrowth_settings.DATAGROWTH_MAX_BATCH_SIZE
             )
             # After all updates we add all data that hasn't been used in any update operation
-            additions = [update for identifier, update in hashed.items() if identifier not in updated]
+            additions = [update for identify, update in hashed.items() if identify not in updated]
             if len(additions):
                 count += self.add(additions, validate=validate, batch_size=batch_size, collection=collection)
 
