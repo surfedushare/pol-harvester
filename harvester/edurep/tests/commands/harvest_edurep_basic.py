@@ -23,7 +23,7 @@ DUMMY_SEEDS = [
 
 class TestBasicHarvest(TestCase):
 
-    fixtures = ["freezes", "surf-oaipmh-1970-01-01", "edurep-files"]
+    fixtures = ["freezes-new", "surf-oaipmh-1970-01-01", "resources"]
 
     def get_command_instance(self):
         command = BasicHarvestCommand()

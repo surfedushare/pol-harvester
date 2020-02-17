@@ -38,7 +38,7 @@ class Command(OutputCommand):
         try:
             cc.clean()
         except (ValidationError, BadZipFile):
-            self.warning(f"Invalid or missing common cartridge for: {cc.id}")
+            self.warning(f"Invalid or missing common cartridge for file resource: {file_resource.id}")
             return []
         # Extract texts per file in the Common Cartridge
         files = set()

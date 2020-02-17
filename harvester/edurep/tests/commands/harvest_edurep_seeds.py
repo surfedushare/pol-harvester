@@ -13,7 +13,7 @@ from edurep.models import EdurepHarvest
 
 class TestSeedHarvest(TestCase):
 
-    fixtures = ["freezes", "surf-oaipmh-1970-01-01"]
+    fixtures = ["freezes-new", "surf-oaipmh-1970-01-01"]
 
     def test_edurep_surf(self):
         # Checking whether end result of the command returned by "handle" matches expectations.

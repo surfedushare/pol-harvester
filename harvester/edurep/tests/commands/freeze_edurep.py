@@ -6,10 +6,11 @@ from django.test import TestCase
 from django.core.management import call_command
 from django.utils.timezone import make_aware
 
-from pol_harvester.models import Collection
+from pol_harvester.models import Freeze, Collection
 from pol_harvester.constants import HarvestStages
 from edurep.models import EdurepHarvest
-from edurep.management.commands.harvest_edurep_basic import Command as BasicHarvestCommand
+from edurep.management.commands.freeze_edurep import Command as FreezeCommand
+from edurep.utils import get_edurep_oaipmh_seeds
 
 
 GET_EDUREP_OAIPMH_SEEDS_TARGET = "edurep.management.commands.freeze_edurep.get_edurep_oaipmh_seeds"
@@ -25,7 +26,7 @@ DUMMY_SEEDS = [
 
 class TestFreezeNoHistory(TestCase):
 
-    fixtures = ["freezes", "surf-oaipmh-1970-01-01", "edurep-files"]
+    fixtures = ["freezes-new", "surf-oaipmh-1970-01-01", "resources"]
 
     def setUp(self):
         # Setting the stage of the "surf" set harvests to VIDEO.
@@ -33,7 +34,7 @@ class TestFreezeNoHistory(TestCase):
         EdurepHarvest.objects.filter(source__collection_name="surf").update(stage=HarvestStages.VIDEO)
 
     def get_command_instance(self):
-        command = BasicHarvestCommand()
+        command = FreezeCommand()
         command.show_progress = False
         command.info = lambda x: x
         return command
@@ -93,78 +94,31 @@ class TestFreezeNoHistory(TestCase):
         except EdurepHarvest.DoesNotExist:
             pass
 
-    # def test_download_seed_files(self):
-    #     # Asserting Datagrowth usage for downloading files.
-    #     # This handles many edge cases for us.
-    #     command = self.get_command_instance()
-    #     with patch("edurep.management.commands.harvest_edurep_basic.send_serie", return_value=[[12024, 12025], []]) as send_serie_mock:
-    #         command.download_seed_files(DUMMY_SEEDS)
-    #     self.assertEqual(send_serie_mock.call_count, 1, "More than 1 call to send_serie?")
-    #     args, kwargs = send_serie_mock.call_args
-    #     config = kwargs["config"]
-    #     self.assertEqual(config.resource, "edurep.EdurepFile", "Wrong resource used for downloading files")
-    #     self.assertEqual(
-    #         args,
-    #         (
-    #             [
-    #                 ['https://www.vn.nl/speciaalmelk-rechtstreeks-koe/'],
-    #                 ['http://www.samhao.nl/webopac/MetaDataEditDownload.csp?file=2:145797:1']
-    #             ],
-    #             [{}, {}],
-    #         ),
-    #         "Wrong arguments given to send_serie processing multiple edurep.EdurepFile")
-    #     self.assertEqual(kwargs["method"], "get", "edurep.EdurepFile is not using HTTP GET method")
+    def test_handle_upsert_seeds(self):
+        freeze = Freeze.objects.last()
+        collection = Collection.objects.create(name="surf", freeze=freeze)
+        command = self.get_command_instance()
+        upserts = [
+            seed
+            for seed in get_edurep_oaipmh_seeds("surf", make_aware(datetime(year=1970, month=1, day=1)))
+            if seed.get("state", "active") == "active"
+        ]
+        command.handle_upsert_seeds(collection, upserts)
+        self.assertEqual(collection.document_set.count(), 6)
+        self.assertEqual(collection.arrangement_set.count(), 6)
 
-    # def test_extract_from_seed_files(self):
-    #     # Asserting Datagrowth usage for extracting content from files with Tika.
-    #     # This handles many edge cases for us.
-    #     command = self.get_command_instance()
-    #     with patch(SEND_SERIE_TARGET, return_value=[[1, 2], []]) as send_serie_mock:
-    #         command.extract_from_seed_files(DUMMY_SEEDS, [12024, 12025], [])
-    #     self.assertEqual(send_serie_mock.call_count, 1, "More than 1 call to send_serie?")
-    #     args, kwargs = send_serie_mock.call_args
-    #     config = kwargs["config"]
-    #     self.assertEqual(config.resource, "pol_harvester.HttpTikaResource",
-    #                      "Wrong resource used for extracting content")
-    #     self.assertEqual(
-    #         args,
-    #         (
-    #             [[], []],
-    #             [
-    #                 {
-    #                     "file": "edurep/downloads/7/c7/20191209102536078995.index.html"
-    #                 },
-    #                 {
-    #                     "file": "edurep/downloads/f/03/20191209102536508370.MetaDataEditDownload.csp"
-    #                 }
-    #             ],
-    #         ),
-    #         "Wrong arguments given to send_serie processing multiple pol_harvester.HttpTikaResource"
-    #     )
-    #     self.assertEqual(kwargs["method"], "post", "pol_harvester.HttpTikaResource is not using HTTP POST method")
-    #
-    #     # Now calling the same method, but specify a list of contenttypes to exclude
-    #     send_serie_mock.reset_mock()
-    #     with patch(SEND_SERIE_TARGET, return_value=[[1, 2], []]) as send_serie_mock:
-    #         command.extract_from_seed_files(DUMMY_SEEDS, [12024, 12025], ["application/pdf"])
-    #     self.assertEqual(send_serie_mock.call_count, 1, "More than 1 call to send_serie?")
-    #     args, kwargs = send_serie_mock.call_args
-    #     config = kwargs["config"]
-    #     self.assertEqual(config.resource, "pol_harvester.HttpTikaResource",
-    #                      "Wrong resource used for extracting content")
-    #     self.assertEqual(
-    #         args,
-    #         (
-    #             [[]],
-    #             [
-    #                 {
-    #                     "file": "edurep/downloads/7/c7/20191209102536078995.index.html"
-    #                 }
-    #             ],
-    #         ),
-    #         "Wrong arguments given to send_serie processing multiple pol_harvester.HttpTikaResource"
-    #     )
-    #     self.assertEqual(kwargs["method"], "post", "pol_harvester.HttpTikaResource is not using HTTP POST method")
+    def test_handle_deletion_seeds(self):
+        freeze = Freeze.objects.last()
+        collection = Collection.objects.create(name="surf", freeze=freeze)
+        command = self.get_command_instance()
+        upserts = [
+            seed
+            for seed in get_edurep_oaipmh_seeds("surf", make_aware(datetime(year=1970, month=1, day=1)))
+            if seed.get("state", "active") == "active"
+        ]
+        skipped, dumped, documents_count = command.handle_upsert_seeds(collection, upserts)
+        self.assertEqual(collection.document_set.count(), documents_count)
+        self.assertEqual(collection.arrangement_set.count(), dumped)
 
 
 class TestFreezeWithHistory(TestCase):
