@@ -103,6 +103,52 @@ class TestFreezeNoHistory(TestCase):
             for seed in get_edurep_oaipmh_seeds("surf", make_aware(datetime(year=1970, month=1, day=1)))
             if seed.get("state", "active") == "active"
         ]
+        skipped, dumped, documents_count = command.handle_upsert_seeds(collection, upserts)
+        # When dealing with an entirely new Freeze
+        # Then the arrangement count and document count should equal output of handle_upsert_seeds
+        self.assertEqual(collection.arrangement_set.count(), dumped)
+        self.assertEqual(collection.document_set.count(), documents_count)
+
+
+    def test_handle_deletion_seeds(self):
+        freeze = Freeze.objects.last()
+        collection = Collection.objects.create(name="surf", freeze=freeze)
+        command = self.get_command_instance()
+        deletes = [
+            seed
+            for seed in get_edurep_oaipmh_seeds("surf", make_aware(datetime(year=1970, month=1, day=1)))
+            if seed.get("state", "active") != "active"
+        ]
+        # Basically we're testing that deletion seeds are not triggering errors when their targets do not exist.
+        command.handle_deletion_seeds(collection, deletes)
+        self.assertEqual(collection.document_set.count(), 0)
+        self.assertEqual(collection.arrangement_set.count(), 0)
+
+
+class TestFreezeWithHistory(TestCase):
+
+    fixtures = ["freezes-history", "surf-oaipmh-2020-01-01", "resources"]
+
+    def setUp(self):
+        # Setting the stage of the "surf" set harvests to VIDEO.
+        # The only valid stage for "freeze_edurep" to act on.
+        EdurepHarvest.objects.filter(source__collection_name="surf").update(stage=HarvestStages.VIDEO)
+
+    def get_command_instance(self):
+        command = FreezeCommand()
+        command.show_progress = False
+        command.info = lambda x: x
+        return command
+
+    def test_handle_upsert_seeds(self):
+        freeze = Freeze.objects.last()
+        collection = Collection.objects.create(name="surf", freeze=freeze)
+        command = self.get_command_instance()
+        upserts = [
+            seed
+            for seed in get_edurep_oaipmh_seeds("surf", make_aware(datetime(year=2019, month=12, day=31)))
+            if seed.get("state", "active") == "active"
+        ]
         command.handle_upsert_seeds(collection, upserts)
         self.assertEqual(collection.document_set.count(), 6)
         self.assertEqual(collection.arrangement_set.count(), 6)
@@ -111,15 +157,13 @@ class TestFreezeNoHistory(TestCase):
         freeze = Freeze.objects.last()
         collection = Collection.objects.create(name="surf", freeze=freeze)
         command = self.get_command_instance()
-        upserts = [
+        arrangement_count = collection.arrangement_set.count()
+        document_count = collection.document_set.count()
+        deletes = [
             seed
-            for seed in get_edurep_oaipmh_seeds("surf", make_aware(datetime(year=1970, month=1, day=1)))
-            if seed.get("state", "active") == "active"
+            for seed in get_edurep_oaipmh_seeds("surf", make_aware(datetime(year=2019, month=12, day=31)))
+            if seed.get("state", "active") != "active"
         ]
-        skipped, dumped, documents_count = command.handle_upsert_seeds(collection, upserts)
-        self.assertEqual(collection.document_set.count(), documents_count)
-        self.assertEqual(collection.arrangement_set.count(), dumped)
-
-
-class TestFreezeWithHistory(TestCase):
-    pass
+        arrangement_deletes, document_deletes = command.handle_deletion_seeds(collection, deletes)
+        self.assertEqual(collection.arrangement_set.count(), arrangement_count - arrangement_deletes)
+        self.assertEqual(collection.document_set.count(), document_count - document_deletes)
