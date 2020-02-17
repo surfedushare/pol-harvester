@@ -2,14 +2,15 @@ import os
 from collections import defaultdict
 from sklearn.feature_extraction.text import TfidfVectorizer
 import joblib
+from collections import Iterator
 
-from django.conf import settings
 from django.db import models
 from django.contrib.postgres import fields as postgres_fields
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 
 from datagrowth import settings as datagrowth_settings
+from datagrowth.utils import ibatch
 from datagrowth.datatypes import DocumentBase, DocumentPostgres, CollectionBase, DocumentCollectionMixin
 
 
@@ -58,7 +59,7 @@ class Freeze(DocumentCollectionMixin, CollectionBase):
 
 class Collection(DocumentCollectionMixin, CollectionBase):
 
-    freeze = models.ForeignKey("Freeze", blank=True, null=True)
+    freeze = models.ForeignKey("Freeze", blank=True, null=True, on_delete=models.CASCADE)
 
     def init_document(self, data, collection=None):
         doc = super().init_document(data, collection=collection)
@@ -71,8 +72,8 @@ class Collection(DocumentCollectionMixin, CollectionBase):
 
 class Arrangement(DocumentCollectionMixin, CollectionBase):
 
-    freeze = models.ForeignKey("Freeze", blank=True, null=True)
-    collection = models.ForeignKey("Collection", blank=True, null=True)
+    freeze = models.ForeignKey("Freeze", blank=True, null=True, on_delete=models.CASCADE)
+    collection = models.ForeignKey("Collection", blank=True, null=True, on_delete=models.CASCADE)
     meta = postgres_fields.JSONField(default=dict)
 
     def init_document(self, data, collection=collection):
@@ -81,12 +82,43 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
         doc.arrangement = self
         return doc
 
+    def update(self, data, by, validate=True, batch_size=32, collection=None):
+        collection = collection or self
+        Document = collection.get_document_model()
+        assert isinstance(data, (Iterator, list, tuple, dict, Document)), \
+            f"Collection.update expects data to be formatted as iteratable, dict or {type(Document)} not {type(data)}"
+
+        count = 0
+        for updates in ibatch(data, batch_size=batch_size):
+            # First we bulk update by getting all objects whose identifier value match any update's "by" value
+            # and then updating these source objects.
+            # One update object can potentially target multiple sources
+            # if multiple objects with an identifier of "by" exist.
+            updated = set()
+            hashed = {update[by]: update for update in updates}
+            sources = {source[by]: source for source in collection.documents.filter(identity__in=hashed.keys())}
+            for source in sources:
+                source.update(hashed[source.identifier], validate=validate)
+                count += 1
+                updated.add(source.identifier)
+            Document.objects.bulk_update(
+                sources.values(),
+                ["properties"],
+                batch_size=datagrowth_settings.DATAGROWTH_MAX_BATCH_SIZE
+            )
+            # After all updates we add all data that hasn't been used in any update operation
+            additions = [update for identify, update in hashed.items() if identify not in updated]
+            if len(additions):
+                count += self.add(additions, validate=validate, batch_size=batch_size, collection=collection)
+
+        return count
+
 
 class Document(DocumentPostgres, DocumentBase):
 
-    freeze = models.ForeignKey("Freeze", blank=True, null=True)
+    freeze = models.ForeignKey("Freeze", blank=True, null=True, on_delete=models.CASCADE)
     # NB: Collection foreign key is added by the base class
-    arrangement = models.ForeignKey("Arrangement", blank=True, null=True)
+    arrangement = models.ForeignKey("Arrangement", blank=True, null=True, on_delete=models.CASCADE)
 
     def get_language(self):
         for field in ['from_text', 'from_title', 'metadata']:

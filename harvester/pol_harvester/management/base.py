@@ -1,19 +1,71 @@
-import logging
 import os
 import hashlib
+import json
 from urllib.parse import urlparse
+from copy import copy
+from tqdm import tqdm
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.utils import timezone
 
 from pol_harvester.utils.language import get_language_from_snippet
 from pol_harvester.constants import HIGHER_EDUCATION_LEVELS
 
 
-log = logging.getLogger(__name__)
+class HarvesterCommand(BaseCommand):
+    """
+    This class adds some syntax sugar to make output of all commands similar
+    """
+
+    show_progress = True
+
+    def add_arguments(self, parser):
+        parser.add_argument('-n', '--no-progress', action="store_true")
+
+    def execute(self, *args, **options):
+        self.show_progress = not options.get("no_progress", False)
+        super().execute(*args, **options)
+
+    def error(self, message):
+        self.stderr.write(self.style.ERROR(message))
+
+    def warning(self, message):
+        self.stderr.write(self.style.WARNING(message))
+
+    def info(self, message, object=None, log=False):
+        if object is not None:
+            message += json.dumps(object, indent=4)
+        if not log:
+            self.stdout.write(message)
+        else:
+            self.stderr.write(message)
+
+    def success(self, message):
+        self.stdout.write(self.style.SUCCESS(message))
+
+    def header(self, header, options=None):
+        self.info("")
+        self.info("")
+        self.info(header)
+        self.info("-" * len(header))
+        if options:
+            opts = copy(options)
+            opts.pop("stdout", None)
+            opts.pop("stderr", None)
+            self.info("Options: ", opts)
+        self.info("Commit: {}".format(settings.GIT_COMMIT))
+        now = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.info("Time: {}".format(now))
+        self.info("")
+
+    def progress(self, iterator, total=None):
+        if not self.show_progress:
+            return iterator
+        return tqdm(iterator, total=total)
 
 
-class OutputCommand(BaseCommand):
+class OutputCommand(HarvesterCommand):
 
     @staticmethod
     def _serialize_resource(resource=None):
@@ -34,8 +86,7 @@ class OutputCommand(BaseCommand):
         hasher.update(payload.encode("utf-8"))
         return hasher.hexdigest()
 
-    @staticmethod
-    def get_file_type(mime_type=None, url=None):
+    def get_file_type(self, mime_type=None, url=None):
         file_type = None
         if mime_type:
             file_type = settings.MIME_TYPE_TO_FILE_TYPE.get(mime_type, None)
@@ -43,7 +94,7 @@ class OutputCommand(BaseCommand):
             url = urlparse(url)
             file, extension = os.path.splitext(url.path)
             if extension and extension.lower() not in settings.EXTENSION_TO_FILE_TYPE:
-                log.warning("Unknown extension: {}".format(extension))
+                self.warning("Unknown extension: {}".format(extension))
             file_type = settings.EXTENSION_TO_FILE_TYPE.get(extension.lower(), "unknown")
         return file_type
 

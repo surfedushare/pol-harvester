@@ -1,3 +1,6 @@
+from urlobject import URLObject
+
+from django.utils.timezone import datetime, make_aware
 from django.db import models
 from datagrowth.resources import HttpResource, HttpFileResource
 
@@ -31,6 +34,49 @@ class EdurepSearch(HttpResource):
         verbose_name_plural = "Edurep searches"
 
 
+class EdurepOAIPMH(HttpResource):
+
+    # TODO: add UTC datetime validation (no millis) for (optional) "from" argument
+    # TODO: do something with 200 errors
+
+    set_specification = models.CharField(max_length=255, blank=True, null=False)
+
+    URI_TEMPLATE = "http://oai.edurep.kennisnet.nl:8001/edurep/oai?set={}&from={}"
+    PARAMETERS = {
+        "verb": "ListRecords",
+        "metadataPrefix": "lom"
+    }
+
+    def next_parameters(self):
+        content_type, soup = self.content
+        resumption_token = soup.find("resumptiontoken")
+        if not resumption_token or not resumption_token.text:
+            return {}
+        return {
+            "verb": "ListRecords",
+            "resumptionToken": resumption_token.text
+        }
+
+    def create_next_request(self):
+        next_request = super().create_next_request()
+        if not next_request:
+            return
+        url = URLObject(next_request.get("url"))
+        url = url.without_query().set_query_params(**self.next_parameters())
+        next_request["url"] = str(url)
+        return next_request
+
+    def clean(self):
+        super().clean()
+        variables = self.variables()
+        if not self.set_specification and len(variables["url"]):
+            self.set_specification = variables["url"][0]
+
+    class Meta:
+        verbose_name = "Edurep OAIPMH harvest"
+        verbose_name_plural = "Edurep OAIPMH harvests"
+
+
 class EdurepFile(HttpFileResource):
     pass
 
@@ -38,9 +84,13 @@ class EdurepFile(HttpFileResource):
 class EdurepSource(models.Model):
 
     name = models.CharField(max_length=50)
-    query = models.CharField(max_length=255)
+    query = models.CharField(max_length=255, null=True, blank=True)
     freezes = models.ManyToManyField(Freeze, through="EdurepHarvest")
-    collection_name = models.CharField(max_length=255)
+    collection_name = models.CharField(
+        max_length=255,
+        help_text="This name will be given to the collection holding all documents for this source. "
+                  "When dealing with OAI-PMH this value will be the setSpec value"
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -51,10 +101,12 @@ class EdurepSource(models.Model):
 
 class EdurepHarvest(models.Model):
 
-    source = models.ForeignKey(EdurepSource)
-    freeze = models.ForeignKey(Freeze)
+    source = models.ForeignKey(EdurepSource, on_delete=models.CASCADE)
+    freeze = models.ForeignKey(Freeze, on_delete=models.CASCADE)
 
-    scheduled_after = models.DateTimeField(null=True, blank=True)
+    latest_update_at = models.DateTimeField(
+        null=True, blank=True, default=make_aware(datetime(year=1970, month=1, day=1))
+    )
     completed_at = models.DateTimeField(null=True, blank=True)
     stage = models.CharField(max_length=50, choices=HARVEST_STAGE_CHOICES, default=HarvestStages.NEW)
 
