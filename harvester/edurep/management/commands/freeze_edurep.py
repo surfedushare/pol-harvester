@@ -145,8 +145,10 @@ class Command(OutputCommand):
         self.info(f"Deleting for {collection.name} ...")
         document_delete_total = 0
         for seeds in ibatch(deletion_seeds, 32, progress_bar=self.show_progress):
-            ids = [seed["id"] for seed in seeds]
-            delete_count, delete_info = collection.documents.filter(collection=collection, id__in=ids).delete()
+            ids = [seed["external_id"] for seed in seeds]
+            delete_count, delete_info = collection.documents \
+                .filter(collection=collection, properties__exernal_id__in=ids) \
+                .delete()
             document_delete_total += delete_count
         arrangement_delete_count, arrangement_delete_info = Arrangement.objects \
             .annotate(num_docs=Count('document_set')) \
