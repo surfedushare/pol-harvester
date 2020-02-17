@@ -106,6 +106,7 @@ class TestFreezeNoHistory(TestCase):
         skipped, dumped, documents_count = command.handle_upsert_seeds(collection, upserts)
         # When dealing with an entirely new Freeze
         # Then the arrangement count and document count should equal output of handle_upsert_seeds
+        # TODO: serious problem with video, because doc ids will not differ inside arrangement
         self.assertEqual(collection.arrangement_set.count(), dumped)
         self.assertEqual(collection.document_set.count(), documents_count)
 
@@ -142,7 +143,7 @@ class TestFreezeWithHistory(TestCase):
 
     def test_handle_upsert_seeds(self):
         freeze = Freeze.objects.last()
-        collection = Collection.objects.create(name="surf", freeze=freeze)
+        collection = Collection.objects.get(name="surf", freeze=freeze)
         command = self.get_command_instance()
         upserts = [
             seed

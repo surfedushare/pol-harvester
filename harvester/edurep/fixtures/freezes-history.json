@@ -69,6 +69,143 @@
     }
 },
 {
+    "model": "pol_harvester.arrangement",
+    "pk": 73737,
+    "fields": {
+        "schema": "\"{}\"",
+        "created_at": "2020-02-17T12:24:52.137Z",
+        "modified_at": "2020-02-17T12:24:52.143Z",
+        "name": null,
+        "identifier": null,
+        "referee": "id",
+        "freeze": 19,
+        "collection": 171,
+        "meta": {
+            "url": "http://online.codarts.nl/mod/page/view.php?id=313",
+            "keywords": [
+                "Instructie",
+                "Praktische muzieknotatie en audiobewerking"
+            ]
+        }
+    }
+},
+{
+    "model": "pol_harvester.arrangement",
+    "pk": 73738,
+    "fields": {
+        "schema": "\"{}\"",
+        "created_at": "2020-02-17T12:24:52.167Z",
+        "modified_at": "2020-02-17T12:24:52.171Z",
+        "name": null,
+        "identifier": null,
+        "referee": "id",
+        "freeze": 19,
+        "collection": 171,
+        "meta": {
+            "url": "https://github.com/ericpostma/ep/blob/master/chris/Week%203%20-%20Tuning%20and%20Testing/Practical%203.ipynb",
+            "keywords": [
+                "Exercise",
+                "WEKA",
+                "MOOC"
+            ]
+        }
+    }
+},
+{
+    "model": "pol_harvester.arrangement",
+    "pk": 73739,
+    "fields": {
+        "schema": "\"{}\"",
+        "created_at": "2020-02-17T12:24:52.192Z",
+        "modified_at": "2020-02-17T12:24:52.208Z",
+        "name": null,
+        "identifier": null,
+        "referee": "id",
+        "freeze": 19,
+        "collection": 171,
+        "meta": {
+            "url": "https://surfsharekit.nl/dl/surf/5af0e26f-c4d2-4ddd-94ab-7dd0bd531751/182216be-31a2-43c3-b7de-e5dd355b09f7",
+            "keywords": [
+                "Exercise"
+            ]
+        }
+    }
+},
+{
+    "model": "pol_harvester.arrangement",
+    "pk": 73740,
+    "fields": {
+        "schema": "\"{}\"",
+        "created_at": "2020-02-17T12:24:52.241Z",
+        "modified_at": "2020-02-17T12:24:52.246Z",
+        "name": null,
+        "identifier": null,
+        "referee": "id",
+        "freeze": 19,
+        "collection": 171,
+        "meta": {
+            "url": "https://www.youtube.com/watch?v=Zl59P5ZNX3M",
+            "keywords": [
+                "Video",
+                "Practicum clip",
+                "Instructie clip"
+            ]
+        }
+    }
+},
+{
+    "model": "pol_harvester.arrangement",
+    "pk": 73741,
+    "fields": {
+        "schema": "\"{}\"",
+        "created_at": "2020-02-17T12:24:52.340Z",
+        "modified_at": "2020-02-17T12:24:52.345Z",
+        "name": null,
+        "identifier": null,
+        "referee": "id",
+        "freeze": 19,
+        "collection": 171,
+        "meta": {
+            "url": "https://surfsharekit.nl/dl/surf/63903863-6c93-4bda-b850-277f3c9ec00e/88c687c8-fbc4-4d69-a27d-45d9f30d642b",
+            "keywords": [
+                "correspondentie",
+                "didactiek",
+                "eigenschappen",
+                "macro",
+                "macro-meso-micro",
+                "meso",
+                "micro",
+                "scheikunde",
+                "structuur"
+            ]
+        }
+    }
+},
+{
+    "model": "pol_harvester.arrangement",
+    "pk": 73742,
+    "fields": {
+        "schema": "\"{}\"",
+        "created_at": "2020-02-17T12:24:52.400Z",
+        "modified_at": "2020-02-17T12:24:52.416Z",
+        "name": null,
+        "identifier": null,
+        "referee": "id",
+        "freeze": 19,
+        "collection": 171,
+        "meta": {
+            "url": "https://surfsharekit.nl/dl/surf/b500d389-2fda-4696-ae51-9cd0603a48af/48fac5c4-c846-48b3-9318-6b01e151a508",
+            "keywords": [
+                "economics",
+                "macro economics",
+                "micro economics",
+                "economic structure",
+                "labour market"
+            ]
+        }
+    }
+},
+{
     "model": "pol_harvester.document",
     "pk": 197509,
     "fields": {
