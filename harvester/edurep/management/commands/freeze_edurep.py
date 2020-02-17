@@ -151,7 +151,7 @@ class Command(OutputCommand):
                 .delete()
             document_delete_total += delete_count
         arrangement_delete_count, arrangement_delete_info = Arrangement.objects \
-            .annotate(num_docs=Count('document_set')) \
+            .annotate(num_docs=Count('document')) \
             .filter(collection=collection, num_docs=0) \
             .delete()
         return arrangement_delete_count, document_delete_total
