@@ -59,7 +59,7 @@ class Freeze(DocumentCollectionMixin, CollectionBase):
 
 class Collection(DocumentCollectionMixin, CollectionBase):
 
-    freeze = models.ForeignKey("Freeze", blank=True, null=True)
+    freeze = models.ForeignKey("Freeze", blank=True, null=True, on_delete=models.CASCADE)
 
     def init_document(self, data, collection=None):
         doc = super().init_document(data, collection=collection)
@@ -72,8 +72,8 @@ class Collection(DocumentCollectionMixin, CollectionBase):
 
 class Arrangement(DocumentCollectionMixin, CollectionBase):
 
-    freeze = models.ForeignKey("Freeze", blank=True, null=True)
-    collection = models.ForeignKey("Collection", blank=True, null=True)
+    freeze = models.ForeignKey("Freeze", blank=True, null=True, on_delete=models.CASCADE)
+    collection = models.ForeignKey("Collection", blank=True, null=True, on_delete=models.CASCADE)
     meta = postgres_fields.JSONField(default=dict)
 
     def init_document(self, data, collection=collection):
@@ -116,9 +116,9 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
 
 class Document(DocumentPostgres, DocumentBase):
 
-    freeze = models.ForeignKey("Freeze", blank=True, null=True)
+    freeze = models.ForeignKey("Freeze", blank=True, null=True, on_delete=models.CASCADE)
     # NB: Collection foreign key is added by the base class
-    arrangement = models.ForeignKey("Arrangement", blank=True, null=True)
+    arrangement = models.ForeignKey("Arrangement", blank=True, null=True, on_delete=models.CASCADE)
 
     def get_language(self):
         for field in ['from_text', 'from_title', 'metadata']:

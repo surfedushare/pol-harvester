@@ -11,11 +11,11 @@ from pol_harvester.models import Freeze
 
 class QueryRanking(models.Model):
 
-    query = models.ForeignKey("search.Query")
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    query = models.ForeignKey("search.Query", on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
 
     subquery = models.CharField(max_length=255, db_index=True)
-    ranking = JSONField(default={})
+    ranking = JSONField(default=dict)
     freeze = models.ForeignKey(Freeze, on_delete=models.SET_NULL, null=True)
     is_approved = models.NullBooleanField(null=True)
 

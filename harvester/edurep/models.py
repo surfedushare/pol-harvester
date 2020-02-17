@@ -101,8 +101,8 @@ class EdurepSource(models.Model):
 
 class EdurepHarvest(models.Model):
 
-    source = models.ForeignKey(EdurepSource)
-    freeze = models.ForeignKey(Freeze)
+    source = models.ForeignKey(EdurepSource, on_delete=models.CASCADE)
+    freeze = models.ForeignKey(Freeze, on_delete=models.CASCADE)
 
     latest_update_at = models.DateTimeField(
         null=True, blank=True, default=make_aware(datetime(year=1970, month=1, day=1))
