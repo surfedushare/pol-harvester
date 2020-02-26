@@ -59,6 +59,9 @@ def get_index_config(lang):
                     'url': {'type': 'text'},
                     'title_plain': {'type': 'text'},
                     'text_plain': {'type': 'text'},
+                    'author': {
+                        'type': 'keyword'
+                    },
                     'keywords': {
                         'type': 'keyword'
                     },
