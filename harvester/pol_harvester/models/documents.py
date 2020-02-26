@@ -82,7 +82,7 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
         doc.arrangement = self
         return doc
 
-    def update(self, data, by, validate=True, batch_size=32, collection=None):
+    def update(self, data, by_reference, validate=True, batch_size=32, collection=None):
         collection = collection or self
         Document = collection.get_document_model()
         assert isinstance(data, (Iterator, list, tuple, dict, Document)), \

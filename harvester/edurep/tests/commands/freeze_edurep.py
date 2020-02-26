@@ -106,7 +106,6 @@ class TestFreezeNoHistory(TestCase):
         skipped, dumped, documents_count = command.handle_upsert_seeds(collection, upserts)
         # When dealing with an entirely new Freeze
         # Then the arrangement count and document count should equal output of handle_upsert_seeds
-        # TODO: serious problem with video, because doc ids will not differ inside arrangement
         self.assertEqual(collection.arrangement_set.count(), dumped)
         self.assertEqual(collection.document_set.count(), documents_count)
 
@@ -145,14 +144,56 @@ class TestFreezeWithHistory(TestCase):
         freeze = Freeze.objects.last()
         collection = Collection.objects.get(name="surf", freeze=freeze)
         command = self.get_command_instance()
+        # Checking the state before the test
+        arrangement_count = collection.arrangement_set.count()
+        document_count = collection.document_set.count()
+        vortex_queryset = freeze.documents.filter(properties__title="Using a Vortex | Wageningen UR")
+        handson_queryset = freeze.documents.filter(
+            properties__title="Hands-on exercise based on WEKA - Tuning and Testing"
+        )
+        self.assertEqual(vortex_queryset.count(), 1, "Expected the start state to contain 'Using a Vortex'")
+        self.assertEqual(handson_queryset.count(), 1, "Expected the start state to contain 'Hands-on exercise'")
+        for doc in freeze.documents.all():
+            self.assertEqual(doc.created_at, doc.modified_at, f"Document is unexpectedly updated: {doc.id}")
+        # Perform the test
         upserts = [
             seed
             for seed in get_edurep_oaipmh_seeds("surf", make_aware(datetime(year=2019, month=12, day=31)))
             if seed.get("state", "active") == "active"
         ]
-        command.handle_upsert_seeds(collection, upserts)
-        self.assertEqual(collection.document_set.count(), 6)
-        self.assertEqual(collection.arrangement_set.count(), 6)
+        skipped, dumped, documents_count = command.handle_upsert_seeds(collection, upserts)
+        # Checking the state after the test
+        self.assertEqual(skipped, 0)
+        self.assertEqual(collection.arrangement_set.count(), arrangement_count+2,
+                         "Upsert seeds should have added 2 Arrangements")
+        self.assertEqual(collection.document_set.count(), document_count+3,
+                         "Upsert seeds should have added 3 Documents (1 video arrangement got 2 documents)")
+        vortex_updateset = freeze.documents.filter(properties__title="Using a Vortex (responsibly) | Wageningen UR")
+        self.assertEqual(
+            vortex_updateset.count(), 2
+        )
+        self.assertEqual(vortex_queryset.count(), 0)
+        handson_updateset = freeze.documents.filter(
+            properties__title="Hands-off exercise based on WEKA - Tuning and Testing"
+        )
+        self.assertEqual(handson_updateset.count(), 1)
+        self.assertEqual(handson_queryset.count(), 0)
+        update_ids = set()
+        for update in vortex_updateset:
+            self.assertNotEqual(update.created_at, update.modified_at,
+                                f"Document is unexpectedly not updated: {update.id}")
+            update_ids.add(update.id)
+        for update in handson_updateset:
+            self.assertNotEqual(update.created_at, update.modified_at,
+                                f"Document is unexpectedly not updated: {update.id}")
+            update_ids.add(update.id)
+        not_updated = freeze.documents.exclude(id__in=update_ids)
+        self.assertNotEqual(not_updated.count(), 0)
+        for not_update in not_updated:
+            self.assertEqual(
+                not_update.created_at.replace(microsecond=0), not_update.modified_at.replace(microsecond=0),
+                f"Document is unexpectedly updated after upsert: {not_update.id}"
+            )
 
     def test_handle_deletion_seeds(self):
         freeze = Freeze.objects.last()
