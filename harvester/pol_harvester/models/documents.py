@@ -95,12 +95,12 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
             # One update object can potentially target multiple sources
             # if multiple objects with an identifier of "by" exist.
             updated = set()
-            hashed = {update[by]: update for update in updates}
-            sources = {source[by]: source for source in collection.documents.filter(identity__in=hashed.keys())}
-            for source in sources:
-                source.update(hashed[source.identifier], validate=validate)
+            hashed = {update[by_reference]: update for update in updates}
+            sources = {source[by_reference]: source for source in collection.documents.filter(reference__in=hashed.keys())}
+            for source in sources.values():
+                source.update(hashed[source.reference], validate=validate)
                 count += 1
-                updated.add(source.identifier)
+                updated.add(source.reference)
             Document.objects.bulk_update(
                 sources.values(),
                 ["properties"],
