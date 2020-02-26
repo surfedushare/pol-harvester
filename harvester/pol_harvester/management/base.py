@@ -125,7 +125,7 @@ class OutputCommand(HarvesterCommand):
         mime_type = mime_type or meta.get("mime_type", None)
         file_type = file_type or self.get_file_type(mime_type, url)
 
-        hash_postfix = hash_postfix if hash_postfix is not None else mime_type
+        hash_postfix = hash_postfix if hash_postfix is not None else file_type
         identifier = self.get_hash_from_url(url, postfix=hash_postfix)
 
         text_language = get_language_from_snippet(text)
