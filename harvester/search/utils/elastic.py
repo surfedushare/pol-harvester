@@ -56,9 +56,14 @@ def get_index_config(lang):
                         'type': 'text',
                         'analyzer': settings.ELASTIC_SEARCH_ANALYSERS[lang]
                     },
+                    'transcription': {
+                        'type': 'text',
+                        'analyzer': settings.ELASTIC_SEARCH_ANALYSERS[lang]
+                    },
                     'url': {'type': 'text'},
                     'title_plain': {'type': 'text'},
                     'text_plain': {'type': 'text'},
+                    'transcription_plain': {'type': 'text'},
                     'author': {
                         'type': 'keyword'
                     },

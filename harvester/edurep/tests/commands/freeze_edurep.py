@@ -70,6 +70,11 @@ class TestFreezeNoHistory(TestCase):
             HarvestStages.COMPLETE,
             "surf set harvest should got updated to stage BASIC to prevent re-harvest in the future"
         )
+        # One assumption that is a bit harder to test is out current setup
+        # is that any updates to Arrangement and Document occur after the completed_at time
+        # This is necessary for the push_es_index command to pick-up changes
+        # The least we can do is check that the completed_at date is indeed set
+        self.assertIsNotNone(surf_harvest.completed_at)
         edurep_delen_harvest = EdurepHarvest.objects.get(source__collection_name="edurep_delen")
         self.assertEqual(
             edurep_delen_harvest.stage,
@@ -108,7 +113,6 @@ class TestFreezeNoHistory(TestCase):
         # Then the arrangement count and document count should equal output of handle_upsert_seeds
         self.assertEqual(collection.arrangement_set.count(), dumped)
         self.assertEqual(collection.document_set.count(), documents_count)
-
 
     def test_handle_deletion_seeds(self):
         freeze = Freeze.objects.last()
@@ -155,6 +159,11 @@ class TestFreezeWithHistory(TestCase):
         self.assertEqual(handson_queryset.count(), 1, "Expected the start state to contain 'Hands-on exercise'")
         for doc in freeze.documents.all():
             self.assertEqual(doc.created_at, doc.modified_at, f"Document is unexpectedly updated: {doc.id}")
+        for arrangement in freeze.arrangement_set.all():
+            self.assertEqual(
+                arrangement.created_at, arrangement.modified_at,
+                f"Arrangement is unexpectedly updated: {arrangement.id}"
+            )
         # Perform the test
         upserts = [
             seed
@@ -182,10 +191,14 @@ class TestFreezeWithHistory(TestCase):
         for update in vortex_updateset:
             self.assertNotEqual(update.created_at, update.modified_at,
                                 f"Document is unexpectedly not updated: {update.id}")
+            self.assertNotEqual(update.arrangement.created_at, update.arrangement.modified_at,
+                                f"Arrangement of document is unexpectedly not updated: {update.id}")
             update_ids.add(update.id)
         for update in handson_updateset:
             self.assertNotEqual(update.created_at, update.modified_at,
                                 f"Document is unexpectedly not updated: {update.id}")
+            self.assertNotEqual(update.arrangement.created_at, update.arrangement.modified_at,
+                                f"Arrangement of document is unexpectedly not updated: {update.id}")
             update_ids.add(update.id)
         not_updated = freeze.documents.exclude(id__in=update_ids)
         self.assertNotEqual(not_updated.count(), 0)

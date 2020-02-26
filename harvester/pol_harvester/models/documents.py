@@ -27,6 +27,20 @@ class Freeze(DocumentCollectionMixin, CollectionBase):
     def get_elastic_indices(self):
         return ",".join([index.remote_name for index in self.indices.all()])
 
+    def get_earliest_completion_date(self):
+        latest_harvest = self.edurepharvest_set.order_by("completed_at").first()
+        return latest_harvest.completed_at if latest_harvest else None
+
+    def get_elastic_documents_by_language(self, since):
+        by_language = defaultdict(list)
+        for arrangement in self.arrangement_set.prefetch_related("document").filter(modified_at__gte=since):
+            languages = {doc.get_language() for doc in arrangement.documents}
+            if len(languages) != 1:
+                print(f"Impossible to determine language for arrangement: {arrangement.id}")
+                continue
+            language = languages.pop()
+            by_language[language].append(arrangement.to_search())
+
     def get_documents_by_language(self, as_search=False, minimal_educational_level=-1):
         by_language = defaultdict(list)
         for doc in self.documents.all():
@@ -112,6 +126,46 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
                 count += self.add(additions, validate=validate, batch_size=batch_size, collection=collection)
 
         return count
+
+    def to_search(self):
+        base_document = self.documents.first()
+
+        text_documents = self.documents.exclude(properties__file_type="video")
+        texts = []
+        for doc in text_documents:
+            texts.append(doc.properties["text"])
+        text = "\n\n".join(texts)
+
+        video_documents = self.documents.filter(properties__file_type="video")
+        transcriptions = []
+        for doc in video_documents:
+            transcriptions.append(doc.properties["text"])
+        transcription = "\n\n".join(transcriptions)
+
+        # these dicts are compatible with Elastic Search
+        return {
+            'title': base_document.properties['title'],
+            'text': text,
+            'transcription': transcription,
+            'url': base_document.properties['url'],
+            'external_id': base_document.properties['external_id'],
+            'disciplines': base_document.properties['disciplines'],
+            'educational_levels': base_document.properties['educational_levels'],
+            'author': base_document.properties['author'],
+            'description': base_document.properties['description'],
+            'publisher_date': base_document.properties['publisher_date'],
+            'copyright': base_document.properties['copyright'],
+            'language': base_document.get_language(),
+            'title_plain': base_document.properties['title'],
+            'text_plain': text,
+            'transcription_plain': transcription,
+            'keywords': self.meta['keywords'],
+            'file_type': base_document.get('file_type', 'unknown'),
+            'mime_type': base_document['mime_type'],
+            'suggest': base_document['title'].split(" ") if base_document['title'] else [],
+            '_id': self.meta['reference_id'],
+            'arrangement_collection_name': self.collection.name  # TODO: migrate to just collection name
+        }
 
 
 class Document(DocumentPostgres, DocumentBase):
