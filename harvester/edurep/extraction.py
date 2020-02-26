@@ -1,5 +1,7 @@
 from html import unescape
 
+from pol_harvester.constants import HIGHER_EDUCATION_LEVELS
+
 
 class EdurepDataExtraction(object):
 
@@ -136,6 +138,27 @@ class EdurepDataExtraction(object):
             for edu in contexts
         ]
         return list(set(educational_levels))
+
+    @classmethod
+    def get_lowest_educational_level(cls, soup, el):
+        educational_levels = cls.get_lom_educational_levels(soup, el)
+        current_numeric_level = 3 if len(educational_levels) else -1
+        for education_level in educational_levels:
+            for higher_education_level, numeric_level in HIGHER_EDUCATION_LEVELS.items():
+                if not education_level.startswith(higher_education_level):
+                    continue
+                # One of the records education levels matches a higher education level.
+                # We re-assign current level and stop processing this education level,
+                # as it shouldn't match multiple higher education levels
+                current_numeric_level = min(current_numeric_level, numeric_level)
+                break
+            else:
+                # No higher education level found inside current education level.
+                # Dealing with an "other" means a lower education level than we're interested in.
+                # So this record has the lowest possible level. We're done processing this seed.
+                current_numeric_level = 0
+                break
+        return current_numeric_level
 
     @classmethod
     def get_educational_levels(cls, soup, el):

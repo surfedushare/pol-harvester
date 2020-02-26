@@ -25,8 +25,9 @@ EDUREP_EXTRACTION_OBJECTIVE = {
     "lom_educational_levels": EdurepDataExtraction.get_lom_educational_levels,
     "educational_levels": EdurepDataExtraction.get_educational_levels,
     "humanized_educational_levels": EdurepDataExtraction.get_humanized_educational_levels,
+    "lowest_educational_level": EdurepDataExtraction.get_lowest_educational_level,
     "disciplines": EdurepDataExtraction.get_disciplines,
-    "humanized_disciplines": EdurepDataExtraction.get_humanized_disciplines
+    "humanized_disciplines": EdurepDataExtraction.get_humanized_disciplines,
 }
 
 
@@ -101,7 +102,14 @@ def get_edurep_oaipmh_seeds(set_specification, latest_update, include_deleted=Tr
             seed["url"] += "?p=imscp"
         # We deduplicate based on the external_id a UID by Edurep
         uniques[seed["external_id"]] = seed
-
+    # Now we'll mark any invalid seeds as deleted to make sure they disappear
+    # Invalid seeds have a copyright or are of insufficient education level
+    for seed in uniques.values():
+        if not seed["copyright"] or seed["copyright"] == "no":
+            seed["state"] = "deleted"
+        if seed["lowest_educational_level"] < 1:  # lower level than MBO
+            seed["state"] = "deleted"
+    # And we return the seeds based on whether to include deleted or not
     return uniques.values() if include_deleted else \
         [result for result in uniques.values() if result.get("state", "active") == "active"]
 
