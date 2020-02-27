@@ -144,8 +144,8 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
             transcriptions.append(doc.properties["text"])
         transcription = "\n\n".join(transcriptions)
 
-        # these dicts are compatible with Elastic Search
-        return {
+        # Elastic Search actions get streamed to the Elastic Search service
+        elastic_search_action = {
             'title': base_document.properties['title'],
             'text': text,
             'transcription': transcription,
@@ -168,6 +168,9 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
             '_id': self.meta['reference_id'],
             'arrangement_collection_name': self.collection.name  # TODO: migrate to just collection name
         }
+        if self.deleted_at:
+            elastic_search_action["_op_type"] = "delete"
+        return elastic_search_action
 
     def restore(self):
         self.deleted_at = None
