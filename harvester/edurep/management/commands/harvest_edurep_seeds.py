@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+from django.core.management import CommandError
 from django.utils.timezone import now
 
 from datagrowth.resources.http.tasks import send
@@ -44,6 +45,8 @@ class Command(HarvesterCommand):
         for harvest in self.progress(harvest_queryset, total=harvest_queryset.count()):
             set_specification = harvest.source.collection_name
             scc, err = send(set_specification, f"{harvest.latest_update_at:%Y-%m-%d}", config=send_config, method="get")
+            if len(err):
+                raise CommandError("Failed to harvest seeds from Edurep OAI-PMH")
             successes[set_specification] += len(scc)
             fails[set_specification] += len(err)
             if not dummy:
