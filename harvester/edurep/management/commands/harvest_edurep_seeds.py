@@ -7,6 +7,7 @@ from datagrowth.resources.http.tasks import send
 from datagrowth.configuration import create_config
 from pol_harvester.management.base import HarvesterCommand
 from pol_harvester.constants import HarvestStages
+from pol_harvester.models import Arrangement
 from edurep.models import EdurepHarvest
 
 
@@ -17,10 +18,20 @@ class Command(HarvesterCommand):
         parser.add_argument('-f', '--freeze', type=str, required=True)
         parser.add_argument('-d', '--dummy', action="store_true", default=False)
 
+    def prepare_harvest(self, freeze_name):
+        Arrangement.objects.filter(deleted_at__isnull=False).delete()
+        for harvest in EdurepHarvest.objects.filter(freeze__name=freeze_name, stage=HarvestStages.COMPLETE):
+            harvest.stage = HarvestStages.NEW
+            harvest.latest_update_at = harvest.harvested_at
+            harvest.save()
+
     def handle(self, *args, **options):
 
         freeze_name = options["freeze"]
         dummy = options["dummy"]
+
+        if not dummy:
+            self.prepare_harvest(freeze_name)
 
         harvest_queryset = EdurepHarvest.objects.filter(
             freeze__name=freeze_name,
