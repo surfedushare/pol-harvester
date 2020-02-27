@@ -36,8 +36,22 @@ class EdurepSearch(HttpResource):
 
 class EdurepOAIPMH(HttpResource):
 
-    # TODO: add UTC datetime validation (no millis) for (optional) "from" argument
-    # TODO: do something with 200 errors
+    GET_SCHEMA = {
+        "args": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "string",
+                    "pattern": "^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}Z$"
+                }
+            ],
+            "minItems": 1,
+            "additionalItems": False
+        }
+    }
 
     set_specification = models.CharField(max_length=255, blank=True, null=False)
 
@@ -71,6 +85,35 @@ class EdurepOAIPMH(HttpResource):
         variables = self.variables()
         if not self.set_specification and len(variables["url"]):
             self.set_specification = variables["url"][0]
+
+    def send(self, method, *args, **kwargs):
+        # We're sending along a default "from" parameter in a distant past to get all materials
+        # if a set has been specified, but no start date.
+        if len(args) == 1:
+            args = (args[0], "1970-01-01T00:00:00Z")
+        return super().send(method, *args, **kwargs)
+
+    def handle_errors(self):
+        content_type, soup = self.content
+        # If there is no response at all we indicate a service not available
+        # Note that the IP might be blocked by Edurep
+        if soup is None:
+            self.status = 503
+            super().handle_errors()
+            return
+        # Edurep always responds with a 200, but it may contain an error tag
+        # If not we're fine and done handling errors
+        error = soup.find("error")
+        if error is None:
+            return
+        # If an error was found we translate it into an appropriate code
+        status = error["code"]
+        if status == "badArgument":
+            self.status = 400
+        elif status == "noRecordsMatch":
+            self.status = 204
+        # And we raise proper exceptions for the system to pick up
+        super().handle_errors()
 
     class Meta:
         verbose_name = "Edurep OAIPMH harvest"
