@@ -45,7 +45,7 @@ class EdurepOAIPMH(HttpResource):
                 },
                 {
                     "type": "string",
-                    "pattern": "^\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}Z$"
+                    "pattern": "^\d{4}-\d{2}-\d{2}(T\d{2}\:\d{2}\:\d{2}Z)?$"
                 }
             ],
             "minItems": 1,
@@ -92,6 +92,11 @@ class EdurepOAIPMH(HttpResource):
         if len(args) == 1:
             args = (args[0], "1970-01-01T00:00:00Z")
         return super().send(method, *args, **kwargs)
+
+    def validate_request(self, request, validate_input=True):
+        # Casting datetime to string, because we need strings to pass validation
+        request["args"] = (request["args"][0], str(request["args"][1]))
+        return super().validate_request(request, validate_input=validate_input)
 
     def handle_errors(self):
         content_type, soup = self.content
