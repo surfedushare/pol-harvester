@@ -70,11 +70,6 @@ class TestFreezeNoHistory(TestCase):
             HarvestStages.COMPLETE,
             "surf set harvest should got updated to stage BASIC to prevent re-harvest in the future"
         )
-        # One assumption that is a bit harder to test is out current setup
-        # is that any updates to Arrangement and Document occur after the completed_at time
-        # This is necessary for the push_es_index command to pick-up changes
-        # The least we can do is check that the completed_at date is indeed set
-        self.assertIsNotNone(surf_harvest.completed_at)
         edurep_delen_harvest = EdurepHarvest.objects.get(source__collection_name="edurep_delen")
         self.assertEqual(
             edurep_delen_harvest.stage,

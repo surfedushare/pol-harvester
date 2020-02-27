@@ -8,6 +8,7 @@ from django.db import models
 from django.contrib.postgres import fields as postgres_fields
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
+from django.utils import timezone
 
 from datagrowth import settings as datagrowth_settings
 from datagrowth.utils import ibatch
@@ -27,9 +28,9 @@ class Freeze(DocumentCollectionMixin, CollectionBase):
     def get_elastic_indices(self):
         return ",".join([index.remote_name for index in self.indices.all()])
 
-    def get_earliest_completion_date(self):
-        latest_harvest = self.edurepharvest_set.order_by("completed_at").first()
-        return latest_harvest.completed_at if latest_harvest else None
+    def get_earliest_harvest_date(self):
+        latest_harvest = self.edurepharvest_set.order_by("harvested_at").first()
+        return latest_harvest.harvested_at if latest_harvest else None
 
     def get_elastic_documents_by_language(self, since):
         by_language = defaultdict(list)
@@ -89,6 +90,7 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
     freeze = models.ForeignKey("Freeze", blank=True, null=True, on_delete=models.CASCADE)
     collection = models.ForeignKey("Collection", blank=True, null=True, on_delete=models.CASCADE)
     meta = postgres_fields.JSONField(default=dict)
+    deleted_at = models.DateTimeField(null=True, blank=True)
 
     def init_document(self, data, collection=collection):
         doc = super().init_document(data, collection=collection)
@@ -166,6 +168,17 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
             '_id': self.meta['reference_id'],
             'arrangement_collection_name': self.collection.name  # TODO: migrate to just collection name
         }
+
+    def restore(self):
+        self.deleted_at = None
+        self.save()
+
+    def delete(self, using=None, keep_parents=False):
+        if not self.deleted_at:
+            self.deleted_at = timezone.now()
+            self.save()
+        else:
+            super().delete(using=using, keep_parents=keep_parents)
 
 
 class Document(DocumentPostgres, DocumentBase):

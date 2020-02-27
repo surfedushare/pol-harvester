@@ -47,7 +47,7 @@ class Command(HarvesterCommand):
             successes[set_specification] += len(scc)
             fails[set_specification] += len(err)
             if not dummy:
-                harvest.latest_update_at = current_time
+                harvest.harvested_at = current_time
                 harvest.save()
         self.info('Failed OAI-PMH calls: ', fails)
         self.info('Successful OAI-PMH calls: ', successes)

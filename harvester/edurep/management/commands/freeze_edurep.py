@@ -160,7 +160,6 @@ class Command(OutputCommand):
 
         freeze_name = options["freeze"]
         freeze = Freeze.objects.get(name=freeze_name)
-        completion_time = now()
 
         harvest_queryset = EdurepHarvest.objects.filter(
             freeze__name=freeze_name,
@@ -212,5 +211,4 @@ class Command(OutputCommand):
         # Finish the freeze and harvest
         for harvest in harvest_queryset:
             harvest.stage = HarvestStages.COMPLETE
-            harvest.completed_at = completion_time
             harvest.save()

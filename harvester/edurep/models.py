@@ -155,7 +155,7 @@ class EdurepHarvest(models.Model):
     latest_update_at = models.DateTimeField(
         null=True, blank=True, default=make_aware(datetime(year=1970, month=1, day=1))
     )
-    completed_at = models.DateTimeField(null=True, blank=True)
+    harvested_at = models.DateTimeField(null=True, blank=True)
     stage = models.CharField(max_length=50, choices=HARVEST_STAGE_CHOICES, default=HarvestStages.NEW)
 
     def clean(self):

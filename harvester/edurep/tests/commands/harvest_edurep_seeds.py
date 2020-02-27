@@ -42,9 +42,9 @@ class TestSeedHarvest(TestCase):
         # to prevent repetitious harvests.
         surf_harvest = EdurepHarvest.objects.get(source__collection_name="surf")
         self.assertGreater(
-            surf_harvest.latest_update_at,
+            surf_harvest.harvested_at,
             make_aware(datetime(year=1970, month=1, day=1)),
-            "surf set harvest should got updated to prevent re-harvest in the future"
+            "surf set harvested_at should got updated to prevent re-harvest in the future"
         )
         edurep_delen_harvest = EdurepHarvest.objects.get(source__collection_name="edurep_delen")
         self.assertEqual(

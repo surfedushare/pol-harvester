@@ -26,12 +26,12 @@ class Command(BaseCommand):
         freeze = Freeze.objects.get(name=options["freeze"])
         recreate = options["recreate"]
         promote = options["promote"]
-        earliest_completion = freeze.get_earliest_completion_date()
+        earliest_harvest = freeze.get_earliest_harvest_date()
 
         print("Upserting ES index for {freeze.name}")
-        print(f"since:{earliest_completion:%Y-%m-%d}, recreate:{recreate} and promote:{promote}")
+        print(f"since:{earliest_harvest:%Y-%m-%d}, recreate:{recreate} and promote:{promote}")
 
-        lang_doc_dict = freeze.get_elastic_documents_by_language(since=earliest_completion)
+        lang_doc_dict = freeze.get_elastic_documents_by_language(since=earliest_harvest)
         for lang in lang_doc_dict.keys():
             log.info(f'{lang}:{len(lang_doc_dict[lang])}')
 
