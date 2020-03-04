@@ -14,7 +14,7 @@ before_script: cd harvester
 script: python manage.py test
 env:
   global:
-  - PGPORT=5432
+  - PGPORT=5433
   - DJANGO_POSTGRES_HOST=127.0.0.1
   - DJANGO_POSTGRES_USER=postgres
   - DJANGO_POSTGRES_PASSWORD=
