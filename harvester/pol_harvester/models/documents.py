@@ -142,6 +142,8 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
         video_documents = self.documents.filter(properties__file_type="video")
         transcriptions = []
         for doc in video_documents:
+            if doc.properties["text"] is None:
+                continue
             transcriptions.append(doc.properties["text"])
         transcription = "\n\n".join(transcriptions)
 
