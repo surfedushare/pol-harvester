@@ -89,6 +89,10 @@ By running the commands below we store the data from the previous steps into the
 Updating a Freeze
 -----------------
 
+If you want to update existing ``Arrangements`` and/or ``Documents`` from an existing ``Freeze``
+without going through the entire process from the start.
+It's possible to execute a delta update. Simply repeat the steps from step 3 onwards.
+Through the OAI-PMH protocol the harvester will only retrieve materials that are newer than your last harvest.
 
 
 
@@ -112,7 +116,7 @@ Once the data is harvested it is necessary to create an index on the Elastic Sea
 You can do this by running the following command:
 
 ```bash
-./manage.py create_es_index --freeze <your-freeze-name>
+./manage.py push_es_index --freeze <your-freeze-name>
 ```
 
 After this command the Elastic Search index should show up in the administration interface under
