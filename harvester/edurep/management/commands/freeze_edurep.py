@@ -124,13 +124,15 @@ class Command(OutputCommand):
                 continue
             dumped += 1
 
+            reference_id = self.get_hash_from_url(seed["url"])
             arrangement, created = Arrangement.objects.get_or_create(
-                meta__reference_id=self.get_hash_from_url(seed["url"]),
+                meta__reference_id=reference_id,
                 freeze=collection.freeze,
                 collection=collection,
                 defaults={"referee": "id"}
             )
             arrangement.meta.update({
+                "reference_id": reference_id,
                 "url": seed["url"],
                 "keywords": seed.get("keywords", [])
             })
