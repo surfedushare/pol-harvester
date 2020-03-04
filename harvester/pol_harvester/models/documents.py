@@ -34,8 +34,8 @@ class Freeze(DocumentCollectionMixin, CollectionBase):
 
     def get_elastic_documents_by_language(self, since):
         by_language = defaultdict(list)
-        for arrangement in self.arrangement_set.prefetch_related("document").filter(modified_at__gte=since):
-            languages = {doc.get_language() for doc in arrangement.documents}
+        for arrangement in self.arrangement_set.prefetch_related("document_set").filter(modified_at__gte=since):
+            languages = {doc.get_language() for doc in arrangement.documents.all()}
             if len(languages) != 1:
                 print(f"Impossible to determine language for arrangement: {arrangement.id}")
                 continue
