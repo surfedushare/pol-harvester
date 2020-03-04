@@ -41,6 +41,7 @@ class Freeze(DocumentCollectionMixin, CollectionBase):
                 continue
             language = languages.pop()
             by_language[language].append(arrangement.to_search())
+        return by_language
 
     def get_documents_by_language(self, as_search=False, minimal_educational_level=-1):
         by_language = defaultdict(list)
