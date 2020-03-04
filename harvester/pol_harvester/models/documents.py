@@ -162,7 +162,7 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
             'text_plain': text,
             'transcription_plain': transcription,
             'keywords': self.meta['keywords'],
-            'file_type': base_document.get('file_type', 'unknown'),
+            'file_type': base_document['file_type'] if 'file_type' in base_document.properties else  'unknown',
             'mime_type': base_document['mime_type'],
             'suggest': base_document['title'].split(" ") if base_document['title'] else [],
             '_id': self.meta['reference_id'],
