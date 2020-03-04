@@ -1,5 +1,5 @@
 import os
-import re
+import json
 import hashlib
 from datetime import datetime
 from urlobject import URLObject
@@ -18,6 +18,7 @@ class YouTubeDLResource(ShellResource):
         "--extract-audio",
         "--audio-format=wav",
         "--postprocessor-args=-ac 1 -ar 8000",
+        "--print-json",
         "CMD_FLAGS",
         "{}"
     ]
@@ -41,7 +42,12 @@ class YouTubeDLResource(ShellResource):
     def transform(self, stdout):
         if not stdout:
             return []
-        return re.findall("\[ffmpeg\] Destination: (.+)$", stdout, flags=re.MULTILINE)
+        metadata = json.loads(stdout)
+        file_name = metadata.get("_filename", None)
+        if not file_name:
+            return []
+        name, ext = os.path.splitext(file_name)
+        return [f"{name}.wav"]
 
     def _get_file_info(self, url):
         # Getting the file name and extension from url
