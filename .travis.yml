@@ -2,24 +2,15 @@ language: python
 python:
   - "3.6"
 # command to install dependencies
-before_install:
-  - sudo apt-get install libblas-dev liblapack-dev libatlas-base-dev gfortran
-  #- sudo sed -i -e '/local.*peer/s/postgres/all/' -e 's/peer\|md5/trust/g' /etc/postgresql/*/main/pg_hba.conf
+install:
+  - sudo apt-get install -yq --no-install-suggests --no-install-recommends postgresql-common
   - sudo service postgresql stop
-  - sudo service postgresql start
-  - sleep 1
-install: "pip install -r harvester/requirements.txt"
+  - sudo apt install -yq --no-install-suggests --no-install-recommends postgresql-11 postgresql-client-11
+  - sudo service postgresql start 11
+  - pip install -r harvester/requirements.txt
 # command to run tests
 before_script: cd harvester
 script: python manage.py test
-services:
-  - postgresql
-addons:
-  postgresql: "11"
-  apt:
-    packages:
-    - postgresql-11
-    - postgresql-client-11
 env:
   global:
   - PGPORT=5432
