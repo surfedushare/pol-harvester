@@ -1,3 +1,4 @@
+from django import db
 from django.db.utils import OperationalError
 from psycopg2 import InterfaceError
 
@@ -14,7 +15,10 @@ class KaldiNLResource(KaldiNL):
         # For now we're simply retrying once and leave it at that
         try:
             super().save(*args, **kwargs)
-        except (OperationalError, InterfaceError):
+        except OperationalError:
+            super().save(*args, **kwargs)
+        except InterfaceError:
+            db.connection.close()
             super().save(*args, **kwargs)
 
 
@@ -27,5 +31,8 @@ class KaldiAspireResource(KaldiEN):
         # For now we're simply retrying once and leave it at that
         try:
             super().save(*args, **kwargs)
-        except (OperationalError, InterfaceError):
+        except OperationalError:
+            super().save(*args, **kwargs)
+        except InterfaceError:
+            db.connection.close()
             super().save(*args, **kwargs)
