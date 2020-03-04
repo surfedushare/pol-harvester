@@ -80,7 +80,10 @@ class Command(HarvesterCommand):
                 harvest.latest_update_at,
                 include_deleted=False
             )
-            self.info(f'Amount of extracted results by OAI-PMH for "{set_specification}": {len(harvest_seeds)}')
+            self.info(
+                f'Amount of extracted results by OAI-PMH for "{set_specification}": {len(harvest_seeds)}',
+                log=True
+            )
             seeds += harvest_seeds
         self.info("")
 
