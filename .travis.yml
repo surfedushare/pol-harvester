@@ -9,7 +9,7 @@ before_install:
   - sleep 1
 install: "pip install -r harvester/requirements.txt"
 # command to run tests
-before_script: cd harvester && python manage.py collectstatic --noinput
+before_script: cd harvester
 script: python manage.py test
 services:
   - postgresql
