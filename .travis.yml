@@ -7,6 +7,7 @@ before_install:
   - sudo sed -i -e '/local.*peer/s/postgres/all/' -e 's/peer\|md5/trust/g' /etc/postgresql/*/main/pg_hba.conf
   - sudo service postgresql stop
   - sudo service postgresql start
+  - sudo journalctl -xe
   - sleep 1
 install: "pip install -r harvester/requirements.txt"
 # command to run tests
