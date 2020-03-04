@@ -1,6 +1,5 @@
 from django import db
-from django.db.utils import OperationalError
-from psycopg2 import InterfaceError
+from django.db.utils import OperationalError, InterfaceError
 
 from .nl import KaldiNLResource as KaldiNL
 from .aspire import KaldiAspireResource as KaldiEN
