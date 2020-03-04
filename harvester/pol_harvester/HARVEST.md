@@ -25,12 +25,13 @@ will have its ``reference`` attribute set to the value of the ``id`` property.
 Currently a ``Freeze`` can only contain harvests from Edurep.
 You need to specify which sources you want to include in the ``Freeze``.
 For each source you need to specify from which date you want to start to harvest it.
-This makes it possible to create a basic scheduled harvest.
+By default this is 01-01-1970.
 
 You can create new sources as well as select sources from a previous ``Freeze``.
-When you create a new ``EdurepSource`` you need to specify a ``name``, ``query`` and a ``collection_name``.
-The ``name`` is only used in the admin interface. The ``query`` will be send to the API to "harvest" data.
+When you create a new ``EdurepSource`` you need to specify a ``name`` and ``collection_name``.
+The ``name`` is only used in the admin interface.
 The ``collection_name`` will be used as a name for the ``Collection`` where documents for the harvest will get stored.
+It also indicates the Edurep set that you want to harvest through OAI-PMH.
 
 
 #### 3.) Run harvest management commands
@@ -40,7 +41,7 @@ The order of the commands is important. The system will not proceed to step B if
 
 ##### A.) Metadata and files
 
-Then we'll download basic files like HTML and PDF files.
+First we'll download basic files like HTML and PDF files.
 These files will go through Tika to extract texts from them.
 
 ```bash
@@ -68,12 +69,12 @@ Running a dummy harvest will skip the video, but allows you to continue the pipe
 
 So far these commands have executed various parts of a pipeline, but nothing has been combined yet.
 We aggregate the results of the pipeline in a ``Collection``, which is a set of ``Documents``.
-These ``Documents`` get extracted from a ``Arrangement``.
-An ``Arrangement`` is a set of learning materials that belong together.
+These ``Documents`` get extracted from an ``Arrangement``.
+An ``Arrangement`` is a learning materials as exposed in the search portal.
 If a HTML page contains text and a video than the text and video are ``Documents`` belonging to the same ``Arrangements``.
 You can think of ``Arrangements`` as unique URL's that point to learning materials.
 The ``Collections`` of ``Documents`` get stored by Django in a no-SQL fashion to allow dynamic queries.
-There is a ``Collection`` for every learning material source.
+There is a ``Collection`` for every learning material source, which is the same as a OAI-PMH set.
 All these different sources together form a ``Freeze``.
 That way a ``Freeze`` holds all ``Documents`` from all ``Collections`` for a certain pipeline version.
 ``Documents`` are possibly grouped in ``Arrangements``. There is at least one ``Document`` for every ``Arrangment``
@@ -85,11 +86,10 @@ By running the commands below we store the data from the previous steps into the
 ./manage.py freeze_edurep --freeze <your-freeze-name>
 ```
 
-After you have ran this command it is not possible to execute it a second time.
-This is because running it multiple times will cause duplicate documents.
-If you want to create a different version of the data it's better to create a new ``Freeze``.
-Once ran the commands for harvesting don't necessarily need to rerun.
-If you set all sources to a stage of "video" the freeze should succeed without previous pipeline steps.
+Updating a Freeze
+-----------------
+
+
 
 
 Working with Library for Learning
