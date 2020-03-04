@@ -15,6 +15,7 @@ class KaldiNLResource(KaldiNL):
         try:
             super().save(*args, **kwargs)
         except OperationalError:
+            db.connection.close()
             super().save(*args, **kwargs)
         except InterfaceError:
             db.connection.close()
@@ -31,6 +32,7 @@ class KaldiAspireResource(KaldiEN):
         try:
             super().save(*args, **kwargs)
         except OperationalError:
+            db.connection.close()
             super().save(*args, **kwargs)
         except InterfaceError:
             db.connection.close()
