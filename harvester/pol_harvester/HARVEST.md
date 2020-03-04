@@ -39,16 +39,24 @@ It also indicates the Edurep set that you want to harvest through OAI-PMH.
 You need to run the following harvest commands to gather data from Edurep and the URL's that Edurep points to.
 The order of the commands is important. The system will not proceed to step B if step A hasn't been completed.
 
-##### A.) Metadata and files
+##### A.)
 
-First we'll download basic files like HTML and PDF files.
+First we'll download metadata from Edurep to see which learning materials are available
+
+```bash
+./manage.py harvest_edurep_seeds -f <your-freeze-name>
+```
+
+##### B.) Basic source files
+
+Then we'll download basic files like HTML and PDF files.
 These files will go through Tika to extract texts from them.
 
 ```bash
 ./manage.py harvest_edurep_basic -f <your-freeze-name>
 ```
 
-##### B.) Video files (optional)
+##### C.) Video files (optional)
 
 You can choose to download and transcribe the video content with this command:
 
