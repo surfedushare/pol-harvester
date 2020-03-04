@@ -73,6 +73,7 @@ class Command(HarvesterCommand):
         # From the Edurep API metadata we generate "seeds" that are the starting point for our own data structure
         self.info("Extracting data from sources ...")
         seeds = []
+        progress = {}
         for harvest in self.progress(harvest_queryset, total=harvest_queryset.count()):
             set_specification = harvest.source.collection_name
             harvest_seeds = get_edurep_oaipmh_seeds(
@@ -80,11 +81,10 @@ class Command(HarvesterCommand):
                 harvest.latest_update_at,
                 include_deleted=False
             )
-            self.info(
-                f'Amount of extracted results by OAI-PMH for "{set_specification}": {len(harvest_seeds)}',
-                log=True
-            )
             seeds += harvest_seeds
+            progress[set_specification] = len(harvest_seeds)
+        for set_name, seeds_count in progress.items():
+            self.info(f'Amount of extracted results by OAI-PMH for "{set_name}": {seeds_count}')
         self.info("")
 
         # Download files of all seeds
