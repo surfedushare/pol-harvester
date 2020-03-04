@@ -41,13 +41,13 @@ class YouTubeDLResource(ShellResource):
 
     def transform(self, stdout):
         if not stdout:
-            return []
+            return {}
         metadata = json.loads(stdout)
         file_name = metadata.get("_filename", None)
         if not file_name:
-            return []
+            return {"metadata": metadata}
         name, ext = os.path.splitext(file_name)
-        return [f"{name}.wav"]
+        return {"file_path": f"{name}.wav", "metadata": metadata}
 
     def _get_file_info(self, url):
         # Getting the file name and extension from url

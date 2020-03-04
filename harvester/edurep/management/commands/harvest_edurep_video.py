@@ -52,11 +52,11 @@ class Command(HarvesterCommand):
         # Preprocess the videos
         for video_download_resource in YouTubeDLResource.objects.filter(id__in=video_download_ids, status=0):
             # Make sure that the video has a valid audio file
-            _, file_paths = video_download_resource.content
-            if not len(file_paths):
+            _, data = video_download_resource.content
+            file_path = data.get("file_path", None)
+            if not file_path:
                 no_paths_count += 1
                 continue
-            file_path = file_paths[0]
             if not os.path.exists(file_path):
                 invalid_paths_count += 1
                 continue
@@ -68,7 +68,7 @@ class Command(HarvesterCommand):
             seed = seeds[video_url]
             title = seed.get("title", None)
             kaldi_model = get_kaldi_model_from_snippet(title)
-            kaldi_file_paths[kaldi_model].append(file_paths[0])
+            kaldi_file_paths[kaldi_model].append(file_path)
         no_language_count = len(kaldi_file_paths.pop(None, []))
         # Actual transcribing
         for kaldi_model, paths in kaldi_file_paths.items():

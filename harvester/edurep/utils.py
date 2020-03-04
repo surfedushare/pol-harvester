@@ -150,11 +150,11 @@ def get_edurep_resources(url, language_hint):
         video_resource = YouTubeDLResource(config={"cache_only": True}).run(url)
     except DGResourceDoesNotExist:
         return file_resource, tika_resource, None, None
-    _, file_paths = video_resource.content
-    if not video_resource.success or not len(file_paths):
+    _, data = video_resource.content
+    file_path = data.get("file_path", None)
+    if not video_resource.success or not file_path:
         return file_resource, tika_resource, video_resource, None
     # Getting the transcription for the download
-    file_path = file_paths[0]
     kaldi_model = get_kaldi_model_from_snippet(language_hint)
     if kaldi_model is None:
         return file_resource, tika_resource, video_resource, None
