@@ -34,8 +34,9 @@ class Command(OutputCommand):
             if not download.success:
                 print("Download error")
                 continue
-            _, file_paths = download.content
-            if not len(file_paths):
+            _, data = download.content
+            file_path = data.get("file_path", None)
+            if not file_path:
                 print("Download missing file in output")
                 continue
 
@@ -43,7 +44,6 @@ class Command(OutputCommand):
                 "resource": "pol_harvester.kaldinlresource",
                 "reference": ref
             })
-            file_path = file_paths[0]
             if not os.path.exists(file_path):
                 print("Download missing file")
                 continue
