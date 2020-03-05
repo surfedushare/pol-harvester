@@ -23,11 +23,13 @@ RUN apt-get update && apt-get install -y less vim ffmpeg \
 # Create the app environment
 RUN mkdir -p /usr/src/app
 RUN mkdir -p /usr/src/rateapp
+RUN mkdir -p /usr/src/logs
 WORKDIR /usr/src/app
 RUN useradd -mUs /bin/bash app
 RUN chown -R app:app /usr/local
 RUN chown app:app /usr/src/app
 RUN chown app:app /usr/src/rateapp
+RUN chown app:app /usr/src/logs
 RUN chown -R app:app /usr/local/lib/python3.6/site-packages
 USER app:app
 
