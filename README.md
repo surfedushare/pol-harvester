@@ -17,12 +17,17 @@ To start you'll need to first setup a local environment on a host machine with:
 
 ```bash
 conda env create -f environment.yml
-docker build . -t pol-harvester_harvester
 git rev-parse HEAD > harvester/.commit
 ```
 
 Then copy the ``.env.development`` file to ``.env`` and update the variable values to fit your system.
 When you're running the project locally you'll only need to provide your Elastic Search credentials.
+
+Now you can activate the conda environment and load environment variables with:
+
+```bash
+source activate.sh
+```
 
 Inside of the root directory of this repo run the following command:
 
@@ -31,7 +36,6 @@ docker-compose up
 ```
 
 This will build and run the backend software in the background.
-The exact same command gets used when deploying a new version of the harvester to production.
 
 After this basic installation you'll need to load the data.
 Get a Postgres dump file and load it with the following command from the root directory:
@@ -65,11 +69,9 @@ Deploy on a server
 ------------------
 
 The repo expects to be deployed on a Docker swarm.
-You'll need to init the swarm and set your conda shell.
-
+You'll need to init the swarm:
 
 ```bash
-conda init bash
 docker swarm init
 ```
 
@@ -81,6 +83,19 @@ bash start.sh
 ```
 
 To update the code it's sufficient to re-run the start command.
+It can be convenient to run Django commands outside of a Docker container on the server.
+You can create a venv on the server to achieve this:
+
+```
+python3 -m venv venv
+pip install -r harvester/requirements.txt
+```
+
+Then before you run a command to load environment variables and activate the virtual environment run:
+
+```bash
+source activate.sh
+```
 
 
 Documentation
