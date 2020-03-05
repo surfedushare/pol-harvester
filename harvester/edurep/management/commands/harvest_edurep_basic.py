@@ -31,6 +31,8 @@ class Command(HarvesterCommand):
         return success
 
     def extract_from_seed_files(self, seeds, downloads, mime_type_blacklist):
+        if not len(seeds):
+            return
         df = pd.DataFrame(seeds)
         keeps = df.loc[~df['mime_type'].isin(mime_type_blacklist)]
         skips = df.loc[df['mime_type'].isin(mime_type_blacklist)]
