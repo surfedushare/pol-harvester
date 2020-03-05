@@ -55,6 +55,7 @@ class EdurepOAIPMH(HttpResource):
     }
 
     set_specification = models.CharField(max_length=255, blank=True, null=False)
+    since = models.DateTimeField()
 
     URI_TEMPLATE = "http://oai.edurep.kennisnet.nl:8001/edurep/oai?set={}&from={}"
     PARAMETERS = {
@@ -96,6 +97,8 @@ class EdurepOAIPMH(HttpResource):
         variables = self.variables()
         if not self.set_specification and len(variables["url"]):
             self.set_specification = variables["url"][0]
+        if not self.since:
+            self.since = variables.get("since", None)
 
     def send(self, method, *args, **kwargs):
         # We're sending along a default "from" parameter in a distant past to get all materials

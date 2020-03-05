@@ -74,7 +74,7 @@ def get_edurep_query_seeds(query):
 
 def get_edurep_oaipmh_seeds(set_specification, latest_update, include_deleted=True):
     queryset = EdurepOAIPMH.objects\
-        .filter(set_specification=set_specification, created_at__gte=latest_update, status=200)
+        .filter(set_specification=set_specification, since__gte=latest_update, status=200)
 
     oaipmh_objective = {
         "@": EdurepDataExtraction.get_oaipmh_records,
