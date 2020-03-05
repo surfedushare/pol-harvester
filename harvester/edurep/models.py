@@ -88,8 +88,8 @@ class EdurepOAIPMH(HttpResource):
         if len(vars["url"]) >= 2:
             since_time = vars["url"][1]
             if isinstance(since_time, str):
-                since_time = make_aware(parse_date_string(since_time))
-        vars["since"] = since_time
+                since_time = parse_date_string(since_time)
+        vars["since"] = make_aware(since_time)
         return vars
 
     def clean(self):
