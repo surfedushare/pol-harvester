@@ -1,4 +1,5 @@
 from urlobject import URLObject
+from dateutil.parser import parse as parse_date_string
 
 from django.utils.timezone import datetime, make_aware
 from django.db import models
@@ -79,6 +80,15 @@ class EdurepOAIPMH(HttpResource):
         url = url.without_query().set_query_params(**self.next_parameters())
         next_request["url"] = str(url)
         return next_request
+
+    def variables(self, *args):
+        vars = super().variables(*args)
+        since_time = None
+        if len(vars["url"]) >= 2:
+            since_text = vars["url"][1]
+            since_time = make_aware(parse_date_string(since_text))
+        vars["since"] = since_time
+        return vars
 
     def clean(self):
         super().clean()
