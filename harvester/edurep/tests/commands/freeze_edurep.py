@@ -29,8 +29,10 @@ class TestFreezeNoHistory(TestCase):
     fixtures = ["freezes-new", "surf-oaipmh-1970-01-01", "resources"]
 
     def setUp(self):
-        # Setting the stage of the "surf" set harvests to VIDEO.
+        # Moving the VIDEO source to complete to test it gets ignored by the freeze command
+        # Setting the stage of the "surf" set harvests to VIDEO
         # The only valid stage for "freeze_edurep" to act on.
+        EdurepHarvest.objects.filter(stage=HarvestStages.VIDEO).update(stage=HarvestStages.COMPLETE)
         EdurepHarvest.objects.filter(source__collection_name="surf").update(stage=HarvestStages.VIDEO)
 
     def get_command_instance(self):

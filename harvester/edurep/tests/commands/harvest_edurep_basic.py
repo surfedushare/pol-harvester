@@ -61,8 +61,8 @@ class TestBasicHarvest(TestCase):
         edurep_delen_harvest = EdurepHarvest.objects.get(source__collection_name="edurep_delen")
         self.assertEqual(
             edurep_delen_harvest.stage,
-            HarvestStages.COMPLETE,
-            "edurep_delen set harvest got updated to other than COMPLETE while we expected it to be ignored"
+            HarvestStages.VIDEO,
+            "edurep_delen set harvest got updated to other than VIDEO while we expected it to be ignored"
         )
 
     @patch(GET_EDUREP_OAIPMH_SEEDS_TARGET, return_value=DUMMY_SEEDS)
@@ -95,8 +95,8 @@ class TestBasicHarvest(TestCase):
         edurep_delen_harvest = EdurepHarvest.objects.get(source__collection_name="edurep_delen")
         self.assertEqual(
             edurep_delen_harvest.stage,
-            HarvestStages.COMPLETE,
-            "edurep_delen set harvest got updated to other than COMPLETE while we expected it to be ignored"
+            HarvestStages.VIDEO,
+            "edurep_delen set harvest got updated to other than VIDEO while we expected it to be ignored"
         )
 
     def test_basic_invalid_freeze(self):
