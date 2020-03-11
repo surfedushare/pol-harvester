@@ -108,8 +108,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'pol',
-        'USER': 'django',
-        'PASSWORD': os.environ.get('DJANGO_POSTGRES_PASSWORD', 'Yd36ewNjYBKY4MRUjmXMpaoHvxvR2Yqe'),
+        'USER': os.environ.get('DJANGO_POSTGRES_USER', 'django'),
+        'PASSWORD': os.environ.get('DJANGO_POSTGRES_PASSWORD', 'Yd36ewNjYBKY4MRUjmXMpaoHvxvR2Yqe') or None,
         'HOST': os.environ.get('POSTGRES_HOST', '127.0.0.1')
     }
 }

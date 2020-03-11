@@ -1,0 +1,22 @@
+language: python
+python:
+  - "3.6"
+# command to install dependencies
+install:
+  - sudo apt-get install -yq --no-install-suggests --no-install-recommends postgresql-common
+  - sudo service postgresql stop
+  - sudo apt install -yq --no-install-suggests --no-install-recommends postgresql-11 postgresql-client-11
+  - sudo sed -i -e '/local.*peer/s/postgres/all/' -e 's/peer\|md5/trust/g' /etc/postgresql/*/main/pg_hba.conf
+  - sudo service postgresql start 11
+  - pip install -r harvester/requirements.txt
+# command to run tests
+before_script: cd harvester
+script: python manage.py test
+env:
+  global:
+  - PGPORT=5433
+  - DJANGO_POSTGRES_HOST=127.0.0.1
+  - DJANGO_POSTGRES_USER=postgres
+  - DJANGO_POSTGRES_PASSWORD=
+  - ELASTIC_SEARCH_USERNAME=search
+  - ELASTIC_SEARCH_PASSWORD=qwerty
