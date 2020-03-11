@@ -5,7 +5,7 @@
 export $(cat .env | xargs)
 
 # Either activate a conda environment (typically local) or activate a pip venv (typically dev server)
-if [ -x "$(command -v conda)" ]
+if [ "$(command -v conda)" ]
 then
     conda activate surf-harvester;
 elif [ -d venv ]
