@@ -161,7 +161,7 @@ USE_TZ = True
 
 # Logging
 # https://docs.djangoproject.com/en/1.11/topics/logging/
-
+LOGS_DIR = os.path.join(BASE_DIR, '..', 'logs')
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -169,12 +169,12 @@ LOGGING = {
         'debug_file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR + '/pol_harvester/logs/debug.log',
+            'filename': os.path.join(LOGS_DIR, 'debug.log'),
         },
         'freeze_file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR + '/pol_harvester/logs/freeze.log',
+            'filename': os.path.join(LOGS_DIR, 'freeze.log'),
         },
         'console': {
             'level': 'DEBUG',
