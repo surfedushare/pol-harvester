@@ -93,13 +93,13 @@ def get_edurep_oaipmh_seeds(set_specification, latest_update, include_deleted=Tr
             results += list(prc.extract_from_resource(harvest))
         except ValueError as exc:
             err.warning("Invalid XML:", exc, harvest.uri)
-    uniques = {}
-    for seed in sorted(results, key=lambda rsl: rsl["publisher_date"] or ""):
+    seeds = []
+    for seed in results:
         # Some records in Edurep do not have any known URL
         # As we can't possibly process those we ignore them (silently)
         # If we want to fix this it should happen on Edurep's or Sharekit's side
         # We informed Kirsten van Veelo and Martine Teirlinck about the situation.
-        if not seed["url"]:
+        if seed["state"] == "active" and not seed["url"]:
             continue
         # We adjust url's of seeds if the source files are not at the URL
         # We should improve data extraction to always get source files
@@ -107,17 +107,17 @@ def get_edurep_oaipmh_seeds(set_specification, latest_update, include_deleted=Tr
             seed["package_url"] = seed["url"]
             seed["url"] += "?p=imscp"
         # We deduplicate based on the external_id a UID by Edurep
-        uniques[seed["external_id"]] = seed
+        seeds.append(seed)
     # Now we'll mark any invalid seeds as deleted to make sure they disappear
     # Invalid seeds have a copyright or are of insufficient education level
-    for seed in uniques.values():
+    for seed in seeds:
         if not seed["copyright"] or seed["copyright"] == "no":
             seed["state"] = "deleted"
         if seed["lowest_educational_level"] < 1:  # lower level than MBO
             seed["state"] = "deleted"
     # And we return the seeds based on whether to include deleted or not
-    return uniques.values() if include_deleted else \
-        [result for result in uniques.values() if result.get("state", "active") == "active"]
+    return seeds if include_deleted else \
+        [result for result in seeds if result.get("state", "active") == "active"]
 
 
 def get_edurep_basic_resources(url):
