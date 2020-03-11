@@ -17,5 +17,16 @@ if [[ ! -d "statics" ]]; then
     ./manage.py collectstatic --noinput
 fi
 
+# When in DEBUG mode, and datagrowth project is present as a sibling, and datagrowth is installed as a site-package
+# Then we uninstall datagrowth and install the sibling project as editable instead.
+# That way we can more easily experiment with datagrowth during development.
+if [ "$DJANGO_DEBUG" == "1" ]  && [ -d "/usr/src/datagrowth" ] && \
+    [ $(pip show datagrowth | grep "Location:" | awk -F "/" '{print $NF}') == "site-packages" ]
+then
+    echo "Replacing datagrowth PyPi installation with editable version"
+    pip uninstall -y datagrowth
+    pip install -e /usr/src/datagrowth
+fi
+
 # Executing the normal commands
 exec "$@"

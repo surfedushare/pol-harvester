@@ -17,7 +17,7 @@ class ElasticIndex(models.Model):
 
     name = models.CharField(max_length=255)
     language = models.CharField(max_length=5, choices=settings.ELASTIC_SEARCH_ANALYSERS.items())
-    freeze = models.ForeignKey(Freeze, related_name="indices")
+    freeze = models.ForeignKey(Freeze, related_name="indices", on_delete=models.CASCADE)
     configuration = JSONField(blank=True)
     error_count = models.IntegerField(default=0)
 

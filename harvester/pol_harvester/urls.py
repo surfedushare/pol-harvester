@@ -25,6 +25,9 @@ from pol_harvester.models.documents import DocumentSitemap
 from search.urls import router as search_router
 
 
+app_name = "pol_harvester"
+
+
 api_urlpatterns = [
     url(r'^document/(?P<pk>\d+)/content/$', views.DocumentContentView.as_view(), name="document-content"),
     url(r'^document/(?P<pk>\d+)/$', views.DocumentView.as_view(), name="document"),
@@ -50,6 +53,6 @@ urlpatterns = [
     url(r'^content/sitemap.xml', sitemap, {'sitemaps': {"beta": DocumentSitemap("beta")}},
         name='django.contrib.sitemaps.views.sitemap'),
     url(r'^content/documents/(?P<pk>\d+)/$', views.document_html_view, name="content-document-html"),
-    url(r'^api/v1/', include(api_urlpatterns, namespace="api-v1")),
+    url(r'^api/v1/', include((api_urlpatterns, "api",), namespace="api-v1")),
     url(r'^api/v1/auth/token/?$', csrf_exempt(rest_views.obtain_auth_token)),
 ]

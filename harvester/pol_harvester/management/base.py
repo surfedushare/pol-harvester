@@ -1,19 +1,70 @@
-import logging
 import os
 import hashlib
+import json
 from urllib.parse import urlparse
+from copy import copy
+from tqdm import tqdm
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.utils import timezone
 
 from pol_harvester.utils.language import get_language_from_snippet
-from pol_harvester.constants import HIGHER_EDUCATION_LEVELS
 
 
-log = logging.getLogger(__name__)
+class HarvesterCommand(BaseCommand):
+    """
+    This class adds some syntax sugar to make output of all commands similar
+    """
+
+    show_progress = True
+
+    def add_arguments(self, parser):
+        parser.add_argument('-n', '--no-progress', action="store_true")
+
+    def execute(self, *args, **options):
+        self.show_progress = not options.get("no_progress", False)
+        super().execute(*args, **options)
+
+    def error(self, message):
+        self.stderr.write(self.style.ERROR(message))
+
+    def warning(self, message):
+        self.stderr.write(self.style.WARNING(message))
+
+    def info(self, message, object=None, log=False):
+        if object is not None:
+            message += json.dumps(object, indent=4)
+        if not log:
+            self.stdout.write(message)
+        else:
+            self.stderr.write(message)
+
+    def success(self, message):
+        self.stdout.write(self.style.SUCCESS(message))
+
+    def header(self, header, options=None):
+        self.info("")
+        self.info("")
+        self.info(header)
+        self.info("-" * len(header))
+        if options:
+            opts = copy(options)
+            opts.pop("stdout", None)
+            opts.pop("stderr", None)
+            self.info("Options: ", opts)
+        self.info("Commit: {}".format(settings.GIT_COMMIT))
+        now = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.info("Time: {}".format(now))
+        self.info("")
+
+    def progress(self, iterator, total=None):
+        if not self.show_progress:
+            return iterator
+        return tqdm(iterator, total=total)
 
 
-class OutputCommand(BaseCommand):
+class OutputCommand(HarvesterCommand):
 
     @staticmethod
     def _serialize_resource(resource=None):
@@ -34,8 +85,7 @@ class OutputCommand(BaseCommand):
         hasher.update(payload.encode("utf-8"))
         return hasher.hexdigest()
 
-    @staticmethod
-    def get_file_type(mime_type=None, url=None):
+    def get_file_type(self, mime_type=None, url=None):
         file_type = None
         if mime_type:
             file_type = settings.MIME_TYPE_TO_FILE_TYPE.get(mime_type, None)
@@ -43,29 +93,9 @@ class OutputCommand(BaseCommand):
             url = urlparse(url)
             file, extension = os.path.splitext(url.path)
             if extension and extension.lower() not in settings.EXTENSION_TO_FILE_TYPE:
-                log.warning("Unknown extension: {}".format(extension))
+                self.warning("Unknown extension: {}".format(extension))
             file_type = settings.EXTENSION_TO_FILE_TYPE.get(extension.lower(), "unknown")
         return file_type
-
-    @staticmethod
-    def get_lowest_educational_level(educational_levels):
-        current_numeric_level = 3 if len(educational_levels) else -1
-        for education_level in educational_levels:
-            for higher_education_level, numeric_level in HIGHER_EDUCATION_LEVELS.items():
-                if not education_level.startswith(higher_education_level):
-                    continue
-                # One of the seed's education levels matches a higher education level.
-                # We re-assign current level and stop processing this education level,
-                # as it shouldn't match multiple higher education levels
-                current_numeric_level = min(current_numeric_level, numeric_level)
-                break
-            else:
-                # No higher education level found inside current education level.
-                # Dealing with an "other" means a lower education level than we're interested in.
-                # So this seed has the lowest possible level. We're done processing this seed.
-                current_numeric_level = 0
-                break
-        return current_numeric_level
 
     def _create_document(self, text, meta, title=None, url=None, mime_type=None, file_type=None, pipeline=None,
                          hash_postfix=None):
@@ -74,7 +104,7 @@ class OutputCommand(BaseCommand):
         mime_type = mime_type or meta.get("mime_type", None)
         file_type = file_type or self.get_file_type(mime_type, url)
 
-        hash_postfix = hash_postfix if hash_postfix is not None else mime_type
+        hash_postfix = hash_postfix if hash_postfix is not None else file_type
         identifier = self.get_hash_from_url(url, postfix=hash_postfix)
 
         text_language = get_language_from_snippet(text)
@@ -105,7 +135,7 @@ class OutputCommand(BaseCommand):
             "publisher_date": meta.get("publisher_date", None),
             "disciplines": meta.get("disciplines", []),
             "educational_levels": meta.get("educational_levels", []),
-            "lowest_educational_level": self.get_lowest_educational_level(meta.get("lom_educational_levels", [])),
+            "lowest_educational_level": meta.get("lowest_educational_level", -1),
             "suggest": title,
             "pipeline": pipeline
         }

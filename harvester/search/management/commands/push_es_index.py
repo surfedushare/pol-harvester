@@ -4,7 +4,9 @@ from collections import defaultdict
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
+from pol_harvester.constants import HarvestStages
 from pol_harvester.models import Freeze, Arrangement
+from edurep.models import EdurepHarvest
 from search.models import ElasticIndex
 from search.utils.elastic import get_index_config
 
@@ -24,13 +26,12 @@ class Command(BaseCommand):
         freeze = Freeze.objects.get(name=options["freeze"])
         recreate = options["recreate"]
         promote = options["promote"]
-        arrangements = Arrangement.objects.filter(freeze=freeze).prefetch_related("documents")
-        print(f"Creating freeze { freeze.name } index recreate:{recreate} and arrangement count:{len(arrangements)}")
+        earliest_harvest = freeze.get_earliest_harvest_date()
 
-        lang_doc_dict = freeze.get_documents_by_language(
-            as_search=True,  # Elastic Search format
-            minimal_educational_level=1  # MBO and up
-        )
+        print("Upserting ES index for {freeze.name}")
+        print(f"since:{earliest_harvest:%Y-%m-%d}, recreate:{recreate} and promote:{promote}")
+
+        lang_doc_dict = freeze.get_elastic_documents_by_language(since=earliest_harvest)
         for lang in lang_doc_dict.keys():
             log.info(f'{lang}:{len(lang_doc_dict[lang])}')
 
