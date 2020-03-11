@@ -53,8 +53,8 @@
         "source": 19,
         "freeze": 19,
         "latest_update_at": "1970-01-01T00:00:00Z",
-        "harvested_at": null,
-        "stage": "New"
+        "harvested_at": "2020-02-10T13:08:39.315Z",
+        "stage": "Complete"
     }
 },
 {
@@ -64,8 +64,8 @@
         "source": 15,
         "freeze": 19,
         "latest_update_at": "1970-01-01T00:00:00Z",
-        "harvested_at": null,
-        "stage": "Complete"
+        "harvested_at": "2020-02-10T13:08:39.315Z",
+        "stage": "Video"
     }
 },
 {
