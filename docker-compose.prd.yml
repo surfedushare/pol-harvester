@@ -81,7 +81,6 @@ services:
         - "traefik.http.routers.harvester.tls=true"
         - "traefik.http.routers.harvester.tls.certresolver=default"
         - "traefik.http.middlewares.harvester.ipwhitelist.sourcerange=${HARVESTER_IP_WHITELIST}"
-    volumes:  # overwriting all mount points needed for development
     networks:
       - webnet
       - default
