@@ -27,8 +27,8 @@ services:
     command: celery -A pol_harvester worker --loglevel=info
     volumes:
       - ./harvester:/usr/src/app
-      - ./${HARVESTER_DATA_DIR}/:/usr/src/data
-      - ./${HARVESTER_MEDIA_ROOT}/:/usr/src/media
+      - ./${HARVESTER_DATA_DIR}/:/usr/src/data:z
+      - ./${HARVESTER_MEDIA_ROOT}/:/usr/src/media:z
     depends_on:
       - "postgres"
       - "redis"
