@@ -2,7 +2,9 @@
   (:require [analysis.import :refer [get-data]]
             [clojure.java.io :as io]
             [clojure.string :as str]
-            [clojure.math.combinatorics :as combo]))
+            [clojure.math.combinatorics :as combo]
+            [oz.core :as oz]
+            [cheshire.core :as json]))
 
 (def beta-files
   (let [file? #(.isFile %)
@@ -34,13 +36,62 @@
         (assoc "Tekst" v)
         (dissoc "Tekst (geanalyseerd)"))))
 
-(defn has-kvs?
-  [m subset]
-  (let [create-predicate (fn [[k v]] (fn [x] (v (get x k))))
-        pred (apply every-pred (map create-predicate subset))]
-    (pred m)))
-
 (def beta-data (->> beta-files
                     get-data
                     (map combine-title-fields)
                     (map combine-text-fields)))
+
+(def fields #{"Titel" "Omschrijving" "Sleutelwoorden" "Tekst"})
+
+(def combos
+  (drop 1 (combo/subsets (into [] fields))))
+
+(defn combo->title
+  [combo]
+  (str/capitalize (str/join ", " combo)))
+
+(defn combo->pred
+  [combo]
+  (let [combo-set (into #{} combo)
+        preds (for [field fields]
+                (if (contains? combo-set field)
+                  (fn [m] (pos? (get m field)))
+                  (fn [m] (zero? (get m field)))))]
+    (apply every-pred preds)))
+
+(defn data
+  []
+  (for [combo combos]
+    {:title (combo->title combo)
+     :values (->> beta-data
+                  (filter (combo->pred combo))
+                  (map :score))}))
+
+(def summary-plot
+  {:data {:values (data)}
+
+   :width 1000
+   :height 800
+
+   :transform [{:flatten [:values]
+                :as [:score]}
+
+               {:aggregate [{:op :mean
+                             :field :score
+                             :as :mean}]
+                :groupby [:title]}]
+
+   :mark :bar
+   :encoding {:x {:field :title
+                  :type :ordinal
+                  :title "Gebruikte data"
+                  :sort "-y"
+                  :axis {:titleFontSize 20
+                         :labelFontSize 16}}
+              :y {:field :mean
+                  :type :quantitative
+                  :title "Gemiddelde nDCG"
+                  :axis {:titleFontSize 20
+                         :labelFontSize 16}}}})
+
+(oz/view! summary-plot)
