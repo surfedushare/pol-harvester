@@ -120,6 +120,9 @@ services:
           memory: 10G
       restart_policy:
         condition: on-failure
+    networks:
+      - webnet
+      - default
 
   adminer:  # kills adminer in production, but the port should also be closed by the firewall
     command: "true"
