@@ -116,8 +116,8 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: "4"
-          memory: 10G
+          cpus: "2"
+          memory: 2G
       restart_policy:
         condition: on-failure
     networks:
