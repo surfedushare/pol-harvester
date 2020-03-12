@@ -1,6 +1,7 @@
 version: '3.7'
 
 services:
+
   harvester:
     build: .
     command: uwsgi --ini /usr/src/app/uwsgi.ini --py-autoreload=3 --honour-stdin
@@ -26,9 +27,8 @@ services:
     build: .
     command: celery -A pol_harvester worker --loglevel=info
     volumes:
-      - ./harvester:/usr/src/app
-      - ./${HARVESTER_DATA_DIR}/:/usr/src/data:z
-      - ./${HARVESTER_MEDIA_ROOT}/:/usr/src/media:z
+      - ${HARVESTER_DATA_DIR}/:/usr/src/data
+      - ${HARVESTER_MEDIA_ROOT}/:/usr/src/media
     depends_on:
       - "postgres"
       - "redis"
