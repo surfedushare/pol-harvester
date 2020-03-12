@@ -47,7 +47,8 @@
    :field-text 0
    :field-text-plain 0
    :field-title 0
-   :field-title-plain 0})
+   :field-title-plain 0
+   :field-description 0})
 
 (defn parse-fields
   [fields-str]
@@ -74,7 +75,8 @@
      :field-title-plain "Titel"
      :field-text "Tekst (geanalyseerd)"
      :field-text-plain "Tekst"
-     :field-keywords "Sleutelwoorden"}))
+     :field-keywords "Sleutelwoorden"
+     :field-description "Omschrijving"}))
 
 (defn get-data
   [files]
