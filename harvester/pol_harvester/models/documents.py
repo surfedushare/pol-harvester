@@ -123,6 +123,7 @@ class Document(DocumentPostgres, DocumentBase):
             'language': self.get_language(),
             'title_plain': self.properties['title'],
             'text_plain': self.properties['text'],
+            'description_plain': self.properties['description'],
             'keywords': self.properties['arrangement_keywords'],
             'file_type': self.properties.get('file_type', 'unknown'),
             'mime_type': self.properties['mime_type'],
