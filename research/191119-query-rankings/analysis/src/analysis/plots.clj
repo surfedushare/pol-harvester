@@ -42,16 +42,6 @@
                     (map combine-title-fields)
                     (map combine-text-fields)))
 
-(tap> beta-data)
-
-(->> beta-data
-     (filter (fn [m]
-               (and (zero? (get m "Titel"))
-                    (zero? (get m "Sleutelwoorden"))
-                    (zero? (get m "Tekst"))
-                    (pos? (get m "Omschrijving"))))))
-
-
 (def fields #{"Titel" "Omschrijving" "Sleutelwoorden" "Tekst"})
 
 (def combos
@@ -77,6 +67,23 @@
      :values (->> beta-data
                   (filter (combo->pred combo))
                   (map :score))}))
+
+(defn mean
+  [& xs]
+  (let [c (count xs)]
+    (if (zero? c)
+      0
+      (/ (reduce + xs)
+         c))))
+(defn new-data
+  []
+  (for [combo combos]
+    (let [base (merge (zipmap fields (repeat 0))
+                      (zipmap combo (repeat 1)))
+          scores (->> beta-data
+                      (filter (combo->pred combo))
+                      (map :score))]
+      (assoc base :score (apply mean scores)))))
 
 (def summary-plot
   {:data {:values (data)}
@@ -116,18 +123,18 @@
 
 (def used-fields-table
   {:data [{:name "input"
-           :values [{"Titel" 1
-                     "Omschrijving" 1
-                     :score 1}
-                    {"Titel" 1
-                     "Omschrijving" 0
-                     :score 2}]
-
+           :values (new-data)
            :transform [{:type :identifier
-                        :as :id}]}]
+                        :as :id}]}
 
-    :width 400
-    :height 500
+          {:name "fields"
+           :source "input"
+           :transform [{:type :fold
+                        :fields fields
+                        :as [:field :used]}]}]
+
+    :width 750
+    :height 460
 
     :scales [{:name "position"
               :type :band
@@ -137,25 +144,31 @@
               :domain {:data "input"
                        :field :id
                        :sort {:field :score
+                              :op :mean
                               :order :descending}}}]
 
     :marks [{:type :group
              :name "barchart"
-             :encode {:enter {:height {:value 250}
+             :encode {:enter {:height {:value 350}
                               :width {:signal :width}}}
 
-             :scales [{:name "y"
+             :scales [{:name "barcharty"
                        :type :linear
                        :nice true
-                       :range [250 0]
+                       :range [350 0]
                        :zero true
                        :domain {:data "input"
                                 :field :score}}]
 
              :axes [{:orient :bottom
-                     :scale "position"}
+                     :scale "position"
+                     :labels false
+                     :ticks false}
                     {:orient :left
-                     :scale "y"}]
+                     :scale "barcharty"
+                     :labelFontSize 15
+                     :title "Gemiddelde nDCG"
+                     :titleFontSize 15}]
 
              :marks [{:type :rect
                       :from {:data "input"}
@@ -163,16 +176,52 @@
                                            :field :id}
                                        :width {:scale "position"
                                                :band 1}
-                                       :y {:scale "y"
+                                       :y {:scale "barcharty"
                                            :field :score}
-                                       :y2 {:scale "y"
+                                       :y2 {:scale "barcharty"
                                             :value 0}}}
-                      :update {:fill {:value "steelblue"}}}]}]})
+                      :update {:fill {:value "steelblue"}}}]}
+
+            {:type :group
+             :name "boxes"
+             :encode {:enter {:x {:value 0}
+                              :y {:value 370}
+                              :height {:value 80}
+                              :width {:signal :width}}}
+
+             :scales [{:name "fieldsy"
+                       :type :band
+                       :range [0 70]
+                       :padding 0.05
+                       :round true
+                       :domain fields}
+                      {:name "fieldscolor"
+                       :type :ordinal
+                       :domain [0 1]
+                       :range ["transparent" "slategray"]}]
+
+             :axes [{:orient :left
+                     :scale "fieldsy"
+                     :ticks false
+                     :domainColor {:value "transparent"}
+                     :labelFontSize 15
+                     :title "Gebruikte velden"
+                     :titleFontSize 15}]
+
+             :marks [{:type :rect
+                      :from {:data "fields"}
+                      :encode {:enter {:x {:scale "position"
+                                           :field :id}
+                                       :width {:scale "position"
+                                               :band 1}
+                                       :y {:scale "fieldsy"
+                                           :field :field}
+                                       :height {:scale "fieldsy"
+                                                :band 1}}
+                               :update {:fill {:scale "fieldscolor"
+                                               :field :used}}}}]}]})
 
 (copy-plot used-fields-table)
 
 
 (oz/view! used-fields-table)
-
-
-
