@@ -4,7 +4,8 @@
             [clojure.string :as str]
             [clojure.math.combinatorics :as combo]
             [oz.core :as oz]
-            [cheshire.core :as json]))
+            [cheshire.core :as json])
+  (:import [java.awt.datatransfer StringSelection]))
 
 (def beta-files
   (let [file? #(.isFile %)
@@ -40,6 +41,16 @@
                     get-data
                     (map combine-title-fields)
                     (map combine-text-fields)))
+
+(tap> beta-data)
+
+(->> beta-data
+     (filter (fn [m]
+               (and (zero? (get m "Titel"))
+                    (zero? (get m "Sleutelwoorden"))
+                    (zero? (get m "Tekst"))
+                    (pos? (get m "Omschrijving"))))))
+
 
 (def fields #{"Titel" "Omschrijving" "Sleutelwoorden" "Tekst"})
 
@@ -95,3 +106,73 @@
                          :labelFontSize 16}}}})
 
 (oz/view! summary-plot)
+
+(defn copy-plot
+  [plot]
+  (let [clipboard (.getSystemClipboard (java.awt.Toolkit/getDefaultToolkit))]
+    (.setContents
+      clipboard
+      (StringSelection. (json/generate-string plot)) nil)))
+
+(def used-fields-table
+  {:data [{:name "input"
+           :values [{"Titel" 1
+                     "Omschrijving" 1
+                     :score 1}
+                    {"Titel" 1
+                     "Omschrijving" 0
+                     :score 2}]
+
+           :transform [{:type :identifier
+                        :as :id}]}]
+
+    :width 400
+    :height 500
+
+    :scales [{:name "position"
+              :type :band
+              :range :width
+              :padding 0.05
+              :round true
+              :domain {:data "input"
+                       :field :id
+                       :sort {:field :score
+                              :order :descending}}}]
+
+    :marks [{:type :group
+             :name "barchart"
+             :encode {:enter {:height {:value 250}
+                              :width {:signal :width}}}
+
+             :scales [{:name "y"
+                       :type :linear
+                       :nice true
+                       :range [250 0]
+                       :zero true
+                       :domain {:data "input"
+                                :field :score}}]
+
+             :axes [{:orient :bottom
+                     :scale "position"}
+                    {:orient :left
+                     :scale "y"}]
+
+             :marks [{:type :rect
+                      :from {:data "input"}
+                      :encode {:enter {:x {:scale "position"
+                                           :field :id}
+                                       :width {:scale "position"
+                                               :band 1}
+                                       :y {:scale "y"
+                                           :field :score}
+                                       :y2 {:scale "y"
+                                            :value 0}}}
+                      :update {:fill {:value "steelblue"}}}]}]})
+
+(copy-plot used-fields-table)
+
+
+(oz/view! used-fields-table)
+
+
+
