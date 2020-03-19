@@ -156,7 +156,7 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
             'external_id': base_document.properties['external_id'],
             'disciplines': base_document.properties['disciplines'],
             'educational_levels': base_document.properties['educational_levels'],
-            'lom_educational_levels': base_document.properties['educational_levels'],
+            'lom_educational_levels': base_document.properties['lom_educational_levels'],
             'author': base_document.properties['author'],
             'description': base_document.properties['description'],
             'publisher_date': base_document.properties['publisher_date'],
