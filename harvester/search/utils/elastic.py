@@ -83,6 +83,9 @@ def get_index_config(lang):
                     'educational_levels': {
                         'type': 'keyword'
                     },
+                    'lom_educational_levels': {
+                        'type': 'keyword'
+                    },
                     'disciplines': {
                         'type': 'keyword'
                     },

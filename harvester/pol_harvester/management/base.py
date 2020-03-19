@@ -135,6 +135,7 @@ class OutputCommand(HarvesterCommand):
             "publisher_date": meta.get("publisher_date", None),
             "disciplines": meta.get("disciplines", []),
             "educational_levels": meta.get("educational_levels", []),
+            "lom_educational_levels": meta.get("lom_educational_levels", []),
             "lowest_educational_level": meta.get("lowest_educational_level", -1),
             "suggest": title,
             "pipeline": pipeline
