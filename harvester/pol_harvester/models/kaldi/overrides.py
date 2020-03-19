@@ -1,4 +1,5 @@
-from django.db.utils import OperationalError
+from django import db
+from django.db.utils import OperationalError, InterfaceError
 
 from .nl import KaldiNLResource as KaldiNL
 from .aspire import KaldiAspireResource as KaldiEN
@@ -13,7 +14,8 @@ class KaldiNLResource(KaldiNL):
         # For now we're simply retrying once and leave it at that
         try:
             super().save(*args, **kwargs)
-        except OperationalError:
+        except (OperationalError, InterfaceError):
+            db.connection.close()
             super().save(*args, **kwargs)
 
 
@@ -26,5 +28,6 @@ class KaldiAspireResource(KaldiEN):
         # For now we're simply retrying once and leave it at that
         try:
             super().save(*args, **kwargs)
-        except OperationalError:
+        except (OperationalError, InterfaceError):
+            db.connection.close()
             super().save(*args, **kwargs)

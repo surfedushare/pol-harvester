@@ -24,18 +24,20 @@ RUN apt-get update && apt-get install -y less vim ffmpeg \
 RUN mkdir -p /usr/src/app
 RUN mkdir -p /usr/src/rateapp
 RUN mkdir -p /usr/src/logs
+RUN mkdir -p /usr/src/media
 WORKDIR /usr/src/app
-RUN useradd -mUs /bin/bash app
+RUN groupadd -r app -g 1001 && useradd app -u 1001 -r -g app
 RUN chown -R app:app /usr/local
 RUN chown app:app /usr/src/app
 RUN chown app:app /usr/src/rateapp
 RUN chown app:app /usr/src/logs
+RUN chown app:app /usr/src/media
 RUN chown -R app:app /usr/local/lib/python3.6/site-packages
 USER app:app
 
 # Python dependencies
 COPY harvester/requirements.txt /usr/src/app/
-RUN pip install -U pip && pip install uwsgi==2.0.18
+RUN pip install -U --no-cache-dir pip && pip install --no-cache-dir uwsgi==2.0.18
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application

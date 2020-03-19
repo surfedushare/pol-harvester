@@ -15,7 +15,8 @@ PLAIN_TEXT_MIME_TYPES = [
     "application/octet-stream",
     "application/pdf",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "vnd.openxmlformats-officedocument.presentationml.presentation"
+    "vnd.openxmlformats-officedocument.presentationml.presentation",
+    "application/xhtml+xml"
 ]
 
 

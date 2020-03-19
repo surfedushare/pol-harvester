@@ -43,7 +43,8 @@ class Command(BaseCommand):
         parser.add_argument('-m', '--metrics', nargs="*", default=METRICS.keys())
         parser.add_argument('-k', '--result-count', type=int, default=20)
         parser.add_argument('--fields', nargs="+", default=[
-            'title^2', 'text', 'text_plain', 'title_plain', 'keywords', 'description', 'description_plain'
+            'title^2', 'text', 'text_plain', 'title_plain', 'keywords', 'description', 'description_plain',
+            'transcription', 'transcription_plain'
         ])
 
     def handle(self, *args, **options):

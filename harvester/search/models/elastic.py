@@ -17,7 +17,7 @@ class ElasticIndex(models.Model):
 
     name = models.CharField(max_length=255)
     language = models.CharField(max_length=5, choices=settings.ELASTIC_SEARCH_ANALYSERS.items())
-    freeze = models.ForeignKey(Freeze, related_name="indices")
+    freeze = models.ForeignKey(Freeze, related_name="indices", on_delete=models.CASCADE)
     configuration = JSONField(blank=True)
     error_count = models.IntegerField(default=0)
 
@@ -45,16 +45,22 @@ class ElasticIndex(models.Model):
             raise ValueError("Can't push index with unsaved object")
 
         remote_name = self.remote_name
-        if self.remote_exists and recreate:
-            self.client.indices.delete(remote_name)
+        remote_exists = self.remote_exists
 
-        self.client.indices.create(
-            index=remote_name,
-            body=self.configuration,
-            request_timeout=request_timeout
-        )
+        # Some preparation based on remote state as well as command line options
+        if remote_exists and recreate:
+            self.client.indices.delete(remote_name)
+        if remote_exists and recreate or not remote_exists:
+            self.configuration = get_index_config(self.language)
+            self.client.indices.create(
+                index=remote_name,
+                body=self.configuration,
+                request_timeout=request_timeout
+            )
         if recreate:
             self.error_count = 0
+
+        # Actual push of docs to ES
         for is_ok, result in streaming_bulk(self.client, elastic_documents, index=remote_name, doc_type="_doc",
                                             chunk_size=100, yield_ok=False, raise_on_error=False,
                                             request_timeout=request_timeout):
