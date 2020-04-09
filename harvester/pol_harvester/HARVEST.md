@@ -103,20 +103,6 @@ It's possible to execute a delta update. Simply repeat the steps from step 3 onw
 Through the OAI-PMH protocol the harvester will only retrieve materials that are newer than your last harvest.
 
 
-
-Working with Library for Learning
----------------------------------
-
-The Library for Learning materials take a slightly different approach.
-The video transcripts and metadata for this collection comes directly in a XML file from Wageningen.
-By specifying a freeze, the name of the collection ("wur" traditionally)
-and an input XML file the L4L data gets added to a ``Freeze``.
-
-```bash
-./manage.py freeze_library_4_learning --freeze <your-freeze-name> --collection <source-name> --input <data-file>
-```
-
-
 Putting data in Elastic Search
 ------------------------------
 
