@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'edurep',
     'ims',
     'search',
+    'media_site'
 ]
 
 MIDDLEWARE = [
