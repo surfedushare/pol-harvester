@@ -24,3 +24,21 @@ run-seeds-harvest:
 
 backup-seeds:
 	cd harvester && python -u manage.py dump_resource edurep.EdurepOAIPMH
+
+pull-production-media:
+	# Syncing production media to local media folder
+	# -z means use compression
+	# -r means recursive
+	# -t means preserve creation and modification times
+	# -h means human readable output
+	# -v means verbose
+	rsync -zrthv --progress search-prod.surfcatalog.nl:/opt/media/media .
+
+push-test-media:
+	# Syncing production media to local media folder
+	# -z means use compression
+	# -r means recursive
+	# -t means preserve creation and modification times
+	# -h means human readable output
+	# -v means verbose
+	rsync -zrthv --progress media search-test.surfcatalog.nl:/opt/media/
