@@ -52,7 +52,7 @@ class TestGetEdurepOAIPMHSeeds(TestCase):
         self.check_seed_integrity(seeds)
 
     def test_get_partial_set(self):
-        seeds = get_edurep_oaipmh_seeds("surf", make_aware(datetime(year=2020, month=1, day=1)))
+        seeds = get_edurep_oaipmh_seeds("surf", make_aware(datetime(year=2020, month=2, day=10, hour=22, minute=22)))
         self.assertEqual(len(seeds), 6)
         self.check_seed_integrity(seeds)
 
@@ -62,6 +62,6 @@ class TestGetEdurepOAIPMHSeeds(TestCase):
         self.check_seed_integrity(seeds, include_deleted=False)
 
     def test_get_partial_set_without_deletes(self):
-        seeds = get_edurep_oaipmh_seeds("surf", make_aware(datetime(year=2020, month=1, day=1)), include_deleted=False)
+        seeds = get_edurep_oaipmh_seeds("surf", make_aware(datetime(year=2020, month=2, day=10, hour=22, minute=22)), include_deleted=False)
         self.assertEqual(len(seeds), 4)
         self.check_seed_integrity(seeds, include_deleted=False)
