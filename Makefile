@@ -16,6 +16,9 @@ import-db:
 run-bash:
 	docker exec -it $(shell docker ps -qf label=nl.surfpol.harvester | head -n1) /usr/src/app/entrypoint.sh bash
 
+run-harvest:
+	docker exec -it $(shell docker ps -qf label=nl.surfpol.harvester | head -n1) /usr/src/app/entrypoint.sh python manage.py run_harvest
+
 start-postgres:
 	psql -h localhost -U postgres -d postgres
 
