@@ -46,7 +46,7 @@ services:
       - ELASTIC_SEARCH_HOST=${ELASTIC_SEARCH_HOST}
 
   postgres:
-    image: postgres:11.1
+    image: postgres:11
     command: postgres -c 'config_file=/etc/postgresql/postgresql.conf'
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
