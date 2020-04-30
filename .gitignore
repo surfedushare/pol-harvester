@@ -11,6 +11,7 @@ env/
 data/
 media/
 logs/
+shell/
 *.sqlite3
 harvester/statics
 harvester/pol_harvester/logs/*.log

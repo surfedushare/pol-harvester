@@ -12,6 +12,9 @@ services:
       - "redis"
     labels:
       nl.surfpol.harvester: "harvester"
+    volumes:
+      - ./shell/.ipython/:/home/app/.ipython
+      - ./shell/.bash_history:/home/app/.bash_history
     environment:
       - PYTHONUNBUFFERED=1
       - POSTGRES_HOST=postgres
@@ -29,6 +32,7 @@ services:
     volumes:
       - ${HARVESTER_DATA_DIR}/:/usr/src/data
       - ${HARVESTER_MEDIA_ROOT}/:/usr/src/media
+      - ./.ipython/:/home/app/.ipython
     depends_on:
       - "postgres"
       - "redis"
