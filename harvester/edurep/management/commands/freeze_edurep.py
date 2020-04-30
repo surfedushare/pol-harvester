@@ -87,16 +87,15 @@ class Command(OutputCommand):
             return []
         if tika_resource.is_zip():
             return self.get_documents_from_zip(file_resource, tika_resource, metadata, pipeline)
-        if tika_resource.has_plain():
-            tika_content_type, data = tika_resource.content
-            if data is None:
-                return []
-            text = data.get("text", "")
-            if not text:
-                return []
-            return [self._create_document(text, meta=metadata, pipeline=pipeline)]
-        self.warning(f"No output at all for HttpTikaResource: {tika_resource.id}")
-        return []
+        tika_content_type, data = tika_resource.content
+        if data is None:
+            return []
+        text = data.get("text", "")
+        if not text:
+            self.warning(f"No output at all for HttpTikaResource: {tika_resource.id}")
+            return []
+        return [self._create_document(text, meta=metadata, pipeline=pipeline)]
+
 
     def handle_upsert_seeds(self, collection, seeds):
         skipped = 0
