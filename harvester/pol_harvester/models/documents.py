@@ -17,6 +17,8 @@ from datagrowth.datatypes import DocumentBase, DocumentPostgres, CollectionBase,
 
 class Freeze(DocumentCollectionMixin, CollectionBase):
 
+    is_active = models.BooleanField(default=False)
+
     def init_document(self, data, collection=None):
         doc = super().init_document(data, collection=collection)
         doc.freeze = self
@@ -131,7 +133,6 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
         return count
 
     def to_search(self):
-        base_document = self.documents.first()
 
         text_documents = self.documents.exclude(properties__file_type="video")
         texts = []
@@ -146,6 +147,10 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
                 continue
             transcriptions.append(doc.properties["text"])
         transcription = "\n\n".join(transcriptions)
+
+        base_document = video_documents.first()
+        if base_document is None:
+            base_document = text_documents.first()
 
         # Elastic Search actions get streamed to the Elastic Search service
         elastic_search_action = {
@@ -166,7 +171,7 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
             'text_plain': text,
             'transcription_plain': transcription,
             'keywords': self.meta['keywords'],
-            'file_type': base_document['file_type'] if 'file_type' in base_document.properties else  'unknown',
+            'file_type': base_document['file_type'] if 'file_type' in base_document.properties else 'unknown',
             'mime_type': base_document['mime_type'],
             'suggest': base_document['title'].split(" ") if base_document['title'] else [],
             '_id': self.meta['reference_id'],

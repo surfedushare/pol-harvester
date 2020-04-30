@@ -39,7 +39,7 @@ It also indicates the Edurep set that you want to harvest through OAI-PMH.
 You need to run the following harvest commands to gather data from Edurep and the URL's that Edurep points to.
 The order of the commands is important. The system will not proceed to step B if step A hasn't been completed.
 
-##### A.)
+##### A.) Metadata
 
 First we'll download metadata from Edurep to see which learning materials are available
 
@@ -101,20 +101,6 @@ If you want to update existing ``Arrangements`` and/or ``Documents`` from an exi
 without going through the entire process from the start.
 It's possible to execute a delta update. Simply repeat the steps from step 3 onwards.
 Through the OAI-PMH protocol the harvester will only retrieve materials that are newer than your last harvest.
-
-
-
-Working with Library for Learning
----------------------------------
-
-The Library for Learning materials take a slightly different approach.
-The video transcripts and metadata for this collection comes directly in a XML file from Wageningen.
-By specifying a freeze, the name of the collection ("wur" traditionally)
-and an input XML file the L4L data gets added to a ``Freeze``.
-
-```bash
-./manage.py freeze_library_4_learning --freeze <your-freeze-name> --collection <source-name> --input <data-file>
-```
 
 
 Putting data in Elastic Search
