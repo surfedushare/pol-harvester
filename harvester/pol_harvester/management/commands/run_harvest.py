@@ -24,4 +24,4 @@ class Command(HarvesterCommand):
             call_command("harvest_edurep_basic", freeze=freeze.name)
             call_command("harvest_edurep_video", freeze=freeze.name, dummy=True)
             call_command("freeze_edurep", freeze=freeze.name)
-            call_command("push_es_index", freeze=freeze.name)
+            call_command("push_es_index", freeze=freeze.name, recreate=options["reset"])

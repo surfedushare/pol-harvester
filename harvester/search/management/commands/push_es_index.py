@@ -28,7 +28,7 @@ class Command(BaseCommand):
         promote = options["promote"]
         earliest_harvest = freeze.get_earliest_harvest_date()
 
-        print("Upserting ES index for {freeze.name}")
+        print(f"Upserting ES index for {freeze.name}")
         print(f"since:{earliest_harvest:%Y-%m-%d}, recreate:{recreate} and promote:{promote}")
 
         lang_doc_dict = freeze.get_elastic_documents_by_language(since=earliest_harvest)
