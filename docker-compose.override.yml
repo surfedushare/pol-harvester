@@ -3,7 +3,6 @@ version: '3.7'
 services:
   harvester:
     volumes:
+      # Mounts we need to debug local code
       - ./harvester:/usr/src/app
       - ../datagrowth:/usr/src/datagrowth
-      - ./${HARVESTER_DATA_DIR}/:/usr/src/data
-      - ./${HARVESTER_MEDIA_ROOT}/:/usr/src/media

@@ -12,9 +12,6 @@ services:
       - "redis"
     labels:
       nl.surfpol.harvester: "harvester"
-    volumes:
-      - ./shell/.ipython/:/home/app/.ipython
-      - ./shell/.bash_history:/home/app/.bash_history
     environment:
       - PYTHONUNBUFFERED=1
       - POSTGRES_HOST=postgres
@@ -30,9 +27,12 @@ services:
     build: .
     command: celery -A pol_harvester worker --loglevel=info
     volumes:
+      # Mounts we need to access local file and data storage
       - ${HARVESTER_DATA_DIR}/:/usr/src/data
       - ${HARVESTER_MEDIA_ROOT}/:/usr/src/media
-      - ./.ipython/:/home/app/.ipython
+      # Mounts we need for easy access to tools inside container
+      - ./shell/.ipython/:/home/app/.ipython
+      - ./shell/.bash_history:/home/app/.bash_history
     depends_on:
       - "postgres"
       - "redis"

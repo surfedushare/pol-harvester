@@ -1,5 +1,6 @@
 now = $(shell date +"%Y-%m-%d")
 
+
 clean:
 	find . -type f -name "*.pyc" -delete;
 	find . -type d -name "__pycache__" -delete;
@@ -14,10 +15,10 @@ import-db:
 	cat $(backup) | docker exec -i $(shell docker ps -qf label=nl.surfpol.db) psql -h localhost -U postgres pol
 
 run-bash:
-	docker exec -it $(shell docker ps -qf label=nl.surfpol.harvester | head -n1) /usr/src/app/entrypoint.sh bash
+	docker exec -it $(shell docker ps -qf label=nl.surfpol.tasks | head -n1) /usr/src/app/entrypoint.sh bash
 
 run-harvest:
-	docker exec -i $(shell docker ps -qf label=nl.surfpol.harvester | head -n1) /usr/src/app/entrypoint.sh python manage.py run_harvest
+	docker exec -i $(shell docker ps -qf label=nl.surfpol.tasks | head -n1) /usr/src/app/entrypoint.sh python manage.py run_harvest --no-progress
 
 start-postgres:
 	psql -h localhost -U postgres -d postgres
