@@ -8,9 +8,7 @@ from django.db import models
 from django.contrib.postgres import fields as postgres_fields
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
-from django.utils.timezone import datetime, make_aware, now
-
-from edurep.models import HarvestStages
+from django.utils.timezone import now
 
 from datagrowth import settings as datagrowth_settings
 from datagrowth.utils import ibatch
@@ -32,10 +30,7 @@ class Freeze(DocumentCollectionMixin, CollectionBase):
     def reset(self):
         self.collection_set.all().delete()
         for harvest in self.edurepharvest_set.all():
-            harvest.latest_update_at = make_aware(datetime(year=1970, month=1, day=1))
-            harvest.harvested_at = None
-            harvest.stage = HarvestStages.NEW
-            harvest.save()
+            harvest.reset()
 
     def get_elastic_indices(self):
         return ",".join([index.remote_name for index in self.indices.all()])

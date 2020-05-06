@@ -175,3 +175,9 @@ class EdurepHarvest(models.Model):
     def clean(self):
         if not self.id:
             self.stage = HarvestStages.NEW
+
+    def reset(self):
+        self.latest_update_at = make_aware(datetime(year=1970, month=1, day=1))
+        self.harvested_at = None
+        self.stage = HarvestStages.NEW
+        self.save()
