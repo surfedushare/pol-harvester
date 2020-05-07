@@ -30,8 +30,8 @@ backup-seeds:
 	cd harvester && python -u manage.py dump_resource edurep.EdurepOAIPMH
 
 backup-indices:
-	docker cp $(shell docker ps -qf label=nl.surfpol.elastic):/usr/share/elasticsearch/repositories/backups elastic/repositories/backups
 	cd elastic/repositories
+	docker cp $(shell docker ps -qf label=nl.surfpol.elastic):/usr/share/elasticsearch/repositories/backups backups
 	zip -r data/pol.${now}.elastic.zip backups
 
 pull-production-media:
