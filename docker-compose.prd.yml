@@ -147,6 +147,8 @@ services:
 
   elastic:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.8.6
+    labels:
+      nl.surfpol.elastic: "elastic"
     environment:
       - node.name=elastic
       - discovery.type=single-node
