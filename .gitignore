@@ -12,6 +12,7 @@ data/
 media/
 logs/
 shell/
+elasticsearch/repositories
 *.sqlite3
 harvester/statics
 harvester/pol_harvester/logs/*.log

@@ -167,6 +167,8 @@ services:
         hard: -1
     volumes:
       - elastic-data:/usr/share/elasticsearch/data
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./elasticsearch/repositories:/usr/share/elasticsearch/repositories
     networks:
       - default
       - webnet
