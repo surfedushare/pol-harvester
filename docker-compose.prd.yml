@@ -169,6 +169,7 @@ services:
         hard: -1
     volumes:
       - elastic-data:/usr/share/elasticsearch/data
+      - elastic-repositories:/usr/share/elasticsearch/repositories
       - ./elastic/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
       - default
@@ -222,6 +223,7 @@ volumes:
   postgres-data:
   metabase-data:
   elastic-data:
+  elastic-repositories:
   traefik-data:
 
 networks:
