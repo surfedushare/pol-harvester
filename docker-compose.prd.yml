@@ -147,6 +147,8 @@ services:
 
   elastic:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.8.6
+    labels:
+      nl.surfpol.elastic: "elastic"
     environment:
       - node.name=elastic
       - discovery.type=single-node
@@ -167,6 +169,8 @@ services:
         hard: -1
     volumes:
       - elastic-data:/usr/share/elasticsearch/data
+      - elastic-repositories:/usr/share/elasticsearch/repositories
+      - ./elastic/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
       - default
       - webnet
@@ -219,6 +223,7 @@ volumes:
   postgres-data:
   metabase-data:
   elastic-data:
+  elastic-repositories:
   traefik-data:
 
 networks:
