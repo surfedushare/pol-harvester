@@ -35,7 +35,7 @@ backup-indices:
 	zip -r data/pol.${now}.elastic.zip backups
 
 dump-resources:
-	docker exec -i $(shell docker ps -qf label=nl.surfpol.tasks | head -n1) /usr/src/app/entrypoint.sh python manage.py dump_harvester_data delta
+	docker exec -i $(shell docker ps -qf label=nl.surfpol.tasks | head -n1) /usr/src/app/entrypoint.sh python manage.py dump_harvester_data epsilon
 	sed -i 's/"freeze"/"dataset"/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
 	sed -i 's/pol_harvester.freeze/core.dataset/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
 	sed -i 's/pol_harvester.collection/core.collection/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
