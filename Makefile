@@ -34,6 +34,16 @@ backup-indices:
 	docker cp $(shell docker ps -qf label=nl.surfpol.elastic):/usr/share/elasticsearch/repositories/backups backups
 	zip -r data/pol.${now}.elastic.zip backups
 
+dump-resources:
+	docker exec -i $(shell docker ps -qf label=nl.surfpol.tasks | head -n1) /usr/src/app/entrypoint.sh python manage.py dump_harvester_data delta
+	sed -i 's/"freeze"/"dataset"/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
+	sed -i 's/pol_harvester.freeze/core.dataset/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
+	sed -i 's/pol_harvester.collection/core.collection/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
+	sed -i 's/pol_harvester.arrangement/core.arrangement/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
+	sed -i 's/pol_harvester.document/core.document/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
+	aws s3 cp ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/* s3://edushare-data/datasets/harvester/core/dumps/dataset/
+	aws s3 cp ${HARVESTER_DATA_DIR}/edurep/dumps/edurepoaipmh/* s3://edushare-data/datasets/harvester/edurep/dumps/edurepoaipmh/
+
 pull-production-media:
 	# Syncing production media to local media folder
 	# -z means use compression
