@@ -40,6 +40,7 @@ dump-resources:
 	sed -i 's/pol_harvester.freeze/core.dataset/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
 	sed -i 's/edurep.edurepsource/core.oaipmhset/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
 	sed -i 's/edurep.edurepharvest/core.oaipmhharvest/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
+	sed -i 's/search.elasticindex/core.elasticindex/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
 	sed -i 's/"collection_name"/"spec"/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
 	sed -i 's/"query": null/"repository": "edurep.EdurepOAIPMH"/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
 	sed -i -E 's/"query": "[A-Za-z0-9 \._=]+"/"repository": "edurep.EdurepOAIPMH"/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*

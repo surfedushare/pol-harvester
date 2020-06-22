@@ -23,6 +23,7 @@ class Command(base.LabelCommand):
             object_to_disk(freeze, json_file)
             queryset_to_disk(freeze.edurepsource_set, json_file)
             queryset_to_disk(freeze.edurepharvest_set, json_file)
+            queryset_to_disk(freeze.indices, json_file)
             queryset_to_disk(freeze.collection_set, json_file)
             queryset_to_disk(freeze.arrangement_set, json_file)
             queryset_to_disk(freeze.document_set, json_file)
