@@ -27,6 +27,10 @@ class Freeze(DocumentCollectionMixin, CollectionBase):
     def __str__(self):
         return "{} (id={})".format(self.name, self.id)
 
+    @classmethod
+    def get_name(cls):
+        return "freeze"
+
     def reset(self):
         self.collection_set.all().delete()
         for harvest in self.edurepharvest_set.all():

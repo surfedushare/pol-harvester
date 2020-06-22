@@ -6,3 +6,8 @@ services:
       # Mounts we need to debug local code
       - ./harvester:/usr/src/app
       - ../datagrowth:/usr/src/datagrowth
+
+  tasks:
+    volumes:
+      # Mounts we need to debug local code
+      - ./harvester:/usr/src/app
