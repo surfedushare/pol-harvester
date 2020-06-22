@@ -38,6 +38,8 @@ dump-resources:
 	docker exec -i $(shell docker ps -qf label=nl.surfpol.tasks | head -n1) /usr/src/app/entrypoint.sh python manage.py dump_harvester_data epsilon
 	sed -i 's/"freeze"/"dataset"/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
 	sed -i 's/pol_harvester.freeze/core.dataset/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
+	sed -i 's/edurep.edurepsource/core.oaipmhset/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
+	sed -i 's/edurep.edurepharvest/core.oaipmhharvest/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
 	sed -i 's/pol_harvester.collection/core.collection/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
 	sed -i 's/pol_harvester.arrangement/core.arrangement/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*
 	sed -i 's/pol_harvester.document/core.document/g' ${HARVESTER_DATA_DIR}/pol_harvester/dumps/freeze/*

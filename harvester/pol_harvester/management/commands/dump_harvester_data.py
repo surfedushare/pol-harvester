@@ -21,6 +21,8 @@ class Command(base.LabelCommand):
         file_name = os.path.join(destination, "{}.{}.json".format(freeze.name, freeze.id))
         with open(file_name, "w") as json_file:
             object_to_disk(freeze, json_file)
+            queryset_to_disk(freeze.edurepsource_set, json_file)
+            queryset_to_disk(freeze.edurepharvest_set, json_file)
             queryset_to_disk(freeze.collection_set, json_file)
             queryset_to_disk(freeze.arrangement_set, json_file)
             queryset_to_disk(freeze.document_set, json_file)
