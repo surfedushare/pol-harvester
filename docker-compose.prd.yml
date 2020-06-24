@@ -198,7 +198,7 @@ services:
     image: docker.elastic.co/kibana/kibana:6.8.6
     environment:
       SERVER_NAME: "${KIBANA_HOSTNAME}"
-      ELASTICSEARCH_HOSTS: "${ELASTIC_SEARCH_URL}"
+      ELASTICSEARCH_HOSTS: "http://elastic:9200"
       ELASTICSEARCH_USERNAME: "${ELASTIC_KIBANA_USERNAME}"
       ELASTICSEARCH_PASSWORD: "${ELASTIC_KIBANA_PASSWORD}"
     networks:
