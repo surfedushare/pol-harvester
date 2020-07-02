@@ -130,6 +130,8 @@ class OutputCommand(HarvesterCommand):
             "file_type": file_type,
             "mime_type": mime_type,
             "author": meta.get("author", []),
+            "authors": meta.get("authors", []),
+            "publishers": meta.get("publishers", []),
             "description": meta.get("description", None),
             "copyright": meta.get("copyright", None),
             "publisher_date": meta.get("publisher_date", None),
