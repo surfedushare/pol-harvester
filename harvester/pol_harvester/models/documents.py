@@ -172,6 +172,8 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
             'educational_levels': base_document.properties['educational_levels'],
             'lom_educational_levels': base_document.properties['lom_educational_levels'],
             'author': base_document.properties['author'],
+            'authors': base_document.properties['authors'],
+            'publishers': base_document.properties['publishers'],
             'description': base_document.properties['description'],
             'publisher_date': base_document.properties['publisher_date'],
             'copyright': base_document.properties['copyright'],
