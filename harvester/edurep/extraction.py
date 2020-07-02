@@ -18,7 +18,7 @@ class EdurepDataExtraction(object):
                 match = cls.vcard_regex.match(line)
                 if match:
                     results[match.groups()[0]] = match.groups()[1]
-        return results if key is None else results[key]
+        return results if key is None else results.get(key, vcard)
 
     #############################
     # API ONLY
