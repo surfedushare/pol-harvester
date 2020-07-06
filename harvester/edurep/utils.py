@@ -20,6 +20,7 @@ EDUREP_EXTRACTION_OBJECTIVE = {
     "description": EdurepDataExtraction.get_description,
     "mime_type": EdurepDataExtraction.get_mime_type,
     "copyright": EdurepDataExtraction.get_copyright,
+    "aggregation_level": EdurepDataExtraction.get_aggregation_level,
     "author": EdurepDataExtraction.get_author,
     "authors": EdurepDataExtraction.get_authors,
     "publishers": EdurepDataExtraction.get_publishers,

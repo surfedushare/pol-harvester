@@ -177,6 +177,7 @@ class Arrangement(DocumentCollectionMixin, CollectionBase):
             'description': base_document.properties['description'],
             'publisher_date': base_document.properties['publisher_date'],
             'copyright': base_document.properties['copyright'],
+            'aggregation_level': base_document.properties['aggregation_level'],
             'language': base_document.get_language(),
             'title_plain': base_document.properties['title'],
             'text_plain': text,

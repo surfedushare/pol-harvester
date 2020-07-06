@@ -134,6 +134,7 @@ class OutputCommand(HarvesterCommand):
             "publishers": meta.get("publishers", []),
             "description": meta.get("description", None),
             "copyright": meta.get("copyright", None),
+            "aggregation_level": meta.get("aggregation_level", None),
             "publisher_date": meta.get("publisher_date", None),
             "disciplines": meta.get("disciplines", []),
             "educational_levels": meta.get("educational_levels", []),

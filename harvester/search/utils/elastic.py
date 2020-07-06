@@ -78,6 +78,9 @@ def get_index_config(lang):
                     'publishers': {
                         'type': 'keyword'
                     },
+                    'aggregation_level': {
+                        'type': 'keyword'
+                    },
                     'keywords': {
                         'type': 'keyword'
                     },

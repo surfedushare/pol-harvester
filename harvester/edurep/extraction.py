@@ -114,6 +114,13 @@ class EdurepDataExtraction(object):
         return node.find('czp:value').find('czp:langstring').text.strip() if node else None
 
     @classmethod
+    def get_aggregation_level(clscls, soup, el):
+        node = el.find('czp:aggregationlevel', None)
+        if node is None:
+            return None
+        return node.find('czp:value').find('czp:langstring').text.strip() if node else None
+
+    @classmethod
     def get_author(cls, soup, el):
         author = el.find(string='author')
         if not author:
