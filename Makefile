@@ -31,7 +31,7 @@ backup-seeds:
 
 backup-indices:
 	cd elastic/repositories
-	rm -r backups
+	rm -rf backups
 	docker cp $(shell docker ps -qf label=nl.surfpol.elastic):/usr/share/elasticsearch/repositories/backups backups
 	zip -r data/pol.${now}.elastic.zip backups
 
