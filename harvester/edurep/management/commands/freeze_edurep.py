@@ -91,11 +91,7 @@ class Command(OutputCommand):
         if data is None:
             return []
         text = data.get("text", "")
-        if not text:
-            self.warning(f"No output at all for HttpTikaResource: {tika_resource.id}")
-            return []
         return [self._create_document(text, meta=metadata, pipeline=pipeline)]
-
 
     def handle_upsert_seeds(self, collection, seeds):
         skipped = 0

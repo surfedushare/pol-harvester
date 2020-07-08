@@ -72,6 +72,15 @@ def get_index_config(lang):
                     'author': {
                         'type': 'keyword'
                     },
+                    'authors': {
+                        'type': 'keyword'
+                    },
+                    'publishers': {
+                        'type': 'keyword'
+                    },
+                    'aggregation_level': {
+                        'type': 'keyword'
+                    },
                     'keywords': {
                         'type': 'keyword'
                     },
