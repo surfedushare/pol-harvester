@@ -217,7 +217,9 @@ class TestFreezeWithHistory(TestCase):
             if seed.get("state", "active") != "active"
         ]
         arrangement_deletes, document_deletes = command.handle_deletion_seeds(collection, deletes)
-        self.assertGreater(arrangement_deletes, 0)
-        self.assertGreater(document_deletes, 0)
-        self.assertEqual(collection.arrangement_set.count(), arrangement_count - arrangement_deletes)
+        self.assertEqual(arrangement_deletes, 1)
+        self.assertEqual(document_deletes, 1)
+        self.assertEqual(collection.arrangement_set.count(), arrangement_count,
+                         "Did not expect arrangements to disappear after a delete")
+        self.assertEqual(collection.arrangement_set.filter(deleted_at__isnull=False).count(), arrangement_deletes)
         self.assertEqual(collection.document_set.count(), document_count - document_deletes)
