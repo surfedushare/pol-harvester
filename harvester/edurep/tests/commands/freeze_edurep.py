@@ -207,7 +207,7 @@ class TestFreezeWithHistory(TestCase):
 
     def test_handle_deletion_seeds(self):
         freeze = Freeze.objects.last()
-        collection = Collection.objects.create(name="surf", freeze=freeze)
+        collection = Collection.objects.get(name="surf", freeze=freeze)
         command = self.get_command_instance()
         arrangement_count = collection.arrangement_set.count()
         document_count = collection.document_set.count()
@@ -217,5 +217,7 @@ class TestFreezeWithHistory(TestCase):
             if seed.get("state", "active") != "active"
         ]
         arrangement_deletes, document_deletes = command.handle_deletion_seeds(collection, deletes)
+        self.assertGreater(arrangement_deletes, 0)
+        self.assertGreater(document_deletes, 0)
         self.assertEqual(collection.arrangement_set.count(), arrangement_count - arrangement_deletes)
         self.assertEqual(collection.document_set.count(), document_count - document_deletes)
